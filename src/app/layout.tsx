@@ -1,3 +1,7 @@
+import Header from "@/components/header";
+import Footer from "@/components/footer";
+
+
 // EXPORT METADATA
 import type { Metadata } from "next";
 export const metadata: Metadata = {
@@ -22,7 +26,11 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
     return (
         <html lang="fr">
             <body className={lato.className}>
-                {children}
+                <Header />
+                <main>
+                    {children}
+                </main>
+                <Footer />
             </body>
         </html>
     );

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import EmailForm from "@/components/EmailForm";
+import EmailForm from "@/components/email-form";
 
 export default function Home() {
     return (
