@@ -1,0 +1,11 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./
+      dockerfile: ./src/Dockerfile
+    working_dir: /home/node/app
+    ports:
+      - '3000:3000'
+    volumes:
+      - './src:/home/node/app'
