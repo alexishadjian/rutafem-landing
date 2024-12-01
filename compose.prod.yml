@@ -3,7 +3,7 @@ services:
     container_name: frontend
     build:
       context: ./
-      dockerfile: ./src/Dockerfile
+      dockerfile: ./src/Dockerfile.prod
     working_dir: /home/node/app
     ports:
       - '3000:3000'
