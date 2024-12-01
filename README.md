@@ -16,7 +16,7 @@ The Startup landing page is a Next.js-based interface designed for showcasing ou
 
 The project is structured as follows:
 
-- **src/**: Contains the main application code, including controllers, middlewares, models, routes, and services.
+- **src/**: Contains the main application code
 - **Dockerfile.dev**: Dockerfile for development environment.
 - **Dockerfile.prod**: Dockerfile for production environment.
 - **compose.yml**: Docker Compose file for development.
@@ -55,7 +55,7 @@ make install
 make up-dev
 ````
 
-Once the server is running, you can access the application at `http://localhost:3000`.
+Once the server is running, you can access the application at : `http://localhost:3000`.
 
 ### Production
 
