@@ -1,0 +1,23 @@
+services:
+  frontend:
+    container_name: frontend
+    build:
+      context: ./
+      dockerfile: ./src/Dockerfile
+    working_dir: /home/node/app
+    ports:
+      - '3000:3000'
+    volumes:
+      - './src:/home/node/app'
+    restart: always
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.node.rule=Host(`192.162.68.208`)"
+      - "traefik.http.routers.node.entrypoints=websecure"
+      - "traefik.http.routers.node.tls.certresolver=myresolver"
+    networks:
+      - traefik_routing
+
+networks:
+  traefik_routing:
+    external: true
