@@ -12,7 +12,7 @@ services:
     restart: always
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.node.rule=Host(`192.162.68.208`)"
+      - "traefik.http.routers.node.rule=Host(`vps108094.serveur-vps.net`)"
       - "traefik.http.routers.node.entrypoints=websecure"
       - "traefik.http.routers.node.tls.certresolver=myresolver"
     networks:
