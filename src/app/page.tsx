@@ -4,7 +4,9 @@ import EmailForm from "@/components/email-form";
 export default function Home() {
     return (
         <div className="">
-            <h1>Home</h1>
+            <section id="hero">
+                
+            </section>
 
             <EmailForm />
         </div>
