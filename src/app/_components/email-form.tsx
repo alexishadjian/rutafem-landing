@@ -3,11 +3,9 @@
 import { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 
-
 export default function EmailForm() {
     const form = useRef<HTMLFormElement>(null);
     const [isSending, setIsSending] = useState(false);
-
 
     const sendEmail = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -34,8 +32,8 @@ export default function EmailForm() {
             <form ref={form} onSubmit={sendEmail}>
                 <div className="flex gap-4 mb-6">
                     <input type="email" name="email" id="email" placeholder="nom@domain.fr" required className="p-2 text-black rounded-xl w-1/2" />
-                    <button type="submit" disabled={isSending} className="py-4 px-10 bg-white text-[--accent-color] rounded-xl">
-                    {isSending ? "Envoi en cours..." : "Envoyer"}
+                    <button type="submit" disabled={isSending} className="py-4 px-10 bg-white font-semibold text-[--accent-color] rounded-xl hover:bg-[--accent-color] hover:text-white transition-all duration-300">
+                        {isSending ? "Envoi en cours..." : "Envoyer"}
                     </button>
                 </div>
                 <div className="text-select-none cursor-pointer flex gap-2">

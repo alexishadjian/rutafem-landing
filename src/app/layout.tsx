@@ -1,5 +1,6 @@
 import Header from "@/components/header";
 import Footer from "@/components/footer";
+import ScrollState from "@/components/ScrollState";
 
 
 // EXPORT METADATA
@@ -44,6 +45,7 @@ import "./globals.css";
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
     return (
         <html lang="fr">
+            <ScrollState />
             <body className={`${poppins.className} ${montserrat.variable} ${poppins.variable} ${staatliches.variable}`}>
                 <Header />
                 <main>

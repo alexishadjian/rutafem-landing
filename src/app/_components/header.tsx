@@ -5,7 +5,7 @@ import Socials from "@/components/socials";
 
 export default function Header() {
     return (
-        <header className="fixed left-0 top-0 right-0 z-50 py-5">
+        <header className="fixed left-0 top-0 right-0 z-50 py-2 transition-all duration-300">
             <div className="flex justify-between items-center wrapper">
                 <Link href="/" className="">
                     <svg width="171" height="79" viewBox="0 0 171 79" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -22,7 +22,7 @@ export default function Header() {
                     <Link href="/#about">Nous connaitre</Link>
                     <Link href="/#advantage1">Safe & Simple</Link>
                     <Link href="/#values">Communauté</Link>
-                    <Link href="/#cta">Newletter</Link>
+                    <Link href="/#cta">M'avertir</Link>
                 </nav>
 
                 <Socials />

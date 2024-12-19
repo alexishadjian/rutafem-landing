@@ -22,6 +22,21 @@ html {
     scroll-padding: 100px;
 }
 
+body.scroll-down header {
+    transform: translateY(-100%);
+}
+
+body.scroll-up header {
+    transform: translateY(0);
+}
+
+body.scroll header {
+    background-color: var(--black-taupe);
+    & nav {
+        background-color: transparent;
+        color: var(--white);
+    }
+}
 
 h1, .h1 {
     font-size: 80px;
@@ -53,12 +68,12 @@ p {
 }
 
 
-section {
+.section-margin {
     margin-top: 150px;
     margin-bottom: 150px;
 }
 
-section:first-child {
+.section-margin:first-child {
     margin-top: 0;
 }
 
@@ -70,6 +85,11 @@ section:first-child {
     border-radius: 12px;
     font-size: 18px;
     display: inline-flex;
+    transition: 0.3s;
+
+    &:hover {
+        background-color: var(--accent-color);
+    }
 }
 
 .title-gradient {
@@ -84,9 +104,9 @@ section:first-child {
 }
 .title-line:before {
     content: "";
-    left: -50px;
-    right: -50px;
-    bottom: -40px;
+    left: -100px;
+    right: -100px;
+    bottom: -50px;
     height: 150px;
     position: absolute;
     background-image: url('/images/title-line.png');
