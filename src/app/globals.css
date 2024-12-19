@@ -78,6 +78,24 @@ section:first-child {
     background-clip: text;
 }
 
+.title-line {
+    position: relative;
+    display: inline-block;
+}
+.title-line:before {
+    content: "";
+    left: -50px;
+    right: -50px;
+    bottom: -40px;
+    height: 150px;
+    position: absolute;
+    background-image: url('/images/title-line.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center bottom;
+    z-index: -1;
+}
+
 .bg-linear {
     background: linear-gradient(264deg, #FF0381 -24.85%, #FF2F76 23.42%, #F5831B 85.29%, #FBBC05 103.76%);
 }
