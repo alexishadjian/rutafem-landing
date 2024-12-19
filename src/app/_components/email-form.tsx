@@ -30,8 +30,8 @@ export default function EmailForm() {
     return (
         <div>
             <form ref={form} onSubmit={sendEmail}>
-                <div className="flex gap-4 mb-6">
-                    <input type="email" name="email" id="email" placeholder="nom@domain.fr" required className="p-2 text-black rounded-xl w-1/2" />
+                <div className="flex gap-4 mb-6 flex-col sm:flex-row">
+                    <input type="email" name="email" id="email" placeholder="nom@domain.fr" required className="p-4 text-black rounded-xl md:w-1/2" />
                     <button type="submit" disabled={isSending} className="py-4 px-10 bg-white font-semibold text-[--accent-color] rounded-xl hover:bg-[--accent-color] hover:text-white transition-all duration-300">
                         {isSending ? "Envoi en cours..." : "Envoyer"}
                     </button>

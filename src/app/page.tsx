@@ -17,18 +17,18 @@ export default function Home() {
                     alt="home cover"
                     className="z-[-1]"
                 />
-                <div className="w-8/12">
+                <div className="md:w-8/12">
                     <h1 className="font-montserrat font-bold">Comme un road-trip avec tes copines</h1>
                     <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis assumenda, molestiae recusandae amet a id distinctio dolores suscipit est, porro ut pariatur quo aut velit? Laudantium voluptate hic sequi. Repellat!</p>
                     <Link className="btn mt-8" href="/#cta">M'avertir !</Link>
                 </div>
             </section>
 
-            <section id="about" className="flex gap-10 wrapper">
-                <div className="w-1/2 flex items-center">
+            <section id="about" className="flex gap-10 wrapper flex-col md:flex-row">
+                <div className="md:w-1/2 flex items-center">
                     <h2 className="font-staatliches title-gradient">Nous connaitre</h2>
                 </div>
-                <div className="w-1/2">
+                <div className="md:w-1/2">
                     <p className="mb-3">Chez RutaFem, nous avons imaginé une solution simple et rassurante : une plateforme de covoiturage 100 % féminine. Partagez vos trajets, vos frais et bien plus encore, dans un espace pensé pour votre sécurité et votre sérénité.</p>
                     <p className="mb-3">Ensemble, avançons vers une mobilité plus sûre, plus solidaire et plus conviviale.Avec RutaFem, chaque trajet devient une opportunité de rencontre et de partage, dans un cadre bienveillant et respectueux. </p>
                     <p className="mb-3">Nous allions technologie et communauté pour créer une expérience de voyage unique, où chaque femme peut se sentir confiante et soutenue. Parce que voyager ensemble, c’est aussi construire un avenir plus éco-responsable et inclusif.</p>
@@ -45,8 +45,8 @@ export default function Home() {
                     alt="home cover"
                     className="z-[-1]"
                 /> */}
-                <div className="wrapper flex gap-6">
-                    <div className="relative aspect-[6/7] text-white flex justify-end flex-col rounded-3xl overflow-hidden">
+                <div className="wrapper flex flex-col md:flex-row gap-6">
+                    <div className="relative aspect-[6/7] text-white flex justify-end flex-col rounded-3xl overflow-hidden md:w-full">
                         <Image 
                             src={Value1}
                             quality={100}
@@ -59,7 +59,7 @@ export default function Home() {
                         <h3 className="text-[17px]">Sécurité</h3>
                         <p className="text-[17px]">“Chaque trajet est sécurisé, chaque kilomètre est serein.”</p>
                     </div>
-                    <div className="relative aspect-[6/7] w-4/6	text-white flex justify-end flex-col rounded-3xl overflow-hidden">
+                    <div className="relative aspect-[6/7] w-4/6	text-white flex justify-end flex-col rounded-3xl overflow-hidden md:w-full">
                         <Image 
                             src={Value2}
                             quality={100}
@@ -72,7 +72,7 @@ export default function Home() {
                         <h3 className="text-[22px]">Communauté</h3>
                         <p className="text-[22px]">“Plus qu'un trajet, une rencontre”</p>
                     </div>
-                    <div className="relative aspect-[6/7] text-white flex justify-end flex-col rounded-3xl overflow-hidden -ml-2">
+                    <div className="relative aspect-[6/7] text-white flex justify-end flex-col rounded-3xl overflow-hidden -ml-2 md:w-full">
                         <Image 
                             src={Value3}
                             quality={100}
@@ -88,14 +88,14 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="advantage1" className="wrapper flex gap-20">
-                <div className="w-1/2">
+            <section id="advantage1" className="wrapper flex gap-20 items-center flex-col md:flex-row">
+                <div className="md:w-1/2">
                     <h2 className="title-line font-staatliches text-center mb-10 text-[--black-taupe] title-line">Safe & Simple</h2>
                     <p className="mb-3">Parce que votre sérénité est notre priorité, nous avons pensé chaque détail pour que vous puissiez voyager l'esprit tranquille. </p>
                     <p className="mb-3">Imaginez partir en covoiturage en toute confiance, en sachant que chaque personne inscrite sur la plateforme a un profil vérifié.</p>
                     <p className="mb-3">Pendant votre trajet, restez connectée : partagez votre localisation en temps réel avec vos proches pour qu'ils sachent exactement où vous êtes. Et si jamais un imprévu survient, notre bouton d’urgence est là, accessible en un instant, pour alerter vos contacts ou nos équipes.</p>
                 </div>
-                <div className="relative w-1/2 rounded-full rounded-br-none overflow-hidden aspect-square">
+                <div className="relative w-full md:w-1/2 rounded-full rounded-br-none overflow-hidden aspect-square shrink-0">
                     <Image 
                         src={Advantage1}
                         quality={100}
@@ -108,7 +108,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="features" className="section-margin wrapper flex gap-24 text-center">
+            <section id="features" className="section-margin wrapper flex gap-24 text-center flex-col md:flex-row">
                 <div>
                     <div className="relative h-[150px] mb-6">
                         <Image 
@@ -154,8 +154,8 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="advantage2" className="section-margin wrapper flex gap-24">
-                <div className="relative w-1/2 rounded-bl-[400px] rounded-tr-3xl overflow-hidden aspect-square">
+            <section id="advantage2" className="section-margin wrapper flex gap-24 flex-col items-center md:flex-row">
+                <div className="relative w-full md:w-1/2 rounded-bl-[300px] md:rounded-bl-[400px] rounded-tr-3xl overflow-hidden aspect-square">
                     <Image 
                         src={Advantage2}
                         quality={100}
@@ -166,7 +166,7 @@ export default function Home() {
                         className="z-[-1]"
                     />
                 </div>
-                <div className="w-1/2">
+                <div className="md:w-1/2 order-first md:order-last">
                     <h2 className="font-staatliches text-center mb-10 text-[--black-taupe]">Une communauté sororale</h2>
                     <p className="mb-3 font-semibold">"Plus qu'un trajet, une rencontre."</p>
                     <p className="mb-3">Chez RutaFem, chaque trajet est bien plus qu'un simple déplacement : c'est une opportunité de rencontre et de partage.</p>
@@ -175,7 +175,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="functioning" className="section-margin wrapper relative p-16">
+            <section id="functioning" className="section-margin wrapper relative p-6 md:p-16">
                 <Image 
                     src={Functioning}
                     quality={100}
@@ -186,7 +186,7 @@ export default function Home() {
                     className="z-[-1]"
                 />
                 <div className="bg-[--white] rounded-3xl p-5 flex gap-10 mix-blend-hard-light">
-                    <div className="w-1/2 flex flex-col gap-10 p-4">
+                    <div className="w-full lg:w-1/2 flex flex-col gap-10 p-4">
                         <h2 className="title-gradient font-staatliches text-[32px]">Comment ça marche ?</h2>
                         <div className="flex gap-8 items-center">
                             <svg width="60" height="60" viewBox="0 0 60 60" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0">
@@ -263,17 +263,17 @@ export default function Home() {
                             </div>
                         </div>
                     </div>
-                    <div className="w-1/2 rounded-r-3xl overflow-hidden bg-[gray]"></div>
+                    <div className="w-1/2 hidden lg:block rounded-r-3xl overflow-hidden bg-[gray]"></div>
                 </div>
             </section>
 
-            <section id="cta" className="section-margin wrapper bg-linear text-white flex gap-5">
-                <div className="w-8/12 p-10">
+            <section id="cta" className="section-margin wrapper bg-linear text-white flex gap-5 flex-col md:flex-row">
+                <div className="w-full md:w-8/12 p-10">
                     <h3 className="mb-10 text-[40px] font-bold">Ne ratez pas notre lancement!</h3>
                     <p className="mb-2">Être averti lors de la sortie officielle de l'application RutaFem</p>
                     <EmailForm />
                 </div>
-                <div className="relative w-4/12">
+                <div className="relative w-full md:w-4/12">
                     <Image 
                         src={Cta}
                         quality={100}
