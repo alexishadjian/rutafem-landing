@@ -1,6 +1,6 @@
 import Image from "next/image";
 import EmailForm from "@/components/email-form";
-import { HeroBanner, Feature1, Value1, Value2, Value3, Advantage1, Advantage2, Functioning } from "@/images";
+import { HeroBanner, Feature1, Value1, Value2, Value3, Advantage1, Advantage2, Functioning, Cta } from "@/images";
 
 
 export default function Home() {
@@ -243,7 +243,24 @@ export default function Home() {
                 </div>
             </section>
 
-            <EmailForm />
+            <section id="cta" className="wrapper bg-linear text-white flex gap-5">
+                <div className="w-8/12 p-10">
+                    <h3 className="mb-10 text-[40px] font-bold">Ne ratez pas notre lancement!</h3>
+                    <p className="mb-2">Être averti lors de la sortie officielle de l'application RutaFem</p>
+                    <EmailForm />
+                </div>
+                <div className="relative w-4/12">
+                    <Image 
+                        src={Cta}
+                        quality={100}
+                        fill={true}
+                        sizes="100%"
+                        style={{objectFit:"contain"}}
+                        alt="app illutration"
+                    />
+                </div>
+            </section>
+
         </div>
     );
 }

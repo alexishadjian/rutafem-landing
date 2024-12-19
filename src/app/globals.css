@@ -14,6 +14,12 @@
     --white: #ffffff;
     --black: #000000;
     --black-taupe: #3B3B3D;
+    --accent-color: #FF0381;
+}
+
+html {
+    scroll-behavior: smooth;
+    scroll-padding: 100px;
 }
 
 
@@ -65,4 +71,45 @@ section {
     background-image: linear-gradient(180deg, #FF0381 0%, #FF2F76 36.98%, #F5831B 84.37%, #FBBC05 98.53%);
     color: transparent;
     background-clip: text;
+}
+
+.bg-linear {
+    background: linear-gradient(264deg, #FF0381 -24.85%, #FF2F76 23.42%, #F5831B 85.29%, #FBBC05 103.76%);
+}
+
+input[type=checkbox] {
+    position: relative;
+    border: 2px solid var(--white);
+    border-radius: 3px;
+    background: transparent;
+    cursor: pointer;
+    padding: 8px;
+    height: 20px;
+    width: 20px;
+    appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+
+
+input[type=checkbox]:checked {
+    background-color: var(--accent-color);
+}
+input[type=checkbox]:checked:before {
+    border-color: var(--white);
+
+}
+input[type=checkbox]:before {
+    content: "";
+    position: absolute;
+    width: 6px;
+    height: 12px;
+    border: solid transparent;
+    border-width: 0 2px 2px 0;
+    margin: -3px -1px 0 -1px;
+    transform: rotate(45deg);
+    z-index: 2;
+    transition: 0.2s;
 }

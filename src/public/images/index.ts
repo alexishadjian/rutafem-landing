@@ -6,6 +6,7 @@ import Advantage1 from "./advantage-1.png";
 import Advantage2 from "./advantage-2.png";
 import Feature1 from "./feature-1.png";
 import Functioning from "./functioning.png";
+import Cta from "./cta.png";
 
 
 export {
@@ -16,5 +17,6 @@ export {
     Advantage1,
     Advantage2,
     Feature1,
-    Functioning
+    Functioning,
+    Cta
 }

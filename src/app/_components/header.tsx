@@ -16,10 +16,10 @@ export default function Header() {
                 </Link>
 
                 <nav className="flex gap-20 bg-[--black-taupe] text-white py-4 px-10 rounded-full uppercase text-sm font-staatliches">
-                    <Link href="/#">Nous connaitre</Link>
-                    <Link href="/#">Safe & Simple</Link>
-                    <Link href="/#">Communauté</Link>
-                    <Link href="/#">Newletter</Link>
+                    <Link href="/#about">Nous connaitre</Link>
+                    <Link href="/#advantage1">Safe & Simple</Link>
+                    <Link href="/#values">Communauté</Link>
+                    <Link href="/#cta">Newletter</Link>
                 </nav>
 
                 <div className="flex gap-x-3 items-center">
