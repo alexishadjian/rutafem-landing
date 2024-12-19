@@ -1,6 +1,6 @@
 import Image from "next/image";
 import EmailForm from "@/components/email-form";
-import { HeroBanner } from "@/images";
+import { HeroBanner, Feature1, Feature2, Feature3 } from "@/images";
 
 
 export default function Home() {
@@ -27,6 +27,48 @@ export default function Home() {
                 </div>
                 <div>
                     <p>Chez RutaFem, nous avons imaginé une solution simple et rassurante : une plateforme de covoiturage 100 % féminine. Partagez vos trajets, vos frais et bien plus encore, dans un espace pensé pour votre sécurité et votre sérénité. Ensemble, avançons vers une mobilité plus sûre, plus solidaire et plus conviviale.Avec RutaFem, chaque trajet devient une opportunité de rencontre et de partage, dans un cadre bienveillant et respectueux. Nous allions technologie et communauté pour créer une expérience de voyage unique, où chaque femme peut se sentir confiante et soutenue. Parce que voyager ensemble, c'est aussi construire un avenir plus éco-responsable et inclusif.</p>
+                </div>
+            </section>
+
+            <section id="features" className="flex">
+                <div className="relative">
+                    <Image 
+                        src={Feature1}
+                        quality={100}
+                        width={1020}
+                        // fill={true}
+                        sizes="100%"
+                        style={{objectFit:"cover"}}
+                        alt="home cover"
+                    />
+                    <h3>Sécurité</h3>
+                    <p>“Chaque trajet est sécurisé, chaque kilomètre est serein.”</p>
+                </div>
+                <div className="relative">
+                    <Image 
+                        src={Feature2}
+                        quality={100}
+                        width={1020}
+                        // fill={true}
+                        sizes="100%"
+                        style={{objectFit:"cover"}}
+                        alt="home cover"
+                    />
+                    <h3>Communauté</h3>
+                    <p>“Plus qu'un trajet, une rencontre”</p>
+                </div>
+                <div className="relative">
+                    <Image 
+                        src={Feature3}
+                        quality={100}
+                        width={1020}
+                        // fill={true}
+                        sizes="100%"
+                        style={{objectFit:"cover"}}
+                        alt="home cover"
+                    />
+                    <h3>Écologique</h3>
+                    <p>“Chaque trajet partagé, c'est une voiture en moins sur la route"</p>
                 </div>
             </section>
 
