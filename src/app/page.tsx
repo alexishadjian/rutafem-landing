@@ -1,6 +1,6 @@
 import Image from "next/image";
 import EmailForm from "@/components/email-form";
-import { HeroBanner, Feature1, Value1, Value2, Value3, Advantage1 } from "@/images";
+import { HeroBanner, Feature1, Value1, Value2, Value3, Advantage1, Advantage2 } from "@/images";
 
 
 export default function Home() {
@@ -74,7 +74,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="advantage" className="wrapper flex gap-20">
+            <section id="advantage1" className="wrapper flex gap-20">
                 <div className="w-1/2">
                     <h2 className="font-staatliches text-center mb-10 text-[--black-taupe]">Safe & Simple</h2>
                     <p className="mb-3">Parce que votre sérénité est notre priorité, nous avons pensé chaque détail pour que vous puissiez voyager l'esprit tranquille. </p>
@@ -137,6 +137,27 @@ export default function Home() {
                     </div>
                     <h3 className="mb-2">Service appel d'urgence</h3>
                     <p>Un clic suffit pour alerter en cas de besoin.</p>
+                </div>
+            </section>
+
+            <section id="advantage2" className="wrapper flex gap-20">
+                <div className="relative w-1/2 rounded-bl-[400px] rounded-tr-3xl overflow-hidden aspect-[7/8]">
+                    <Image 
+                        src={Advantage2}
+                        quality={100}
+                        fill={true}
+                        sizes="100%"
+                        style={{objectFit:"cover"}}
+                        alt="home cover"
+                        className="z-[-1]"
+                    />
+                </div>
+                <div className="w-1/2">
+                    <h2 className="font-staatliches text-center mb-10 text-[--black-taupe]">Une communauté sororale</h2>
+                    <p className="mb-3 font-semibold">"Plus qu'un trajet, une rencontre."</p>
+                    <p className="mb-3">Chez RutaFem, chaque trajet est bien plus qu'un simple déplacement : c'est une opportunité de rencontre et de partage.</p>
+                    <p className="mb-3">Rejoignez une communauté de voyageuses bienveillantes où chacune peut échanger des conseils, partager des bons plans et créer des liens en toute confiance.</p>
+                    <p className="mb-3">Ici, voyager rime avec simplicité et convivialité, dans une ambiance chaleureuse et respectueuse. Ensemble, nous transformons chaque trajet en une expérience enrichissante et humaine.</p>
                 </div>
             </section>
 

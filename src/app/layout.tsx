@@ -12,7 +12,7 @@ export const metadata: Metadata = {
 // FONT IMPORT
 import { Poppins } from "next/font/google";
 export const poppins = Poppins({
-    weight: ['300', '400', '500', '700'],
+    weight: ['300', '400', '500', '600', '700'],
     style: ['normal', 'italic'],
     subsets: ['latin'],
     display: 'swap',
