@@ -1,0 +1,46 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.wrapper {
+    max-width: 1240px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+}
+
+
+h1, .h1 {
+    font-size: 80px;
+}
+
+.montserrat {
+    font-family: var(--font-montserrat);
+}
+
+.poppins {
+    font-family: var(--font-poppins);
+}
+
+.staatliches {
+    font-family: var(--font-staatliches);
+}
+
+p {
+    font-size: 18px;
+}
+
+
+section {
+    margin-top: 100px;
+    margin-bottom: 100px;
+}
+
+
+.btn {
+    color: white;
+    padding: 15px 20px;
+    background-color: #ff03819c;
+    border-radius: 12px;
+    font-size: 18px;
+}

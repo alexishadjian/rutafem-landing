@@ -5,20 +5,20 @@ import { HeroBanner, Feature1, Feature2, Feature3, Advantage1 } from "@/images";
 
 export default function Home() {
     return (
-        <div className="">
-            <section id="hero" className="relative">
+        <div className="mt-28">
+            <section id="hero" className="relative wrapper h-[70vh] rounded-3xl overflow-hidden flex items-center justify-center flex-col text-center text-white p-4">
                 <Image 
                     src={HeroBanner}
                     quality={100}
-                    width={1020}
-                    // fill={true}
+                    fill={true}
                     sizes="100%"
                     style={{objectFit:"cover"}}
                     alt="home cover"
+                    className="z-[-1]"
                 />
-                <h1>Comme un road-trip avec tes copines</h1>
+                <h1 className="montserrat font-bold">Comme un road-trip avec tes copines</h1>
                 <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis assumenda, molestiae recusandae amet a id distinctio dolores suscipit est, porro ut pariatur quo aut velit? Laudantium voluptate hic sequi. Repellat!</p>
-                <button>Inscrivez-vous</button>
+                <button className="btn mt-8">Inscrivez-vous</button>
             </section>
 
             <section id="about" className="flex">
