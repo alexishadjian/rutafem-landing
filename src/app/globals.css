@@ -22,15 +22,15 @@ html {
     scroll-padding: 100px;
 }
 
-body.scroll-down header {
+body.scroll-down header:not(.mobile-menu-open) {
     transform: translateY(-100%);
 }
 
-body.scroll-up header {
+body.scroll-up header:not(.mobile-menu-open) {
     transform: translateY(0);
 }
 
-body.scroll header {
+body.scroll header:not(.mobile-menu-open) {
     background-color: var(--black-taupe);
     & nav {
         background-color: transparent;

@@ -35,7 +35,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="values" className="relative py-48 m-0">
+            <section id="values" className="relative md:py-48 m-0">
                 {/* <Image 
                     src={ValueBg}
                     quality={100}
@@ -45,8 +45,8 @@ export default function Home() {
                     alt="home cover"
                     className="z-[-1]"
                 /> */}
-                <div className="wrapper flex flex-col md:flex-row gap-6">
-                    <div className="relative aspect-[6/7] text-white flex justify-end flex-col rounded-3xl overflow-hidden md:w-full">
+                <div className="wrapper flex flex-col md:flex-row gap-6 md:gap-0 md:h-[680px]">
+                    <div className="relative text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-[600px] md:h-full">
                         <Image 
                             src={Value1}
                             quality={100}
@@ -56,10 +56,12 @@ export default function Home() {
                             alt="home cover"
                             className="z-[-1]"
                         />
-                        <h3 className="text-[17px]">Sécurité</h3>
-                        <p className="text-[17px]">“Chaque trajet est sécurisé, chaque kilomètre est serein.”</p>
+                        <div className="px-24">
+                            <h3 className="text-[17px]">Sécurité</h3>
+                            <p className="text-[17px]">“Chaque trajet est sécurisé, chaque kilomètre est serein.”</p>
+                        </div>
                     </div>
-                    <div className="relative aspect-[6/7] w-4/6	text-white flex justify-end flex-col rounded-3xl overflow-hidden md:w-full">
+                    <div className="relative w-4/6	text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-[600px] md:h-full">
                         <Image 
                             src={Value2}
                             quality={100}
@@ -69,10 +71,12 @@ export default function Home() {
                             alt="home cover"
                             className="z-[-1]"
                         />
-                        <h3 className="text-[22px]">Communauté</h3>
-                        <p className="text-[22px]">“Plus qu'un trajet, une rencontre”</p>
+                        <div className="px-10">
+                            <h3 className="text-[22px]">Communauté</h3>
+                            <p className="text-[22px]">“Plus qu'un trajet, une rencontre”</p>
+                        </div>
                     </div>
-                    <div className="relative aspect-[6/7] text-white flex justify-end flex-col rounded-3xl overflow-hidden -ml-2 md:w-full">
+                    <div className="relative text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-[600px] md:h-full">
                         <Image 
                             src={Value3}
                             quality={100}
@@ -82,8 +86,10 @@ export default function Home() {
                             alt="home cover"
                             className="z-[-1]"
                         />
-                        <h3 className="text-[17px]">Écologique</h3>
-                        <p className="text-[17px]">“Chaque trajet partagé, c'est une voiture en moins sur la route"</p>
+                        <div className="pl-14 pr-24">
+                            <h3 className="text-[17px]">Écologique</h3>
+                            <p className="text-[17px]">“Chaque trajet partagé, c'est une voiture en moins sur la route"</p>
+                        </div>
                     </div>
                 </div>
             </section>
