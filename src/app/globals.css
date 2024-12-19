@@ -10,6 +10,11 @@
 }
 
 
+:root {
+    --black-taupe: #3B3B3D;
+}
+
+
 h1, .h1 {
     font-size: 80px;
 }
@@ -41,8 +46,8 @@ p {
 
 
 section {
-    margin-top: 100px;
-    margin-bottom: 100px;
+    margin-top: 150px;
+    margin-bottom: 150px;
 }
 
 
