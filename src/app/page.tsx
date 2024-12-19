@@ -1,6 +1,6 @@
 import Image from "next/image";
 import EmailForm from "@/components/email-form";
-import { HeroBanner, Feature1, Feature2, Feature3 } from "@/images";
+import { HeroBanner, Feature1, Feature2, Feature3, Advantage1 } from "@/images";
 
 
 export default function Home() {
@@ -11,7 +11,7 @@ export default function Home() {
                     src={HeroBanner}
                     quality={100}
                     width={1020}
-                    // fill={true}x
+                    // fill={true}
                     sizes="100%"
                     style={{objectFit:"cover"}}
                     alt="home cover"
@@ -69,6 +69,24 @@ export default function Home() {
                     />
                     <h3>Écologique</h3>
                     <p>“Chaque trajet partagé, c'est une voiture en moins sur la route"</p>
+                </div>
+            </section>
+
+            <section id="advantage">
+                <div>
+                    <h2>Safe & Simple</h2>
+                    <p>Parce que votre sérénité est notre priorité, nous avons pensé chaque détail pour que vous puissiez voyager l'esprit tranquille. Imaginez partir en covoiturage en toute confiance, en sachant que chaque personne inscrite sur la plateforme a un profil vérifié. Pendant votre trajet, restez connectée : partagez votre localisation en temps réel avec vos proches pour qu'ils sachent exactement où vous êtes. Et si jamais un imprévu survient, notre bouton d'urgence est là, accessible en un instant, pour alerter vos contacts ou nos équipes.</p>
+                </div>
+                <div className="relative">
+                    <Image 
+                        src={Advantage1}
+                        quality={100}
+                        width={1020}
+                        // fill={true}
+                        sizes="100%"
+                        style={{objectFit:"cover"}}
+                        alt="home cover"
+                    />
                 </div>
             </section>
 
