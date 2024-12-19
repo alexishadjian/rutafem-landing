@@ -1,12 +1,13 @@
 import Image from "next/image";
 import EmailForm from "@/components/email-form";
 import { HeroBanner, Feature1, Value1, Value2, Value3, Advantage1, Advantage2, Functioning, Cta } from "@/images";
+import Link from "next/link";
 
 
 export default function Home() {
     return (
-        <div className="mt-28">
-            <section id="hero" className="relative wrapper h-[70vh] rounded-3xl overflow-hidden flex items-center justify-center flex-col text-center text-white p-4">
+        <div className="home">
+            <section id="hero" className="relative h-screen overflow-hidden flex items-center justify-center flex-col text-center text-white p-4">
                 <Image 
                     src={HeroBanner}
                     quality={100}
@@ -16,9 +17,11 @@ export default function Home() {
                     alt="home cover"
                     className="z-[-1]"
                 />
-                <h1 className="font-montserrat font-bold">Comme un road-trip avec tes copines</h1>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis assumenda, molestiae recusandae amet a id distinctio dolores suscipit est, porro ut pariatur quo aut velit? Laudantium voluptate hic sequi. Repellat!</p>
-                <button className="btn mt-8">Inscrivez-vous</button>
+                <div className="w-8/12">
+                    <h1 className="font-montserrat font-bold">Comme un road-trip avec tes copines</h1>
+                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis assumenda, molestiae recusandae amet a id distinctio dolores suscipit est, porro ut pariatur quo aut velit? Laudantium voluptate hic sequi. Repellat!</p>
+                    <Link className="btn mt-8" href="/#cta">Inscrivez-vous</Link>
+                </div>
             </section>
 
             <section id="about" className="flex gap-10 wrapper">
