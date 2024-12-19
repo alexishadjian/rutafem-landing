@@ -15,7 +15,7 @@ export default function Header() {
                     </svg>
                 </Link>
 
-                <nav className="flex gap-20 bg-[#3B3B3D] text-white py-4 px-10 rounded-full uppercase text-sm staatliches">
+                <nav className="flex gap-20 bg-[#3B3B3D] text-white py-4 px-10 rounded-full uppercase text-sm font-staatliches">
                     <Link href="/#">Nous connaitre</Link>
                     <Link href="/#">Safe & Simple</Link>
                     <Link href="/#">Communauté</Link>

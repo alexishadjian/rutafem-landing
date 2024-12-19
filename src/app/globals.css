@@ -14,15 +14,24 @@ h1, .h1 {
     font-size: 80px;
 }
 
-.montserrat {
+h2, .h2 {
+    font-size: 70px;
+}
+
+h3, .h3 {
+    font-size: 22px;
+    font-weight: 500;
+}
+
+.font-montserrat {
     font-family: var(--font-montserrat);
 }
 
-.poppins {
+.font-poppins {
     font-family: var(--font-poppins);
 }
 
-.staatliches {
+.font-staatliches {
     font-family: var(--font-staatliches);
 }
 
@@ -43,4 +52,10 @@ section {
     background-color: #ff03819c;
     border-radius: 12px;
     font-size: 18px;
+}
+
+.title-gradient {
+    background-image: linear-gradient(180deg, #FF0381 0%, #FF2F76 36.98%, #F5831B 84.37%, #FBBC05 98.53%);
+    color: transparent;
+    background-clip: text;
 }
