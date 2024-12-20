@@ -1,12 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname } from "next/navigation";
 
 
 export default function ScrollState() {
 
-    const pathname = usePathname();
     const [lastScrollY, setLastScrollY] = useState(0);
 
     useEffect(() => {        
