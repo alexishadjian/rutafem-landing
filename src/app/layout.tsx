@@ -1,13 +1,22 @@
 import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ScrollState from "@/components/ScrollState";
+import { Favicon } from '@/images';
+
 
 
 // EXPORT METADATA
 import type { Metadata } from "next";
 export const metadata: Metadata = {
-    title: "MDS Startup Landing",
-    description: "A landing page for a startup",
+    title: "Rutafem",
+    description: "Rutafem est solution de covoiturgae pour les femmes",
+    icons: [
+        {
+          rel: "icon",
+          type: "image/png",
+          url: Favicon.src,
+        },
+    ],
 };
 
 // FONT IMPORT
@@ -46,7 +55,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
     return (
         <html lang="fr">
             <ScrollState />
-            <body className={`${poppins.className} ${montserrat.variable} ${poppins.variable} ${staatliches.variable}`}>
+            <body className={`${poppins.className} ${montserrat.variable} ${poppins.variable} ${staatliches.variable}`} suppressHydrationWarning>
                 <Header />
                 <main>
                     {children}

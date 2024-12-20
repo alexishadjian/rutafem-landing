@@ -18,8 +18,8 @@ export default function Home() {
                     className="z-[-1]"
                 />
                 <div className="md:w-8/12">
-                    <h1 className="font-montserrat font-bold">Comme un road-trip avec tes copines</h1>
-                    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nobis assumenda, molestiae recusandae amet a id distinctio dolores suscipit est, porro ut pariatur quo aut velit? Laudantium voluptate hic sequi. Repellat!</p>
+                    <h1 className="font-montserrat font-bold text-[30px] md:text-[80px]">Comme un road-trip avec tes copines</h1>
+                    <p>"Bientôt, partagez vos trajets entre femmes en toute sécurité et avec l'esprit d'une communauté bienveillante."</p>
                     <Link className="btn mt-8" href="/#cta">M'avertir !</Link>
                 </div>
             </section>
@@ -46,7 +46,7 @@ export default function Home() {
                     className="z-[-1]"
                 /> */}
                 <div className="wrapper flex flex-col md:flex-row gap-6 md:gap-0 md:h-[680px]">
-                    <div className="relative text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-[600px] md:h-full">
+                    <div className="relative text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-full md:h-full aspect-[5/7]">
                         <Image 
                             src={Value1}
                             quality={100}
@@ -56,12 +56,12 @@ export default function Home() {
                             alt="home cover"
                             className="z-[-1]"
                         />
-                        <div className="px-24">
+                        <div className="md:px-24 px-44">
                             <h3 className="text-[17px]">Sécurité</h3>
                             <p className="text-[17px]">“Chaque trajet est sécurisé, chaque kilomètre est serein.”</p>
                         </div>
                     </div>
-                    <div className="relative w-4/6	text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-[600px] md:h-full">
+                    <div className="relative w-4/6	text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-full md:h-full aspect-[5/7]">
                         <Image 
                             src={Value2}
                             quality={100}
@@ -76,7 +76,7 @@ export default function Home() {
                             <p className="text-[22px]">“Plus qu'un trajet, une rencontre”</p>
                         </div>
                     </div>
-                    <div className="relative text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-[600px] md:h-full">
+                    <div className="relative text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-full md:h-full aspect-[5/7]">
                         <Image 
                             src={Value3}
                             quality={100}
@@ -86,7 +86,7 @@ export default function Home() {
                             alt="home cover"
                             className="z-[-1]"
                         />
-                        <div className="pl-14 pr-24">
+                        <div className="md:pl-14 md:pr-24 pl-24 pr-48">
                             <h3 className="text-[17px]">Écologique</h3>
                             <p className="text-[17px]">“Chaque trajet partagé, c'est une voiture en moins sur la route"</p>
                         </div>
@@ -94,15 +94,15 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="advantage1" className="wrapper flex gap-20 items-center flex-col md:flex-row">
-                <div className="md:w-1/2">
-                    <h2 className="title-line font-staatliches text-center mb-10 text-[--black-taupe] title-line">Safe & Simple</h2>
-                    <p className="mb-3">Parce que votre sérénité est notre priorité, nous avons pensé chaque détail pour que vous puissiez voyager l'esprit tranquille. </p>
-                    <p className="mb-3">Imaginez partir en covoiturage en toute confiance, en sachant que chaque personne inscrite sur la plateforme a un profil vérifié.</p>
-                    <p className="mb-3">Pendant votre trajet, restez connectée : partagez votre localisation en temps réel avec vos proches pour qu'ils sachent exactement où vous êtes. Et si jamais un imprévu survient, notre bouton d’urgence est là, accessible en un instant, pour alerter vos contacts ou nos équipes.</p>
+            <section id="advantage1" className="wrapper flex md:gap-28 gap-10 items-center flex-col md:flex-row">
+                <div className="md:w-7/12">
+                    <h2 className="title-line w-full font-staatliches text-center mb-10 text-[--black-taupe] title-line">Safe & Simple</h2>
+                    <p className="mb-3">Avec RutaFem, chaque trajet devient une expérience sereine et confiante. Grâce à des profils vérifiés, une localisation en temps réel et une communauté bienveillante, nous créons un environnement où la confiance est au cœur de chaque échange.</p>
+                    <p className="mb-3">Imaginez partager la route avec des femmes qui, comme vous, cherchent des trajets sûrs et enrichissants. Chaque détail de l'application est pensé pour que vous voyagiez l'esprit léger : connectée à vos proches et entourée d'une communauté solidaire.</p>
+                    <p className="mb-3">Voyager en sécurité, c'est aussi voyager avec sérénité. </p>
                 </div>
-                <div className="relative w-full md:w-1/2 rounded-full rounded-br-none overflow-hidden aspect-square shrink-0">
-                    <Image 
+                <div className="relative w-full md:w-5/12 rounded-full rounded-br-none overflow-hidden aspect-square shrink-0">
+                    <Image
                         src={Advantage1}
                         quality={100}
                         fill={true}
@@ -160,7 +160,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="advantage2" className="section-margin wrapper flex gap-24 flex-col items-center md:flex-row">
+            <section id="advantage2" className="section-margin wrapper flex gap-10 md:gap-24 flex-col items-center md:flex-row">
                 <div className="relative w-full md:w-1/2 rounded-bl-[300px] md:rounded-bl-[400px] rounded-tr-3xl overflow-hidden aspect-square">
                     <Image 
                         src={Advantage2}

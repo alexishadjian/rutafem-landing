@@ -8,10 +8,7 @@ import Socials from "@/components/socials";
 
 export default function Header() {
 
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    console.log(isMenuOpen);
-    
+    const [isMenuOpen, setIsMenuOpen] = useState(false);    
 
     return (
         <header className={`fixed left-0 top-0 right-0 z-50 py-2 transition-all duration-300 ${isMenuOpen ? "mobile-menu-open" : ""}`}>
@@ -27,7 +24,7 @@ export default function Header() {
                     </svg>
                 </Link>
 
-                <nav className={`flex gap-4 lg:gap-20 bg-[--white] text-[--black] py-4 px-14 lg:rounded-full uppercase text-lg lg:text-sm font-staatliches flex-col lg:flex-row fixed left-0 bottom-0 top-0 p-8 lg:relative transition-transform duration-300 ease-in-out shadow-md lg:translate-x-0 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0}`}>
+                <nav className={`flex gap-4 lg:gap-20 bg-[--white] text-[--black] py-4 px-14 lg:rounded-full uppercase text-lg lg:text-sm font-staatliches flex-col lg:flex-row fixed left-0 bottom-0 top-0 p-8 lg:relative transition-transform duration-300 ease-in-out lg:translate-x-0 ${isMenuOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0}`}>
                     <div className="flex justify-between gap-20 lg:hidden">
                         <svg width="171" height="79" viewBox="0 0 171 79" fill="none" xmlns="http://www.w3.org/2000/svg">
                             <path fillRule="evenodd" clipRule="evenodd" d="M14.2947 0.449515C13.6486 0.429422 13.1363 0.945258 13.1515 1.56213L13.3449 9.3848C13.3601 10.0022 13.8983 10.4843 14.5423 10.538C16.9233 10.7377 19.1625 11.7048 20.892 13.2805C22.6215 14.8561 23.7386 16.9466 24.0599 19.2088C24.1458 19.8207 24.676 20.3108 25.3219 20.2962L33.513 20.1115C34.1595 20.0969 34.6748 19.5844 34.6233 18.9689C34.2134 14.0344 31.9134 9.41732 28.1631 6.00071C24.4128 2.58409 19.4749 0.607715 14.2947 0.449515ZM28.9756 17.4257C29.0805 17.8325 29.1676 18.2433 29.2367 18.6571L30.3925 18.4806C30.3183 18.0362 30.2248 17.595 30.1122 17.158L28.9756 17.4257ZM26.897 12.8328C27.374 13.5367 27.7888 14.2772 28.1371 15.0468L29.2114 14.6032C28.8373 13.7766 28.3918 12.9813 27.8794 12.2253L26.897 12.8328ZM24.3621 9.95598C24.6841 10.2404 24.9935 10.5374 25.2897 10.8464L26.1531 10.0917C25.5167 9.42762 24.8236 8.8153 24.0808 8.26107L23.3603 9.1422C23.7059 9.40007 24.0401 9.67157 24.3621 9.95598ZM18.7543 6.75818C19.5846 7.02972 20.3899 7.36687 21.1616 7.76614L21.7192 6.78357C20.8902 6.35467 20.0252 5.9925 19.1332 5.70081L18.7543 6.75818ZM14.8995 5.99251C15.3381 6.02623 15.7737 6.07734 16.2051 6.14477L16.3956 5.0419C15.9308 4.96879 15.4631 4.91405 14.9937 4.87783L14.8995 5.99251Z" fill="#FF0381"/>
@@ -44,10 +41,10 @@ export default function Header() {
                         </button>
                     </div>
                     
-                    <Link href="/#about">Nous connaitre</Link>
-                    <Link href="/#advantage1">Safe & Simple</Link>
-                    <Link href="/#values">Communauté</Link>
-                    <Link href="/#cta">M'avertir</Link>
+                    <Link href="/#about" className="hover:text-[--accent-color] transition-all duration-300">Nous connaitre</Link>
+                    <Link href="/#advantage1" className="hover:text-[--accent-color] transition-all duration-300">Safe & Simple</Link>
+                    <Link href="/#values" className="hover:text-[--accent-color] transition-all duration-300">Communauté</Link>
+                    <Link href="/#cta" className="hover:text-[--accent-color] transition-all duration-300">M'avertir</Link>
                 </nav>
 
                 <div className="hidden lg:block">

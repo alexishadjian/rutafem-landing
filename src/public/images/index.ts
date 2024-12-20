@@ -10,6 +10,7 @@ import Feature2 from "./feature-2.png";
 import Feature3 from "./feature-3.png";
 import Functioning from "./functioning.png";
 import Cta from "./cta.png";
+import Favicon from "./favicon.png";
 
 
 export {
@@ -24,5 +25,6 @@ export {
     Feature2,
     Feature3,
     Functioning,
-    Cta
+    Cta,
+    Favicon
 }

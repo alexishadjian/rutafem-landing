@@ -71,6 +71,10 @@ p {
 .section-margin {
     margin-top: 150px;
     margin-bottom: 150px;
+    @media (max-width: 768px) {
+        margin-top: 80px;
+        margin-bottom: 80px;
+    }
 }
 
 .section-margin:first-child {
@@ -106,7 +110,7 @@ p {
     content: "";
     left: -100px;
     right: -100px;
-    bottom: -50px;
+    bottom: -60px;
     height: 150px;
     position: absolute;
     background-image: url('/images/title-line.png');
