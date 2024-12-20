@@ -1,7 +1,7 @@
 import Link from "next/link";
 
 
-export default function Footer() {
+export default function Socials() {
     return (
         <div className="flex gap-x-3 items-center">
             <Link href="/#">
