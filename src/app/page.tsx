@@ -7,7 +7,7 @@ import Link from "next/link";
 export default function Home() {
     return (
         <div className="home">
-            <section id="hero" className="section-margin relative h-screen overflow-hidden flex items-center justify-center flex-col text-center text-white p-4">
+            <section id="hero" className="section-margin relative h-screen overflow-hidden flex items-center justify-center flex-col text-center text-white wrapper-padding">
                 <Image 
                     src={HeroBanner}
                     quality={100}
@@ -18,7 +18,7 @@ export default function Home() {
                     className="z-[-1]"
                 />
                 <div className="md:w-8/12">
-                    <h1 className="font-montserrat font-bold text-[30px] md:text-[80px]">Comme un road-trip avec tes copines</h1>
+                    <h1 className="font-montserrat font-bold text-[30px] md:text-[80px] md:leading-tight mb-6">Comme un road-trip avec tes copines</h1>
                     <p>"Bientôt, partagez vos trajets entre femmes en toute sécurité et avec l'esprit d'une communauté bienveillante."</p>
                     <Link className="btn mt-8" href="/#cta">M'avertir !</Link>
                 </div>
@@ -26,7 +26,7 @@ export default function Home() {
 
             <section id="about" className="flex gap-10 wrapper flex-col md:flex-row">
                 <div className="md:w-1/2 flex items-center">
-                    <h2 className="font-staatliches title-gradient">Nous connaitre</h2>
+                    <h2 className="font-staatliches title-gradient leading-tight">Nous connaitre</h2>
                 </div>
                 <div className="md:w-1/2">
                     <p className="mb-3">Chez RutaFem, nous avons imaginé une solution simple et rassurante : une plateforme de covoiturage 100 % féminine. Partagez vos trajets, vos frais et bien plus encore, dans un espace pensé pour votre sécurité et votre sérénité.</p>
@@ -35,7 +35,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="values" className="relative md:py-48 m-0">
+            <section id="values" className="section-margin relative">
                 {/* <Image 
                     src={ValueBg}
                     quality={100}
@@ -45,48 +45,48 @@ export default function Home() {
                     alt="home cover"
                     className="z-[-1]"
                 /> */}
-                <div className="wrapper flex flex-col md:flex-row gap-6 md:gap-0 md:h-[680px]">
-                    <div className="relative text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-full md:h-full aspect-[5/7]">
+                <div className="wrapper flex flex-col md:flex-row gap-6 items-center">
+                    <div className="relative md:w-4/12 w-full text-white flex justify-end flex-col rounded-3xl overflow-hidden aspect-[5/6]">
                         <Image 
                             src={Value1}
                             quality={100}
                             fill={true}
                             sizes="100%"
-                            style={{objectFit:"contain"}}
+                            style={{objectFit:"cover"}}
                             alt="home cover"
                             className="z-[-1]"
                         />
-                        <div className="md:px-24 px-44">
+                        <div className="p-10 pb-20 md:pb-10 lg:pb-20">
                             <h3 className="text-[17px]">Sécurité</h3>
                             <p className="text-[17px]">“Chaque trajet est sécurisé, chaque kilomètre est serein.”</p>
                         </div>
                     </div>
-                    <div className="relative w-4/6	text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-full md:h-full aspect-[5/7]">
+                    <div className="relative md:w-6/12 w-full text-white flex justify-end flex-col rounded-3xl overflow-hidden aspect-[5/6]">
                         <Image 
                             src={Value2}
                             quality={100}
                             fill={true}
                             sizes="100%"
-                            style={{objectFit:"contain"}}
+                            style={{objectFit:"cover"}}
                             alt="home cover"
                             className="z-[-1]"
                         />
-                        <div className="px-10">
+                        <div className="p-10 pb-20 md:pb-10 lg:pb-20">
                             <h3 className="text-[22px]">Communauté</h3>
                             <p className="text-[22px]">“Plus qu'un trajet, une rencontre”</p>
                         </div>
                     </div>
-                    <div className="relative text-white flex justify-center flex-col rounded-3xl overflow-hidden md:w-full h-full md:h-full aspect-[5/7]">
+                    <div className="relative md:w-4/12 w-full text-white flex justify-end flex-col rounded-3xl overflow-hidden aspect-[5/6]">
                         <Image 
                             src={Value3}
                             quality={100}
                             fill={true}
                             sizes="100%"
-                            style={{objectFit:"contain"}}
+                            style={{objectFit:"cover"}}
                             alt="home cover"
                             className="z-[-1]"
                         />
-                        <div className="md:pl-14 md:pr-24 pl-24 pr-48">
+                        <div className="p-10 pb-20 md:pb-10 lg:pb-20">
                             <h3 className="text-[17px]">Écologique</h3>
                             <p className="text-[17px]">“Chaque trajet partagé, c'est une voiture en moins sur la route"</p>
                         </div>
@@ -96,7 +96,7 @@ export default function Home() {
 
             <section id="safe" className="wrapper flex md:gap-28 gap-10 items-center flex-col md:flex-row">
                 <div className="md:w-7/12">
-                    <h2 className="title-line w-full font-staatliches text-center mb-10 text-[--black-taupe] title-line">Safe & Simple</h2>
+                    <h2 className="title-line w-full font-staatliches text-center mb-10 text-[--black-taupe] title-line leading-tight">Safe & Simple</h2>
                     <p className="mb-3">Avec RutaFem, chaque trajet devient une expérience sereine et confiante. Grâce à des profils vérifiés, une localisation en temps réel et une communauté bienveillante, nous créons un environnement où la confiance est au cœur de chaque échange.</p>
                     <p className="mb-3">Imaginez partager la route avec des femmes qui, comme vous, cherchent des trajets sûrs et enrichissants. Chaque détail de l'application est pensé pour que vous voyagiez l'esprit léger : connectée à vos proches et entourée d'une communauté solidaire.</p>
                     <p className="mb-3">Voyager en sécurité, c'est aussi voyager avec sérénité. </p>
@@ -173,7 +173,7 @@ export default function Home() {
                     />
                 </div>
                 <div className="md:w-1/2 order-first md:order-last">
-                    <h2 className="font-staatliches text-center mb-10 text-[--black-taupe]">Une communauté sororale</h2>
+                    <h2 className="font-staatliches text-center mb-10 text-[--black-taupe] leading-tight">Une communauté sororale</h2>
                     <p className="mb-3 font-semibold">"Plus qu'un trajet, une rencontre."</p>
                     <p className="mb-3">Chez RutaFem, chaque trajet est bien plus qu'un simple déplacement : c'est une opportunité de rencontre et de partage.</p>
                     <p className="mb-3">Rejoignez une communauté de voyageuses bienveillantes où chacune peut échanger des conseils, partager des bons plans et créer des liens en toute confiance.</p>
@@ -276,7 +276,7 @@ export default function Home() {
             <section id="notify" className="section-margin wrapper bg-linear text-white flex gap-5 flex-col md:flex-row">
                 <div className="w-full md:w-8/12 p-10">
                     <h3 className="mb-10 text-[40px] font-bold">Ne ratez pas notre lancement!</h3>
-                    <p className="mb-2">Être averti lors de la sortie officielle de l'application RutaFem</p>
+                    <p className="mb-2">Être averti lors de la sortie officielle de l'application RutaFem.</p>
                     <EmailForm />
                 </div>
                 <div className="relative w-full md:w-4/12">
