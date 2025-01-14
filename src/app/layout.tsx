@@ -8,8 +8,8 @@ import { Favicon } from '@/images';
 // EXPORT METADATA
 import type { Metadata } from "next";
 export const metadata: Metadata = {
-    title: "Rutafem",
-    description: "Rutafem est solution de covoiturgae pour les femmes",
+    title: "Covoiturage 100% féminin - Sécurité et convivialité avec RutaFem",
+    description: "Meta description: Covoiturage 100% féminin avec RutaFem : sécurité, convivialité et trajets partagés entre pour voyager en toute sécurité.",
     icons: [
         {
           rel: "icon",
