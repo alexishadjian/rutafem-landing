@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ScrollState from "@/components/ScrollState";
 import { Favicon } from '@/images';
-import Analytics from "@/components/Analytics";
+import Analytics from "@/components/analytics";
 
 
 
