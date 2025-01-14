@@ -41,9 +41,9 @@ export default function Header() {
                     </div>
                     
                     <Link href="/#about" className="hover:text-[--accent-color] transition-all duration-300">Nous connaitre</Link>
-                    <Link href="/#advantage1" className="hover:text-[--accent-color] transition-all duration-300">Safe & Simple</Link>
-                    <Link href="/#values" className="hover:text-[--accent-color] transition-all duration-300">Communauté</Link>
-                    <Link href="/#cta" className="hover:text-[--accent-color] transition-all duration-300">M'avertir</Link>
+                    <Link href="/#safe" className="hover:text-[--accent-color] transition-all duration-300">Safe & Simple</Link>
+                    <Link href="/#community" className="hover:text-[--accent-color] transition-all duration-300">Communauté</Link>
+                    <Link href="/#notify" className="hover:text-[--accent-color] transition-all duration-300">M'avertir</Link>
                 </nav>
 
                 <div className="hidden lg:block">
