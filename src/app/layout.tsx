@@ -2,6 +2,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ScrollState from "@/components/ScrollState";
 import { Favicon } from '@/images';
+import { GoogleAnalytics } from "nextjs-google-analytics";
 
 
 
@@ -62,6 +63,7 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
                 </main>
                 <Footer />
             </body>
+            <GoogleAnalytics trackPageViews />
         </html>
     );
 }
