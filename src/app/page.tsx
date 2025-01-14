@@ -94,7 +94,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="advantage1" className="wrapper flex md:gap-28 gap-10 items-center flex-col md:flex-row">
+            <section id="safe" className="wrapper flex md:gap-28 gap-10 items-center flex-col md:flex-row">
                 <div className="md:w-7/12">
                     <h2 className="title-line w-full font-staatliches text-center mb-10 text-[--black-taupe] title-line">Safe & Simple</h2>
                     <p className="mb-3">Avec RutaFem, chaque trajet devient une expérience sereine et confiante. Grâce à des profils vérifiés, une localisation en temps réel et une communauté bienveillante, nous créons un environnement où la confiance est au cœur de chaque échange.</p>
@@ -160,7 +160,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="advantage2" className="section-margin wrapper flex gap-10 md:gap-24 flex-col items-center md:flex-row">
+            <section id="community" className="section-margin wrapper flex gap-10 md:gap-24 flex-col items-center md:flex-row">
                 <div className="relative w-full md:w-1/2 rounded-bl-[300px] md:rounded-bl-[400px] rounded-tr-3xl overflow-hidden aspect-square">
                     <Image 
                         src={Advantage2}
@@ -273,7 +273,7 @@ export default function Home() {
                 </div>
             </section>
 
-            <section id="cta" className="section-margin wrapper bg-linear text-white flex gap-5 flex-col md:flex-row">
+            <section id="notify" className="section-margin wrapper bg-linear text-white flex gap-5 flex-col md:flex-row">
                 <div className="w-full md:w-8/12 p-10">
                     <h3 className="mb-10 text-[40px] font-bold">Ne ratez pas notre lancement!</h3>
                     <p className="mb-2">Être averti lors de la sortie officielle de l'application RutaFem</p>
