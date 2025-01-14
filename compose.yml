@@ -5,6 +5,8 @@ services:
       context: ./
       dockerfile: ./src/Dockerfile.dev
     working_dir: /home/node/app
+    env_file:
+      - ./src/.env.local
     ports:
       - '3000:3000'
     volumes:
