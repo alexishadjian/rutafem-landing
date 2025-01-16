@@ -13,7 +13,7 @@ export default function EmailForm() {
 
         try {
             await emailjs.sendForm(
-              "service_07ge8sr",
+              "service_9w1g2xi",
               "template_nm0519m",
               form.current!,
               "26bQ6jzfktTOHQ20T"
