@@ -17,8 +17,9 @@ export default function Footer() {
                 <Socials />
 
                 <div className="flex flex-col gap-2 text-center md:text-left">
-                    <Link href="/mentions-legales" className="text-white">Mentions légales</Link>
                     <Link href="/politique-de-confidentialite" className="text-white">Politique de confidentialité</Link>
+                    <Link href="/conditions-generales-de-vente" className="text-white">Conditions générales de vente</Link>
+                    <Link href="/mentions-legales" className="text-white">Mentions légales</Link>
                 </div>
             </div>
         </div>
