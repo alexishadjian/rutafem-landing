@@ -47,6 +47,10 @@ cd rutafem-landing
 make install
 ````
 
+3/ **Set up environment variables:**
+
+Copy the .env.sample file to .env.
+
 ## Running the Project
 
 ### Development
