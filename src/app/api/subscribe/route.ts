@@ -1,9 +1,7 @@
 import { NextResponse } from "next/server";
-import fs from "fs";
-import path from "path";
 
 
-export async function POST(req: Request, res: NextResponse) {
+export async function POST(req: Request) {
     try {
         const { email } = await req.json();
 
