@@ -34,11 +34,11 @@ To run this project, you need to have the following dependencies installed:
 1/ **Clone the repository:**
 
 ````sh
-git clone https://github.com/alexishadjian/mds-startup-landing
+git clone https://github.com/alexishadjian/rutafem-landing
 ````
 
 ````sh
-cd mds-startup-landing
+cd rutafem-landing
 ````
 
 2/ **Install dependencies:**

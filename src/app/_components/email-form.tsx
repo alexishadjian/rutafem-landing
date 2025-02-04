@@ -1,40 +1,49 @@
 "use client";
 
-import { useRef, useState } from "react";
-import emailjs from "@emailjs/browser";
+import { useState } from "react";
 
-export default function EmailForm() {
-    const form = useRef<HTMLFormElement>(null);
+export default function NewsletterForm() {
+    const [email, setEmail] = useState("");
+    const [message, setMessage] = useState("");
     const [isSending, setIsSending] = useState(false);
 
-    const sendEmail = async (e: React.FormEvent) => {
+
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSending(true);
 
         try {
-            await emailjs.sendForm(
-              "service_9w1g2xi",
-              "template_nm0519m",
-              form.current!,
-              "26bQ6jzfktTOHQ20T"
-            );
-            // alert("Email envoyé avec succès !");
+            const res = await fetch("/api/subscribe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ email }),
+            });
+            const data = await res.json();
+            setMessage(data.message);
         } catch (error) {
-            console.error("Erreur : ", error);
-            // alert("Une erreur s'est produite.");
+            console.error("Erreur :", error);
+            setMessage("Une erreur s'est produite.");
         } finally {
             setIsSending(false);
         }
-    }
+    };
 
     return (
         <div>
-            <form ref={form} onSubmit={sendEmail}>
+            <form onSubmit={handleSubmit}>
                 <div className="flex gap-4 mb-6 flex-col sm:flex-row">
-                    <input type="email" name="email" id="email" placeholder="nom@domain.fr" required className="p-4 text-black rounded-xl md:w-1/2" />
+                    <input 
+                        type="email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="nom@domain.fr" 
+                        className="p-4 text-black rounded-xl md:w-1/2" 
+                        required
+                    />
                     <button type="submit" disabled={isSending} className="py-4 px-10 bg-white font-semibold text-[--accent-color] rounded-xl hover:bg-[--accent-color] hover:text-white transition-all duration-300">
                         {isSending ? "Envoi en cours..." : "Envoyer"}
                     </button>
+                    {message && <p>{message}</p>}
                 </div>
                 <div className="text-select-none cursor-pointer flex gap-2">
                     <input type="checkbox" name="accept" id="accept" required className="bg-transparent cursor-pointer" />
@@ -43,4 +52,4 @@ export default function EmailForm() {
             </form>
         </div>
     );
-};
+}
