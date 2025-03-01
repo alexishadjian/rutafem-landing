@@ -2,7 +2,7 @@ import Header from "@/components/header";
 import Footer from "@/components/footer";
 import ScrollState from "@/components/ScrollState";
 import { Favicon } from '@/images';
-import Analytics from "@/components/analytics";
+import GoogleAnalytics from '@/components/google-analytics';
 
 
 
@@ -55,6 +55,9 @@ import "./globals.css";
 export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
     return (
         <html lang="fr">
+            <head>
+                <GoogleAnalytics />
+            </head>
             <ScrollState />
             <body className={`${poppins.className} ${montserrat.variable} ${poppins.variable} ${staatliches.variable}`} suppressHydrationWarning>
                 <Header />
@@ -63,8 +66,6 @@ export default function RootLayout({children}: Readonly<{children: React.ReactNo
                 </main>
                 <Footer />
             </body>
-            <Analytics />
-            {/* <GoogleAnalytics trackPageViews /> */}
         </html>
     );
 }
