@@ -3,8 +3,9 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Metadata } from "next";
 
-type PageProps = {
+type Props = {
     params: { ville: string };
+    searchParams?: { [key: string]: string | string[] | undefined };
 };
 
 export async function generateStaticParams() {
@@ -13,7 +14,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
     const ville = villes.find((v) => v.slug === params.ville);
 
     if (!ville) {
@@ -28,7 +29,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
     };
 }
 
-export default function CovoiturageVillePage({ params }: PageProps) {
+export default async function CovoiturageVillePage({ params }: Props) {
     const ville = villes.find((v) => v.slug === params.ville);
 
     if (!ville) {
