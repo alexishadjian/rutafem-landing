@@ -5,7 +5,7 @@ import { Metadata } from "next";
 
 type Props = {
     params: { ville: string };
-    searchParams?: { [key: string]: string | string[] | undefined };
+    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
 };
 
 export async function generateStaticParams() {
