@@ -2,9 +2,10 @@ import { villes } from "@/datas/villes";
 import { notFound } from "next/navigation";
 import Link from "next/link";
 
-interface VilleParams {
+type Props = {
     params: { ville: string };
-}
+    searchParams: { [key: string]: string | string[] | undefined };
+};
 
 export async function generateStaticParams() {
     return villes.map((ville) => ({
@@ -12,7 +13,7 @@ export async function generateStaticParams() {
     }));
 }
 
-export async function generateMetadata({ params }: VilleParams) {
+export async function generateMetadata({ params }: Props) {
     const ville = villes.find((v) => v.slug === params.ville);
 
     if (!ville) {
@@ -27,7 +28,7 @@ export async function generateMetadata({ params }: VilleParams) {
     };
 }
 
-export default function CovoiturageVillePage({ params }: VilleParams) {
+export default function CovoiturageVillePage({ params }: Props) {
     const ville = villes.find((v) => v.slug === params.ville);
 
     if (!ville) {
