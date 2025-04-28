@@ -4,47 +4,56 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 type Props = {
+    params: Promise<{ city: string }>
     searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 };
 
 export async function generateStaticParams() {
-    return villes.map((ville) => ({
-        ville: ville.slug,
+    return villes.map((city) => ({
+        city: city.slug,
     }));
 }
 
-export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
-    const ville = villes.find(async (v) => v.slug === (await searchParams).ville);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
-    if (!ville) {
+    console.log('params', await params);
+    console.log('params.city', (await params).city);
+
+    const slugCity = (await params).city;
+    const city = villes.find((v) => v.slug === slugCity);
+    console.log('city', city);
+
+    if (!city) {
         return {
             title: "Page non trouvée",
         };
     }
 
     return {
-        title: `Covoiturage à ${ville.nom} entre femmes - RutaFem`,
-        description: `Covoiturage femme à ${ville.nom} avec RutaFem : sécurité, confort et convivialité pour vos trajets entre femmes.`,
+        title: `Covoiturage à ${city.name} entre femmes - RutaFem`,
+        description: `Covoiturage femme à ${city.name} avec RutaFem : sécurité, confort et convivialité pour vos trajets entre femmes.`,
     };
 }
 
-export default async function CovoiturageVillePage({ searchParams }: Props) {
-    const ville = villes.find(async (v) => v.slug === (await searchParams).ville);
+export default async function CovoiturageVillePage({ params }: Props) {
 
-    if (!ville) {
+    const slugCity = (await params).city;
+    const city = villes.find((v) => v.slug === slugCity);
+
+    if (!city) {
         notFound();
     }
 
     return (
         <main className="wrapper py-8">
-            <h1 className="text-3xl font-bold mb-4">Covoiturage à {ville.nom} entre femmes</h1>
+            <h1 className="text-3xl font-bold mb-4">Covoiturage à {city.name} entre femmes</h1>
             <p className="mb-6">
-                Vous cherchez un covoiturage 100% féminin à {ville.nom} ? Avec RutaFem, profitez de trajets partagés entre femmes en toute sécurité et convivialité.
+                Vous cherchez un covoiturage 100% féminin à {city.name} ? Avec RutaFem, profitez de trajets partagés entre femmes en toute sécurité et convivialité.
             </p>
 
-            <h2 className="text-2xl font-semibold mb-2">Des trajets sécurisés dans les quartiers de {ville.nom}</h2>
+            <h2 className="text-2xl font-semibold mb-2">Des trajets sécurisés dans les quartiers de {city.name}</h2>
             <ul className="list-disc list-inside mb-6">
-                {ville.quartiers.map((quartier: string) => (
+                {city.quartiers.map((quartier: string) => (
                     <li key={quartier}>Disponible à {quartier}</li>
                 ))}
             </ul>
@@ -53,7 +62,7 @@ export default async function CovoiturageVillePage({ searchParams }: Props) {
                 href="/#notify"
                 className="inline-block bg-pink-500 text-white py-2 px-6 mb-8 rounded-lg hover:bg-pink-600 transition"
             >
-                Rejoindre RutaFem à {ville.nom}
+                Rejoindre RutaFem à {city.name}
             </Link>
 
             <div className="mb-8">
@@ -65,7 +74,7 @@ export default async function CovoiturageVillePage({ searchParams }: Props) {
                             href={`/covoiturage/${v.slug}`}
                             className="block p-4 border rounded-lg hover:bg-gray-50 transition"
                         >
-                            <h3 className="font-medium">{v.nom}</h3>
+                            <h3 className="font-medium">{v.name}</h3>
                             <p className="text-sm text-gray-600">{v.quartiers.length} quartiers disponibles</p>
                         </Link>
                     ))}
