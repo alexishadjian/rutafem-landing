@@ -4,8 +4,7 @@ import Link from "next/link";
 import { Metadata } from "next";
 
 type Props = {
-    params: { ville: string };
-    searchParams?: Promise<{ [key: string]: string | string[] | undefined }>
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 };
 
 export async function generateStaticParams() {
@@ -14,8 +13,8 @@ export async function generateStaticParams() {
     }));
 }
 
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-    const ville = villes.find((v) => v.slug === params.ville);
+export async function generateMetadata({ searchParams }: Props): Promise<Metadata> {
+    const ville = villes.find(async (v) => v.slug === (await searchParams).ville);
 
     if (!ville) {
         return {
@@ -29,8 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     };
 }
 
-export default async function CovoiturageVillePage({ params }: Props) {
-    const ville = villes.find((v) => v.slug === params.ville);
+export default async function CovoiturageVillePage({ searchParams }: Props) {
+    const ville = villes.find(async (v) => v.slug === (await searchParams).ville);
 
     if (!ville) {
         notFound();
