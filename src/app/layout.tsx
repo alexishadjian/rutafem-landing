@@ -9,13 +9,13 @@ import GoogleAnalytics from '@/components/google-analytics';
 // EXPORT METADATA
 import type { Metadata } from "next";
 export const metadata: Metadata = {
-    title: "Covoiturage 100% féminin - Sécurité et convivialité avec RutaFem",
-    description: "Meta description: Covoiturage 100% féminin avec RutaFem : sécurité, convivialité et trajets partagés entre pour voyager en toute sécurité.",
+    title: "Covoiturage entre femmes - Sécurité et convivialité avec RutaFem",
+    description: "Meta description: Covoiturage entre femmes avec RutaFem : sécurité, convivialité et trajets partagés entre femmes pour voyager en toute sécurité.",
     icons: [
         {
-          rel: "icon",
-          type: "image/png",
-          url: Favicon.src,
+            rel: "icon",
+            type: "image/png",
+            url: Favicon.src,
         },
     ],
 };
@@ -52,7 +52,7 @@ export const staatliches = Staatliches({
 import "./globals.css";
 
 
-export default function RootLayout({children}: Readonly<{children: React.ReactNode}>) {
+export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
     return (
         <html lang="fr">
             <head>
