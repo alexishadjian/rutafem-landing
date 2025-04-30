@@ -11,6 +11,7 @@ import type { Metadata } from "next";
 export const metadata: Metadata = {
     title: "Covoiturage entre femmes - Sécurité et convivialité avec RutaFem",
     description: "Meta description: Covoiturage entre femmes avec RutaFem : sécurité, convivialité et trajets partagés entre femmes pour voyager en toute sécurité.",
+    keywords: ["covoiturage", "femmes", "sécurité", "convivialité", "trajets partagés", "voyage", "RutaFem"],
     icons: [
         {
             rel: "icon",
