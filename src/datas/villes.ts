@@ -29,6 +29,6 @@ export const villes = [
     { slug: "tours", name: "Tours", quartiers: ["Centre-Ville", "Les Halles", "Vieux-Tours"] },
     { slug: "orleans", name: "Orléans", quartiers: ["Centre-Ville", "La Source", "Saint-Jean"] },
     { slug: "valence", name: "Valence", quartiers: ["Centre-Ville", "Fontbarlettes", "Châteauvert"] },
-    { slug: "nîmes", name: "Nîmes", quartiers: ["Centre-Ville", "Les Hauts de Nîmes", "La Placette"] },
+    { slug: "nimes", name: "Nîmes", quartiers: ["Centre-Ville", "Les Hauts de Nîmes", "La Placette"] },
     { slug: "cannes", name: "Cannes", quartiers: ["La Croisette", "Le Suquet", "Carnot"] },
 ];
