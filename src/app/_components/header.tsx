@@ -162,11 +162,11 @@ export default function Header() {
                         M&apos;avertir
                     </Link>
                     <Link
-                        href="/create-trip"
+                        href="/join-trip"
                         className="hover:text-[--accent-color] transition-all duration-300"
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        Créer un trajet
+                        Rejoindre un trajet
                     </Link>
                 </nav>
 
