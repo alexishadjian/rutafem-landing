@@ -168,6 +168,14 @@ export default function Header() {
                     >
                         Rejoindre un trajet
                     </Link>
+
+                    <Link
+                        href="/auth/login"
+                        className="lg:hidden hover:text-[--accent-color] transition-all duration-300"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Se connecter
+                    </Link>
                 </nav>
 
                 <div className="hidden lg:block">
