@@ -66,15 +66,15 @@ export default function TripFormStep({
     };
 
     return (
-        <div className="p-6 mt-10">
-            <div className="bg-gray-100 rounded-3xl p-6 md:p-8">
-                <div className="max-w-2xl mx-auto">
-                    <h2 className="text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-6 text-center">
+        <div className="p-4 sm:p-6 mt-6 sm:mt-10">
+            <div className="bg-gray-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+                <div className="max-w-4xl mx-auto">
+                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-4 sm:mb-6 text-center">
                         Créer ton trajet
                     </h2>
 
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label
                                     htmlFor="departure"
@@ -87,13 +87,15 @@ export default function TripFormStep({
                                     id="departure"
                                     value={formData.departure}
                                     onChange={(e) => handleInputChange('departure', e.target.value)}
-                                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent ${
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
                                         errors.departure ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                     placeholder="Ex: Paris"
                                 />
                                 {errors.departure && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.departure}</p>
+                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                                        {errors.departure}
+                                    </p>
                                 )}
                             </div>
 
@@ -110,18 +112,20 @@ export default function TripFormStep({
                                     id="arrival"
                                     value={formData.arrival}
                                     onChange={(e) => handleInputChange('arrival', e.target.value)}
-                                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent ${
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
                                         errors.arrival ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                     placeholder="Ex: Lyon"
                                 />
                                 {errors.arrival && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.arrival}</p>
+                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                                        {errors.arrival}
+                                    </p>
                                 )}
                             </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label
                                     htmlFor="date"
@@ -134,12 +138,14 @@ export default function TripFormStep({
                                     id="date"
                                     value={formData.date}
                                     onChange={(e) => handleInputChange('date', e.target.value)}
-                                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent ${
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
                                         errors.date ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 />
                                 {errors.date && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.date}</p>
+                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                                        {errors.date}
+                                    </p>
                                 )}
                             </div>
 
@@ -155,7 +161,7 @@ export default function TripFormStep({
                                     id="seats"
                                     value={formData.seats}
                                     onChange={(e) => handleInputChange('seats', e.target.value)}
-                                    className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent ${
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
                                         errors.seats ? 'border-red-500' : 'border-gray-300'
                                     }`}
                                 >
@@ -165,57 +171,66 @@ export default function TripFormStep({
                                     <option value="4">4 places</option>
                                 </select>
                                 {errors.seats && (
-                                    <p className="text-red-500 text-sm mt-1">{errors.seats}</p>
+                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                                        {errors.seats}
+                                    </p>
                                 )}
                             </div>
                         </div>
 
-                        <div>
-                            <label
-                                htmlFor="price"
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Prix par place (€) <span className="text-[--accent-color]">*</span>
-                            </label>
-                            <input
-                                type="number"
-                                id="price"
-                                min="0"
-                                step="0.50"
-                                value={formData.price}
-                                onChange={(e) => handleInputChange('price', e.target.value)}
-                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent ${
-                                    errors.price ? 'border-red-500' : 'border-gray-300'
-                                }`}
-                                placeholder="Ex: 25.00"
-                            />
-                            {errors.price && (
-                                <p className="text-red-500 text-sm mt-1">{errors.price}</p>
-                            )}
-                        </div>
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+                            <div>
+                                <label
+                                    htmlFor="price"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Prix par place (€){' '}
+                                    <span className="text-[--accent-color]">*</span>
+                                </label>
+                                <input
+                                    type="number"
+                                    id="price"
+                                    min="0"
+                                    step="0.50"
+                                    value={formData.price}
+                                    onChange={(e) => handleInputChange('price', e.target.value)}
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
+                                        errors.price ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    placeholder="Ex: 25.00"
+                                />
+                                {errors.price && (
+                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                                        {errors.price}
+                                    </p>
+                                )}
+                            </div>
 
-                        <div>
-                            <label
-                                htmlFor="departure-place"
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Lieu de départ <span className="text-[--accent-color]">*</span>
-                            </label>
-                            <textarea
-                                id="departure-place"
-                                rows={1}
-                                value={formData.departurePlace}
-                                onChange={(e) =>
-                                    handleInputChange('departurePlace', e.target.value)
-                                }
-                                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent ${
-                                    errors.departurePlace ? 'border-red-500' : 'border-gray-300'
-                                }`}
-                                placeholder="Ex: Gare de Lyon, 75000 Paris"
-                            />
-                            {errors.departurePlace && (
-                                <p className="text-red-500 text-sm mt-1">{errors.departurePlace}</p>
-                            )}
+                            <div>
+                                <label
+                                    htmlFor="departure-place"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Lieu de départ <span className="text-[--accent-color]">*</span>
+                                </label>
+                                <textarea
+                                    id="departure-place"
+                                    rows={1}
+                                    value={formData.departurePlace}
+                                    onChange={(e) =>
+                                        handleInputChange('departurePlace', e.target.value)
+                                    }
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base resize-none ${
+                                        errors.departurePlace ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    placeholder="Ex: Gare de Lyon, 75000 Paris"
+                                />
+                                {errors.departurePlace && (
+                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                                        {errors.departurePlace}
+                                    </p>
+                                )}
+                            </div>
                         </div>
 
                         <div>
@@ -230,21 +245,24 @@ export default function TripFormStep({
                                 rows={3}
                                 value={formData.description}
                                 onChange={(e) => handleInputChange('description', e.target.value)}
-                                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent"
+                                className="w-full px-3 sm:px-4 py-2.5 sm:py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base resize-none"
                                 placeholder="Précisions sur le trajet, points de rencontre..."
                             />
                         </div>
 
-                        <div className="flex justify-between mt-8">
+                        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8 pt-4 border-t border-gray-200">
                             <button
                                 type="button"
                                 onClick={onBack}
-                                className="px-6 py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                                className="order-2 sm:order-1 px-4 sm:px-6 py-2.5 sm:py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
                             >
                                 ← Retour
                             </button>
 
-                            <button type="submit" className="btn px-8 py-3">
+                            <button
+                                type="submit"
+                                className="order-1 sm:order-2 btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
+                            >
                                 Continuer -&gt;
                             </button>
                         </div>
