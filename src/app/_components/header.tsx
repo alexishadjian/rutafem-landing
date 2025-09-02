@@ -161,6 +161,13 @@ export default function Header() {
                     >
                         M&apos;avertir
                     </Link>
+                    <Link
+                        href="/create-trip"
+                        className="hover:text-[--accent-color] transition-all duration-300"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Créer un trajet
+                    </Link>
                 </nav>
 
                 <div className="hidden lg:block">
