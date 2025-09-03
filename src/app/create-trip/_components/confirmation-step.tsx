@@ -1,3 +1,5 @@
+import { useRouter } from 'next/navigation';
+
 type TripFormData = {
     departure: string;
     arrival: string;
@@ -13,7 +15,9 @@ type ConfirmationStepProps = {
     onBack: () => void;
 };
 
-export default function ConfirmationStep({ formData, onBack }: ConfirmationStepProps) {
+export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
+    const router = useRouter();
+
     const formatDate = (dateString: string) => {
         if (!dateString) return '[Date non spécifiée]';
         const date = new Date(dateString);
@@ -129,7 +133,7 @@ export default function ConfirmationStep({ formData, onBack }: ConfirmationStepP
 
                     <div className="flex justify-center">
                         <button
-                            onClick={onBack}
+                            onClick={() => router.push('/join-trip')}
                             className="btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
                         >
                             ← Retour au formulaire
