@@ -1,3 +1,193 @@
+'use client';
+
+import { useAuth } from '@/contexts/AuthContext';
+import { logoutUser } from '@/lib/firebaseAuth';
+import { useRouter } from 'next/navigation';
+
 export default function ProfilePage() {
-    return <div>profile</div>;
+    const { user, userProfile, loading } = useAuth();
+    const router = useRouter();
+
+    const handleLogout = async () => {
+        try {
+            await logoutUser();
+            router.push('/auth/login');
+        } catch (error) {
+            console.error('Erreur lors de la déconnexion:', error);
+        }
+    };
+
+    if (loading) {
+        return (
+            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Chargement de votre profil...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (!user || !userProfile) {
+        router.push('/auth/login');
+        return null;
+    }
+
+    return (
+        <div className="min-h-screen bg-gray-100 py-8 px-4">
+            <div className="max-w-2xl mx-auto">
+                <div className="text-center mb-8">
+                    <h1 className="text-4xl font-bold text-gray-900 mb-2">RutaFem</h1>
+                    <h2 className="text-2xl font-semibold text-gray-700">Mon Profil</h2>
+                </div>
+
+                <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
+                    {/* En-tête du profil */}
+                    <div className="text-center pb-6 border-b border-gray-200">
+                        <div className="w-24 h-24 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <svg
+                                className="w-12 h-12 text-white"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                />
+                            </svg>
+                        </div>
+                        <h3 className="text-xl font-semibold text-gray-900">{userProfile.email}</h3>
+                    </div>
+
+                    {/* Informations du profil */}
+                    <div className="space-y-4">
+                        <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                            <span className="text-sm font-medium text-gray-600">Email</span>
+                            <span className="text-sm text-gray-900">{userProfile.email}</span>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                            <span className="text-sm font-medium text-gray-600">
+                                Statut de vérification
+                            </span>
+                            <span
+                                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                    userProfile.isVerified
+                                        ? 'bg-green-100 text-green-800'
+                                        : 'bg-yellow-100 text-yellow-800'
+                                }`}
+                            >
+                                {userProfile.isVerified ? (
+                                    <>
+                                        <svg
+                                            className="w-4 h-4 mr-1"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        Vérifié
+                                    </>
+                                ) : (
+                                    <>
+                                        <svg
+                                            className="w-4 h-4 mr-1"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        En attente de vérification
+                                    </>
+                                )}
+                            </span>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                            <span className="text-sm font-medium text-gray-600">
+                                Compte créé le
+                            </span>
+                            <span className="text-sm text-gray-900">
+                                {userProfile.createdAt.toLocaleDateString('fr-FR', {
+                                    year: 'numeric',
+                                    month: 'long',
+                                    day: 'numeric',
+                                })}
+                            </span>
+                        </div>
+                    </div>
+
+                    {/* Notice de vérification */}
+                    {!userProfile.isVerified && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <svg
+                                        className="h-5 w-5 text-blue-400"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-blue-800">
+                                        Vérification en cours
+                                    </h3>
+                                    <div className="mt-2 text-sm text-blue-700">
+                                        <p>
+                                            Votre profil est en cours de vérification par notre
+                                            équipe.
+                                        </p>
+                                        <p className="mt-1">
+                                            Vous recevrez une notification une fois la vérification
+                                            terminée.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Actions */}
+                    <div className="pt-6 space-y-4">
+                        <button
+                            onClick={handleLogout}
+                            className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors duration-200"
+                        >
+                            <svg
+                                className="w-5 h-5 mr-2 text-gray-500"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                                />
+                            </svg>
+                            Se déconnecter
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    );
 }
