@@ -27,44 +27,24 @@ const getErrorMessage = (errorCode: string): string => {
 export const registerUser = async (
     email: string,
     password: string,
-    idCardFront: File,
-    idCardBack: File,
+    firstName: string,
+    lastName: string,
+    phoneNumber: string,
 ) => {
     try {
-        if (!idCardFront || !idCardBack) {
-            throw new Error("Les deux faces de la carte d'identité sont requises");
-        }
-
-        const maxSize = 5 * 1024 * 1024;
-        if (idCardFront.size > maxSize || idCardBack.size > maxSize) {
-            throw new Error('Les fichiers doivent faire moins de 5MB');
-        }
-
-        const allowedTypes = ['image/jpeg', '<`image/jpg`>', 'image/png', 'application/pdf'];
-        if (!allowedTypes.includes(idCardFront.type) || !allowedTypes.includes(idCardBack.type)) {
-            throw new Error('Seuls les formats JPG, PNG et PDF sont acceptés');
-        }
-
         // Créer l'utilisateur avec Firebase Auth
         const userCredential = await createUserWithEmailAndPassword(auth, email, password);
         const user = userCredential.user;
 
-        // Upload des cartes d'identité
-        const frontRef = ref(storage, `id-cards/${user.uid}/front.jpg`);
-        const backRef = ref(storage, `id-cards/${user.uid}/back.jpg`);
-
-        await uploadBytes(frontRef, idCardFront);
-        await uploadBytes(backRef, idCardBack);
-
-        const frontUrl = await getDownloadURL(frontRef);
-        const backUrl = await getDownloadURL(backRef);
-
         // Créer le profil utilisateur dans Firestore
         await setDoc(doc(db, 'users', user.uid), {
             email: user.email,
+            firstName,
+            lastName,
+            phoneNumber,
+            role: 'passenger',
             isVerified: false,
-            idCardFront: frontUrl,
-            idCardBack: backUrl,
+            isUserVerified: false,
             createdAt: new Date(),
             verificationStatus: 'pending',
         });
@@ -104,13 +84,108 @@ export const logoutUser = async () => {
     }
 };
 
-export const updateUserVerification = async (uid: string, isVerified: boolean) => {
+export const uploadVerificationDocuments = async (
+    uid: string,
+    idCardFront: File,
+    idCardBack: File,
+    driverLicense?: File,
+) => {
     try {
-        await updateDoc(doc(db, 'users', uid), {
+        // Validation des fichiers
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+
+        if (idCardFront.size > maxSize || idCardBack.size > maxSize) {
+            throw new Error('Les fichiers doivent faire moins de 5MB');
+        }
+
+        if (!allowedTypes.includes(idCardFront.type) || !allowedTypes.includes(idCardBack.type)) {
+            throw new Error('Seuls les formats JPG, PNG et PDF sont acceptés');
+        }
+
+        // Upload des cartes d'identité
+        const frontFileName = `front_${Date.now()}.${idCardFront.name.split('.').pop()}`;
+        const backFileName = `back_${Date.now()}.${idCardBack.name.split('.').pop()}`;
+
+        const frontRef = ref(storage, `id-cards/${uid}/${frontFileName}`);
+        const backRef = ref(storage, `id-cards/${uid}/${backFileName}`);
+
+        await uploadBytes(frontRef, idCardFront);
+        await uploadBytes(backRef, idCardBack);
+
+        const frontUrl = await getDownloadURL(frontRef);
+        const backUrl = await getDownloadURL(backRef);
+
+        const updateData: {
+            idCardFront: string;
+            idCardBack: string;
+            verificationStatus: 'pending';
+            driverLicense?: string;
+            role?: 'driver';
+            driverVerificationStatus?: 'pending';
+        } = {
+            idCardFront: frontUrl,
+            idCardBack: backUrl,
+            verificationStatus: 'pending',
+        };
+
+        // Upload du permis de conduire si fourni
+        if (driverLicense) {
+            if (driverLicense.size > maxSize) {
+                throw new Error('Le permis de conduire doit faire moins de 5MB');
+            }
+            if (!allowedTypes.includes(driverLicense.type)) {
+                throw new Error('Le permis de conduire doit être au format JPG, PNG ou PDF');
+            }
+
+            const licenseFileName = `license_${Date.now()}.${driverLicense.name.split('.').pop()}`;
+            const licenseRef = ref(storage, `driver-licenses/${uid}/${licenseFileName}`);
+            await uploadBytes(licenseRef, driverLicense);
+            const licenseUrl = await getDownloadURL(licenseRef);
+
+            updateData.driverLicense = licenseUrl;
+            updateData.role = 'driver';
+            updateData.driverVerificationStatus = 'pending';
+        }
+
+        // Mettre à jour le profil utilisateur
+        await updateDoc(doc(db, 'users', uid), updateData);
+
+        return { success: true };
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error("Erreur lors de l'upload des documents");
+    }
+};
+
+export const updateUserVerification = async (
+    uid: string,
+    isVerified: boolean,
+    isUserVerified?: boolean,
+) => {
+    try {
+        const updateData: {
+            isVerified: boolean;
+            verificationStatus: 'verified' | 'rejected';
+            verifiedAt: Date;
+            isUserVerified?: boolean;
+            driverVerificationStatus?: 'verified' | 'rejected';
+            driverVerifiedAt?: Date;
+        } = {
             isVerified,
             verificationStatus: isVerified ? 'verified' : 'rejected',
             verifiedAt: new Date(),
-        });
+        };
+
+        if (isUserVerified !== undefined) {
+            updateData.isUserVerified = isUserVerified;
+            updateData.driverVerificationStatus = isUserVerified ? 'verified' : 'rejected';
+            updateData.driverVerifiedAt = new Date();
+        }
+
+        await updateDoc(doc(db, 'users', uid), updateData);
         return { success: true };
     } catch {
         throw new Error('Erreur lors de la mise à jour de la vérification');

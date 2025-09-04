@@ -9,13 +9,13 @@ export default function RegisterPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
-    const [idCardFront, setIdCardFront] = useState<File | null>(null);
-    const [idCardBack, setIdCardBack] = useState<File | null>(null);
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [phone, setPhone] = useState('');
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -31,8 +31,13 @@ export default function RegisterPage() {
             return;
         }
 
-        if (!idCardFront || !idCardBack) {
-            setError('Veuillez sélectionner les deux faces de votre carte d&apos;identité');
+        if (!firstName.trim() || !lastName.trim()) {
+            setError('Veuillez renseigner votre nom et prénom');
+            return;
+        }
+
+        if (!phoneNumber.trim()) {
+            setError('Veuillez renseigner votre numéro de téléphone');
             return;
         }
 
@@ -40,42 +45,12 @@ export default function RegisterPage() {
         setError('');
 
         try {
-            await registerUser(email, password, idCardFront, idCardBack);
+            await registerUser(email, password, firstName, lastName, phoneNumber);
             router.push('/auth/profile');
         } catch (error: unknown) {
             setError(error instanceof Error ? error.message : 'Une erreur est survenue');
         } finally {
             setLoading(false);
-        }
-    };
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, side: 'front' | 'back') => {
-        const file = e.target.files?.[0];
-        if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                setError('Le fichier doit faire moins de 5MB');
-                return;
-            }
-
-            if (!['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'].includes(file.type)) {
-                setError('Seuls les formats JPG, PNG et PDF sont acceptés');
-                return;
-            }
-
-            if (side === 'front') {
-                setIdCardFront(file);
-            } else {
-                setIdCardBack(file);
-            }
-            setError('');
-        }
-    };
-
-    const removeFile = (side: 'front' | 'back') => {
-        if (side === 'front') {
-            setIdCardFront(null);
-        } else {
-            setIdCardBack(null);
         }
     };
 
@@ -117,6 +92,43 @@ export default function RegisterPage() {
                     )}
 
                     <form onSubmit={handleSubmit} className="space-y-6">
+                        <div className="grid grid-cols-2 gap-4">
+                            <div>
+                                <label
+                                    htmlFor="firstName"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Prénom
+                                </label>
+                                <input
+                                    id="firstName"
+                                    type="text"
+                                    placeholder="Votre prénom"
+                                    value={firstName}
+                                    onChange={(e) => setFirstName(e.target.value)}
+                                    required
+                                    className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors duration-200"
+                                />
+                            </div>
+                            <div>
+                                <label
+                                    htmlFor="lastName"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
+                                >
+                                    Nom
+                                </label>
+                                <input
+                                    id="lastName"
+                                    type="text"
+                                    placeholder="Votre nom"
+                                    value={lastName}
+                                    onChange={(e) => setLastName(e.target.value)}
+                                    required
+                                    className="block w-full px-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors duration-200"
+                                />
+                            </div>
+                        </div>
+
                         <div>
                             <label
                                 htmlFor="email"
@@ -146,6 +158,41 @@ export default function RegisterPage() {
                                     placeholder="votre@email.com"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
+                                    required
+                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors duration-200"
+                                />
+                            </div>
+                        </div>
+
+                        <div>
+                            <label
+                                htmlFor="phoneNumber"
+                                className="block text-sm font-medium text-gray-700 mb-2"
+                            >
+                                Numéro de téléphone
+                            </label>
+                            <div className="relative">
+                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                    <svg
+                                        className="h-5 w-5 text-gray-400"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        stroke="currentColor"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+                                        />
+                                    </svg>
+                                </div>
+                                <input
+                                    id="phoneNumber"
+                                    type="tel"
+                                    placeholder="06 12 34 56 78"
+                                    value={phoneNumber}
+                                    onChange={(e) => setPhoneNumber(e.target.value)}
                                     required
                                     className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors duration-200"
                                 />
@@ -303,201 +350,6 @@ export default function RegisterPage() {
                                         </svg>
                                     )}
                                 </button>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label
-                                htmlFor="email"
-                                className="block text-sm font-medium text-gray-700 mb-2"
-                            >
-                                Numéro de téléphone
-                            </label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <svg
-                                        className="h-5 w-5 text-gray-400"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                        stroke="currentColor"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M3 5a2 2 0 012-2h2.28a2 2 0 011.94 1.515l.3 1.2a2 2 0 01-.45 1.95l-.7.7a16.001 16.001 0 006.586 6.586l.7-.7a2 2 0 011.95-.45l1.2.3A2 2 0 0121 16.72V19a2 2 0 01-2 2h-1C7.163 21 3 16.837 3 12V5z"
-                                        />
-                                    </svg>
-                                </div>
-                                <input
-                                    id="phone"
-                                    type="phone"
-                                    placeholder="06 00 00 00 00"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                    required
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors duration-200"
-                                />
-                            </div>
-                        </div>
-
-                        <div className="space-y-4">
-                            <div>
-                                <label
-                                    htmlFor="idCardFront"
-                                    className="block text-sm font-medium text-gray-700 mb-2"
-                                >
-                                    Carte d&apos;identité recto
-                                </label>
-                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-pink-400 transition-colors duration-200">
-                                    <div className="space-y-1 text-center">
-                                        {idCardFront ? (
-                                            <div className="flex items-center space-x-2">
-                                                <svg
-                                                    className="mx-auto h-12 w-12 text-green-400"
-                                                    stroke="currentColor"
-                                                    fill="none"
-                                                    viewBox="0 0 48 48"
-                                                >
-                                                    <path
-                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                        strokeWidth={2}
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                <div className="flex flex-col">
-                                                    <p className="text-sm text-gray-600">
-                                                        {idCardFront.name}
-                                                    </p>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeFile('front')}
-                                                        className="text-xs text-red-500 hover:text-red-700"
-                                                    >
-                                                        Supprimer
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <svg
-                                                    className="mx-auto h-12 w-12 text-gray-400"
-                                                    stroke="currentColor"
-                                                    fill="none"
-                                                    viewBox="0 0 48 48"
-                                                >
-                                                    <path
-                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                        strokeWidth={2}
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                <div className="flex text-sm text-gray-600">
-                                                    <label
-                                                        htmlFor="idCardFront"
-                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-pink-600 hover:text-pink-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500"
-                                                    >
-                                                        <span>Télécharger un fichier</span>
-                                                        <input
-                                                            id="idCardFront"
-                                                            type="file"
-                                                            accept="image/*"
-                                                            onChange={(e) =>
-                                                                handleFileChange(e, 'front')
-                                                            }
-                                                            required
-                                                            className="sr-only"
-                                                        />
-                                                    </label>
-                                                </div>
-                                                <p className="text-xs text-gray-500">
-                                                    PNG, JPG jusqu&apos;à 5MB
-                                                </p>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="idCardBack"
-                                    className="block text-sm font-medium text-gray-700 mb-2"
-                                >
-                                    Carte d&apos;identité verso
-                                </label>
-                                <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-pink-400 transition-colors duration-200">
-                                    <div className="space-y-1 text-center">
-                                        {idCardBack ? (
-                                            <div className="flex items-center space-x-2">
-                                                <svg
-                                                    className="mx-auto h-12 w-12 text-green-400"
-                                                    stroke="currentColor"
-                                                    fill="none"
-                                                    viewBox="0 0 48 48"
-                                                >
-                                                    <path
-                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                        strokeWidth={2}
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                <div className="flex flex-col">
-                                                    <p className="text-sm text-gray-600">
-                                                        {idCardBack.name}
-                                                    </p>
-                                                    <button
-                                                        type="button"
-                                                        onClick={() => removeFile('back')}
-                                                        className="text-xs text-red-500 hover:text-red-700"
-                                                    >
-                                                        Supprimer
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ) : (
-                                            <>
-                                                <svg
-                                                    className="mx-auto h-12 w-12 text-gray-400"
-                                                    stroke="currentColor"
-                                                    fill="none"
-                                                    viewBox="0 0 48 48"
-                                                >
-                                                    <path
-                                                        d="M28 8H12a4 4 0 00-4 4v20m32-12v8m0 0v8a4 4 0 01-4 4H12a4 4 0 01-4-4v-4m32-4l-3.172-3.172a4 4 0 00-5.656 0L28 28M8 32l9.172-9.172a4 4 0 015.656 0L28 28m0 0l4 4m4-24h8m-4-4v8m-12 4h.02"
-                                                        strokeWidth={2}
-                                                        strokeLinecap="round"
-                                                        strokeLinejoin="round"
-                                                    />
-                                                </svg>
-                                                <div className="flex text-sm text-gray-600">
-                                                    <label
-                                                        htmlFor="idCardBack"
-                                                        className="relative cursor-pointer bg-white rounded-md font-medium text-pink-600 hover:text-pink-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500"
-                                                    >
-                                                        <span>Télécharger un fichier</span>
-                                                        <input
-                                                            id="idCardBack"
-                                                            type="file"
-                                                            accept="image/*"
-                                                            onChange={(e) =>
-                                                                handleFileChange(e, 'back')
-                                                            }
-                                                            required
-                                                            className="sr-only"
-                                                        />
-                                                    </label>
-                                                </div>
-                                                <p className="text-xs text-gray-500">
-                                                    PNG, JPG jusqu&apos;à 5MB
-                                                </p>
-                                            </>
-                                        )}
-                                    </div>
-                                </div>
                             </div>
                         </div>
 

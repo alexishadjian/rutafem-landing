@@ -2,6 +2,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { logoutUser } from '@/lib/firebaseAuth';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 
 export default function ProfilePage() {
@@ -59,19 +60,47 @@ export default function ProfilePage() {
                                 />
                             </svg>
                         </div>
-                        <h3 className="text-xl font-semibold text-gray-900">{userProfile.email}</h3>
+                        <h3 className="text-xl font-semibold text-gray-900">
+                            {userProfile.firstName} {userProfile.lastName}
+                        </h3>
+                        <p className="text-gray-600">{userProfile.email}</p>
                     </div>
 
                     {/* Informations du profil */}
                     <div className="space-y-4">
+                        <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                            <span className="text-sm font-medium text-gray-600">Nom complet</span>
+                            <span className="text-sm text-gray-900">
+                                {userProfile.firstName} {userProfile.lastName}
+                            </span>
+                        </div>
+
                         <div className="flex items-center justify-between py-3 border-b border-gray-100">
                             <span className="text-sm font-medium text-gray-600">Email</span>
                             <span className="text-sm text-gray-900">{userProfile.email}</span>
                         </div>
 
                         <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                            <span className="text-sm font-medium text-gray-600">Téléphone</span>
+                            <span className="text-sm text-gray-900">{userProfile.phoneNumber}</span>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                            <span className="text-sm font-medium text-gray-600">Rôle</span>
+                            <span
+                                className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                    userProfile.role === 'driver'
+                                        ? 'bg-blue-100 text-blue-800'
+                                        : 'bg-gray-100 text-gray-800'
+                                }`}
+                            >
+                                {userProfile.role === 'driver' ? 'Chauffeuse' : 'Passagère'}
+                            </span>
+                        </div>
+
+                        <div className="flex items-center justify-between py-3 border-b border-gray-100">
                             <span className="text-sm font-medium text-gray-600">
-                                Statut de vérification
+                                Vérification identité
                             </span>
                             <span
                                 className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
@@ -93,7 +122,7 @@ export default function ProfilePage() {
                                                 clipRule="evenodd"
                                             />
                                         </svg>
-                                        Vérifié
+                                        Vérifiée
                                     </>
                                 ) : (
                                     <>
@@ -108,11 +137,58 @@ export default function ProfilePage() {
                                                 clipRule="evenodd"
                                             />
                                         </svg>
-                                        En attente de vérification
+                                        Non vérifiée
                                     </>
                                 )}
                             </span>
                         </div>
+
+                        {userProfile.role === 'driver' && (
+                            <div className="flex items-center justify-between py-3 border-b border-gray-100">
+                                <span className="text-sm font-medium text-gray-600">
+                                    Vérification permis
+                                </span>
+                                <span
+                                    className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
+                                        userProfile.isUserVerified
+                                            ? 'bg-green-100 text-green-800'
+                                            : 'bg-yellow-100 text-yellow-800'
+                                    }`}
+                                >
+                                    {userProfile.isUserVerified ? (
+                                        <>
+                                            <svg
+                                                className="w-4 h-4 mr-1"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                            Vérifié
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg
+                                                className="w-4 h-4 mr-1"
+                                                fill="currentColor"
+                                                viewBox="0 0 20 20"
+                                            >
+                                                <path
+                                                    fillRule="evenodd"
+                                                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                                    clipRule="evenodd"
+                                                />
+                                            </svg>
+                                            En attente
+                                        </>
+                                    )}
+                                </span>
+                            </div>
+                        )}
 
                         <div className="flex items-center justify-between py-3 border-b border-gray-100">
                             <span className="text-sm font-medium text-gray-600">
@@ -147,16 +223,15 @@ export default function ProfilePage() {
                                 </div>
                                 <div className="ml-3">
                                     <h3 className="text-sm font-medium text-blue-800">
-                                        Vérification en cours
+                                        Vérification requise
                                     </h3>
                                     <div className="mt-2 text-sm text-blue-700">
                                         <p>
-                                            Votre profil est en cours de vérification par notre
-                                            équipe.
+                                            Pour utiliser RutaFem en toute sécurité, vous devez
+                                            vérifier votre identité.
                                         </p>
                                         <p className="mt-1">
-                                            Vous recevrez une notification une fois la vérification
-                                            terminée.
+                                            Envoyez vos documents pour accéder à tous les services.
                                         </p>
                                     </div>
                                 </div>
@@ -166,6 +241,28 @@ export default function ProfilePage() {
 
                     {/* Actions */}
                     <div className="pt-6 space-y-4">
+                        {!userProfile.isVerified && (
+                            <Link
+                                href="/auth/profile/verification"
+                                className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200 transform hover:scale-[1.02]"
+                            >
+                                <svg
+                                    className="w-5 h-5 mr-2"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+                                    />
+                                </svg>
+                                Vérifier mon profil
+                            </Link>
+                        )}
+
                         <button
                             onClick={handleLogout}
                             className="w-full flex justify-center items-center py-3 px-4 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors duration-200"

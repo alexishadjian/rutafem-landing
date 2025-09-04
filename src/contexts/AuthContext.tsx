@@ -8,7 +8,12 @@ import { ReactNode, createContext, useContext, useEffect, useState } from 'react
 type UserProfile = {
     uid: string;
     email: string;
+    firstName: string;
+    lastName: string;
+    phoneNumber: string;
+    role: 'passenger' | 'driver';
     isVerified: boolean;
+    isUserVerified: boolean;
     createdAt: Date;
 };
 
@@ -61,7 +66,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                         const profile: UserProfile = {
                             uid: user.uid,
                             email: user.email || '',
+                            firstName: data.firstName || '',
+                            lastName: data.lastName || '',
+                            phoneNumber: data.phoneNumber || '',
+                            role: data.role || 'passenger',
                             isVerified: data.isVerified || false,
+                            isUserVerified: data.isUserVerified || false,
                             createdAt: data.createdAt?.toDate() || new Date(),
                         };
                         setUserProfile(profile);
