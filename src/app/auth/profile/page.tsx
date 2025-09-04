@@ -100,16 +100,20 @@ export default function ProfilePage() {
 
                         <div className="flex items-center justify-between py-3 border-b border-gray-100">
                             <span className="text-sm font-medium text-gray-600">
-                                Vérification identité
+                                Statut de vérification
                             </span>
                             <span
                                 className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${
-                                    userProfile.isVerified
+                                    userProfile.verificationStatus === 'Vérifié'
                                         ? 'bg-green-100 text-green-800'
+                                        : userProfile.verificationStatus === 'Rejeté'
+                                        ? 'bg-red-100 text-red-800'
+                                        : userProfile.verificationStatus === 'En cours'
+                                        ? 'bg-blue-100 text-blue-800'
                                         : 'bg-yellow-100 text-yellow-800'
                                 }`}
                             >
-                                {userProfile.isVerified ? (
+                                {userProfile.verificationStatus === 'Vérifié' ? (
                                     <>
                                         <svg
                                             className="w-4 h-4 mr-1"
@@ -124,6 +128,36 @@ export default function ProfilePage() {
                                         </svg>
                                         Vérifiée
                                     </>
+                                ) : userProfile.verificationStatus === 'Rejeté' ? (
+                                    <>
+                                        <svg
+                                            className="w-4 h-4 mr-1"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        Rejetée
+                                    </>
+                                ) : userProfile.verificationStatus === 'En cours' ? (
+                                    <>
+                                        <svg
+                                            className="w-4 h-4 mr-1"
+                                            fill="currentColor"
+                                            viewBox="0 0 20 20"
+                                        >
+                                            <path
+                                                fillRule="evenodd"
+                                                d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                                clipRule="evenodd"
+                                            />
+                                        </svg>
+                                        En cours
+                                    </>
                                 ) : (
                                     <>
                                         <svg
@@ -137,7 +171,7 @@ export default function ProfilePage() {
                                                 clipRule="evenodd"
                                             />
                                         </svg>
-                                        Non vérifiée
+                                        A vérifier
                                     </>
                                 )}
                             </span>
@@ -205,7 +239,7 @@ export default function ProfilePage() {
                     </div>
 
                     {/* Notice de vérification */}
-                    {!userProfile.isVerified && (
+                    {userProfile.verificationStatus === 'A vérifier' && (
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                             <div className="flex">
                                 <div className="flex-shrink-0">
@@ -239,9 +273,45 @@ export default function ProfilePage() {
                         </div>
                     )}
 
+                    {/* Notice en cours de vérification */}
+                    {userProfile.verificationStatus === 'En cours' && (
+                        <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                            <div className="flex">
+                                <div className="flex-shrink-0">
+                                    <svg
+                                        className="h-5 w-5 text-blue-400"
+                                        viewBox="0 0 20 20"
+                                        fill="currentColor"
+                                    >
+                                        <path
+                                            fillRule="evenodd"
+                                            d="M10 18a8 8 0 100-16 8 8 0 0116 0zm1-12a1 1 0 10-2 0v4a1 1 0 00.293.707l2.828 2.829a1 1 0 101.415-1.415L11 9.586V6z"
+                                            clipRule="evenodd"
+                                        />
+                                    </svg>
+                                </div>
+                                <div className="ml-3">
+                                    <h3 className="text-sm font-medium text-blue-800">
+                                        Vérification en cours
+                                    </h3>
+                                    <div className="mt-2 text-sm text-blue-700">
+                                        <p>
+                                            Vos documents ont été envoyés et sont en cours de
+                                            vérification par notre équipe.
+                                        </p>
+                                        <p className="mt-1">
+                                            Vous recevrez une notification une fois la vérification
+                                            terminée.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
                     {/* Actions */}
                     <div className="pt-6 space-y-4">
-                        {!userProfile.isVerified && (
+                        {userProfile.verificationStatus === 'A vérifier' && (
                             <Link
                                 href="/auth/profile/verification"
                                 className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-all duration-200 transform hover:scale-[1.02]"

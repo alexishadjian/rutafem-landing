@@ -12,8 +12,8 @@ type UserProfile = {
     lastName: string;
     phoneNumber: string;
     role: 'passenger' | 'driver';
-    isVerified: boolean;
     isUserVerified: boolean;
+    verificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     createdAt: Date;
 };
 
@@ -70,8 +70,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                             lastName: data.lastName || '',
                             phoneNumber: data.phoneNumber || '',
                             role: data.role || 'passenger',
-                            isVerified: data.isVerified || false,
                             isUserVerified: data.isUserVerified || false,
+                            verificationStatus: data.verificationStatus || 'A vérifier',
                             createdAt: data.createdAt?.toDate() || new Date(),
                         };
                         setUserProfile(profile);

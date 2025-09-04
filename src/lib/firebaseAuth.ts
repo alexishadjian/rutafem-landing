@@ -43,10 +43,9 @@ export const registerUser = async (
             lastName,
             phoneNumber,
             role: 'passenger',
-            isVerified: false,
             isUserVerified: false,
             createdAt: new Date(),
-            verificationStatus: 'pending',
+            verificationStatus: 'A vérifier', // A vérifier, En cours, Vérifié, Rejeté
         });
 
         return { success: true, user };
@@ -119,14 +118,14 @@ export const uploadVerificationDocuments = async (
         const updateData: {
             idCardFront: string;
             idCardBack: string;
-            verificationStatus: 'pending';
+            verificationStatus: 'En cours';
             driverLicense?: string;
             role?: 'driver';
-            driverVerificationStatus?: 'pending';
+            driverVerificationStatus?: 'En cours';
         } = {
             idCardFront: frontUrl,
             idCardBack: backUrl,
-            verificationStatus: 'pending',
+            verificationStatus: 'En cours',
         };
 
         // Upload du permis de conduire si fourni
@@ -145,7 +144,7 @@ export const uploadVerificationDocuments = async (
 
             updateData.driverLicense = licenseUrl;
             updateData.role = 'driver';
-            updateData.driverVerificationStatus = 'pending';
+            updateData.driverVerificationStatus = 'En cours';
         }
 
         // Mettre à jour le profil utilisateur
@@ -160,30 +159,19 @@ export const uploadVerificationDocuments = async (
     }
 };
 
-export const updateUserVerification = async (
-    uid: string,
-    isVerified: boolean,
-    isUserVerified?: boolean,
-) => {
+export const updateUserVerification = async (uid: string, isUserVerified: boolean) => {
     try {
         const updateData: {
-            isVerified: boolean;
-            verificationStatus: 'verified' | 'rejected';
+            isUserVerified: boolean;
+            verificationStatus: 'Vérifié' | 'Rejeté';
             verifiedAt: Date;
-            isUserVerified?: boolean;
-            driverVerificationStatus?: 'verified' | 'rejected';
+            driverVerificationStatus?: 'Vérifié' | 'Rejeté';
             driverVerifiedAt?: Date;
         } = {
-            isVerified,
-            verificationStatus: isVerified ? 'verified' : 'rejected',
+            isUserVerified,
+            verificationStatus: isUserVerified ? 'Vérifié' : 'Rejeté',
             verifiedAt: new Date(),
         };
-
-        if (isUserVerified !== undefined) {
-            updateData.isUserVerified = isUserVerified;
-            updateData.driverVerificationStatus = isUserVerified ? 'verified' : 'rejected';
-            updateData.driverVerifiedAt = new Date();
-        }
 
         await updateDoc(doc(db, 'users', uid), updateData);
         return { success: true };
