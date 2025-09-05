@@ -11,6 +11,7 @@ import Feature3 from "./feature-3.png";
 import Functioning from "./functioning.png";
 import Cta from "./cta.png";
 import Favicon from "./favicon.png";
+import RideCta from "./ride-cta.png";
 
 
 export {
@@ -26,5 +27,6 @@ export {
     Feature3,
     Functioning,
     Cta,
-    Favicon
+    Favicon,
+    RideCta
 }
