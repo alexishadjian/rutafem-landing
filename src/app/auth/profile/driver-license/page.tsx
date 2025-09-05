@@ -118,6 +118,21 @@ export default function DriverLicenseVerificationPage() {
                         Bonjour {userProfile.firstName} ! Pour devenir chauffeuse et proposer des
                         trajets, nous devons vérifier votre permis de conduire.
                     </p>
+
+                    <div className="mt-4 p-4 bg-pink-50 border border-pink-200 rounded-lg">
+                        <div className="flex items-start gap-3">
+                            <div>
+                                <p className="text-sm text-black font-medium mb-1">
+                                    🚗 Sécurité avant tout
+                                </p>
+                                <p className="text-sm text-black">
+                                    Ton permis sert juste à confirmer que tu peux conduire en toute
+                                    sécurité ! Une fois vérifié, on supprime les photos et on garde
+                                    juste l&apos;info que tu es un super chauffeuse ✨
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
@@ -138,10 +153,6 @@ export default function DriverLicenseVerificationPage() {
                             <h3 className="text-lg font-semibold text-gray-900">
                                 Permis de conduire
                             </h3>
-                            <p className="text-sm text-gray-600">
-                                Pour votre sécurité et celle de la communauté, nous devons vérifier
-                                votre permis de conduire.
-                            </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>

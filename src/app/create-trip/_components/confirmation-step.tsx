@@ -26,6 +26,7 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
     const [isCreating, setIsCreating] = useState(false);
     const [isCreated, setIsCreated] = useState(false);
     const [error, setError] = useState('');
+    const [acceptTerms, setAcceptTerms] = useState(false);
 
     const formatDate = (dateString: string) => {
         if (!dateString) return '[Date non spécifiée]';
@@ -41,6 +42,13 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
     const handleCreateTrip = async () => {
         if (!user) {
             setError('Vous devez être connecté pour créer un trajet');
+            return;
+        }
+
+        if (!acceptTerms) {
+            setError(
+                'Vous devez accepter les conditions générales de vente et le partage d&apos;informations pour créer un trajet',
+            );
             return;
         }
 
@@ -198,6 +206,38 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                         )}
                     </div>
 
+                    {!isCreated && (
+                        <div className="mb-6">
+                            <div className="flex items-start gap-3 p-4 rounded-lg">
+                                <input
+                                    type="checkbox"
+                                    id="acceptTerms"
+                                    checked={acceptTerms}
+                                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                                    className="mt-1 h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-900 rounded"
+                                />
+                                <label
+                                    htmlFor="acceptTerms"
+                                    className="text-sm text-gray-700 leading-relaxed"
+                                >
+                                    J&apos;accepte les{' '}
+                                    <a
+                                        href="/conditions-generales-de-vente"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-pink-600 hover:text-pink-700 underline"
+                                    >
+                                        conditions générales de vente
+                                    </a>{' '}
+                                    et j&apos;autorise le partage de mes informations de contact
+                                    (prénom, numéro de téléphone) avec les autres participants du
+                                    trajet pour faciliter la communication et l&apos;organisation du
+                                    covoiturage.
+                                </label>
+                            </div>
+                        </div>
+                    )}
+
                     <div className="flex flex-col sm:flex-row gap-4 justify-center">
                         {isCreated ? (
                             <button
@@ -216,7 +256,7 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                                 </button>
                                 <button
                                     onClick={handleCreateTrip}
-                                    disabled={isCreating}
+                                    disabled={isCreating || !acceptTerms}
                                     className="btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
                                     {isCreating ? (

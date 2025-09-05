@@ -16,6 +16,7 @@ export default function RegisterPage() {
     const [error, setError] = useState('');
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+    const [acceptTerms, setAcceptTerms] = useState(false);
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -38,6 +39,13 @@ export default function RegisterPage() {
 
         if (!phoneNumber.trim()) {
             setError('Veuillez renseigner votre numéro de téléphone');
+            return;
+        }
+
+        if (!acceptTerms) {
+            setError(
+                'Vous devez accepter les conditions générales de vente et la politique de confidentialité pour créer un compte',
+            );
             return;
         }
 
@@ -353,9 +361,47 @@ export default function RegisterPage() {
                             </div>
                         </div>
 
+                        <div className="mb-4">
+                            <div className="flex items-start gap-3 p-4 bg-gray-50 rounded-lg">
+                                <input
+                                    type="checkbox"
+                                    id="acceptTerms"
+                                    checked={acceptTerms}
+                                    onChange={(e) => setAcceptTerms(e.target.checked)}
+                                    className="mt-1 h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-900 rounded"
+                                />
+                                <label
+                                    htmlFor="acceptTerms"
+                                    className="text-sm text-gray-700 leading-relaxed"
+                                >
+                                    J&apos;accepte les{' '}
+                                    <a
+                                        href="/conditions-generales-de-vente"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-pink-600 hover:text-pink-700 underline"
+                                    >
+                                        conditions générales de vente
+                                    </a>{' '}
+                                    et la{' '}
+                                    <a
+                                        href="/politique-de-confidentialite"
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className="text-pink-600 hover:text-pink-700 underline"
+                                    >
+                                        politique de confidentialité
+                                    </a>
+                                    . J&apos;autorise le traitement de mes données personnelles pour
+                                    la création de mon compte et l&apos;utilisation de la plateforme
+                                    de covoiturage.
+                                </label>
+                            </div>
+                        </div>
+
                         <button
                             type="submit"
-                            disabled={loading}
+                            disabled={loading || !acceptTerms}
                             className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
                         >
                             {loading ? (

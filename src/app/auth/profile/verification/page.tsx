@@ -119,6 +119,22 @@ export default function VerificationPage() {
                         Bonjour {userProfile.firstName} ! Pour utiliser RutaFem en toute sécurité,
                         nous devons vérifier votre identité.
                     </p>
+
+                    <div className="mt-4 p-4 bg-pink-50 border border-pink-400 rounded-lg">
+                        <div className="flex items-start gap-3">
+                            <div className="flex-shrink-0"></div>
+                            <div>
+                                <p className="text-sm text-black font-medium mb-1">
+                                    🔒 Confidentialité garantie
+                                </p>
+                                <p className="text-sm text-black">
+                                    Tes documents servent uniquement à vérifier ton identité. Une
+                                    fois validés, ils sont supprimés de nos serveurs ! On garde
+                                    juste le fait que tu es une humaine, c&apos;est tout ! 😊
+                                </p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
@@ -139,10 +155,6 @@ export default function VerificationPage() {
                             <h3 className="text-lg font-semibold text-gray-900">
                                 Carte d&apos;identité
                             </h3>
-                            <p className="text-sm text-gray-600">
-                                Pour votre sécurité et celle de la communauté, nous devons vérifier
-                                votre identité.
-                            </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
