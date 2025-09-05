@@ -3,7 +3,7 @@
 import { RouteGuard } from '@/app/_components/route-guard';
 import Stepper from '@/components/ui/stepper';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 import ConfirmationStep from './_components/confirmation-step';
 import TripFormStep from './_components/trip-form-step';
 import WelcomeStep from './_components/welcome-step';
@@ -19,7 +19,7 @@ type TripFormData = {
     description: string;
 };
 
-export default function CreateTripPage() {
+function CreateTripContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const currentStep = parseInt(searchParams.get('step') || '1');
@@ -85,5 +85,22 @@ export default function CreateTripPage() {
                 </section>
             </div>
         </RouteGuard>
+    );
+}
+
+export default function CreateTripPage() {
+    return (
+        <Suspense
+            fallback={
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                    <div className="text-center">
+                        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+                        <p className="text-gray-600">Chargement...</p>
+                    </div>
+                </div>
+            }
+        >
+            <CreateTripContent />
+        </Suspense>
     );
 }
