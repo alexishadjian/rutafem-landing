@@ -12,8 +12,8 @@ import {
     Value3,
 } from '@/images';
 import Image from 'next/image';
-import { HeroBanner, Feature1, Feature2, Feature3, Value1, Value2, Value3, ValueBg, Advantage1, Advantage2, Functioning, Cta, RideCta } from "@/images";
-import Link from "next/link";
+import Link from 'next/link';
+import EmailForm from './_components/email-form';
 
 export default function Home() {
     return (
