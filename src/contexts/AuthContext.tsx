@@ -14,6 +14,7 @@ type UserProfile = {
     role: 'passenger' | 'driver';
     isUserVerified: boolean;
     verificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
+    driverLicenseVerificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     createdAt: Date;
 };
 
@@ -72,6 +73,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                             role: data.role || 'passenger',
                             isUserVerified: data.isUserVerified || false,
                             verificationStatus: data.verificationStatus || 'A vérifier',
+                            driverLicenseVerificationStatus:
+                                data.driverLicenseVerificationStatus || 'A vérifier',
                             createdAt: data.createdAt?.toDate() || new Date(),
                         };
                         setUserProfile(profile);

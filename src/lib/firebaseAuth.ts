@@ -159,6 +159,54 @@ export const uploadVerificationDocuments = async (
     }
 };
 
+export const uploadDriverLicenseDocuments = async (
+    uid: string,
+    licenseFront: File,
+    licenseBack: File,
+) => {
+    try {
+        // Validation des fichiers
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'];
+
+        if (licenseFront.size > maxSize || licenseBack.size > maxSize) {
+            throw new Error('Les fichiers doivent faire moins de 5MB');
+        }
+
+        if (!allowedTypes.includes(licenseFront.type) || !allowedTypes.includes(licenseBack.type)) {
+            throw new Error('Seuls les formats JPG, PNG et PDF sont acceptés');
+        }
+
+        // Upload des documents de permis
+        const frontFileName = `license_front_${Date.now()}.${licenseFront.name.split('.').pop()}`;
+        const backFileName = `license_back_${Date.now()}.${licenseBack.name.split('.').pop()}`;
+
+        const frontRef = ref(storage, `driver-licenses/${uid}/${frontFileName}`);
+        const backRef = ref(storage, `driver-licenses/${uid}/${backFileName}`);
+
+        await uploadBytes(frontRef, licenseFront);
+        await uploadBytes(backRef, licenseBack);
+
+        const frontUrl = await getDownloadURL(frontRef);
+        const backUrl = await getDownloadURL(backRef);
+
+        // Mettre à jour le profil utilisateur
+        await updateDoc(doc(db, 'users', uid), {
+            driverLicenseFront: frontUrl,
+            driverLicenseBack: backUrl,
+            driverLicenseVerificationStatus: 'En cours',
+            role: 'driver',
+        });
+
+        return { success: true };
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error("Erreur lors de l'upload des documents de permis");
+    }
+};
+
 export const updateUserVerification = async (uid: string, isUserVerified: boolean) => {
     try {
         const updateData: {

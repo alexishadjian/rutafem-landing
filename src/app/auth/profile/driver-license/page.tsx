@@ -1,25 +1,22 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { uploadVerificationDocuments } from '@/lib/firebaseAuth';
+import { uploadDriverLicenseDocuments } from '@/lib/firebaseAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
-export default function VerificationPage() {
+export default function DriverLicenseVerificationPage() {
     const { user, userProfile, loading } = useAuth();
     const router = useRouter();
 
-    const [idCardFront, setIdCardFront] = useState<File | null>(null);
-    const [idCardBack, setIdCardBack] = useState<File | null>(null);
+    const [licenseFront, setLicenseFront] = useState<File | null>(null);
+    const [licenseBack, setLicenseBack] = useState<File | null>(null);
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    const handleFileChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        type: 'front' | 'back' | 'license',
-    ) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'front' | 'back') => {
         const file = e.target.files?.[0];
         if (file) {
             if (file.size > 5 * 1024 * 1024) {
@@ -33,19 +30,19 @@ export default function VerificationPage() {
             }
 
             if (type === 'front') {
-                setIdCardFront(file);
+                setLicenseFront(file);
             } else if (type === 'back') {
-                setIdCardBack(file);
+                setLicenseBack(file);
             }
             setError('');
         }
     };
 
-    const removeFile = (type: 'front' | 'back' | 'license') => {
+    const removeFile = (type: 'front' | 'back') => {
         if (type === 'front') {
-            setIdCardFront(null);
+            setLicenseFront(null);
         } else if (type === 'back') {
-            setIdCardBack(null);
+            setLicenseBack(null);
         }
     };
 
@@ -57,8 +54,8 @@ export default function VerificationPage() {
             return;
         }
 
-        if (!idCardFront || !idCardBack) {
-            setError("Veuillez sélectionner les deux faces de votre carte d'identité");
+        if (!licenseFront || !licenseBack) {
+            setError('Veuillez sélectionner les deux faces de votre permis de conduire');
             return;
         }
 
@@ -67,10 +64,10 @@ export default function VerificationPage() {
         setSuccess('');
 
         try {
-            await uploadVerificationDocuments(user.uid, idCardFront, idCardBack);
+            await uploadDriverLicenseDocuments(user.uid, licenseFront, licenseBack);
 
             setSuccess(
-                'Documents envoyés avec succès ! Votre profil sera vérifié par notre équipe.',
+                'Documents de permis envoyés avec succès ! Votre permis sera vérifié par notre équipe.',
             );
 
             setTimeout(() => {
@@ -104,10 +101,12 @@ export default function VerificationPage() {
             <div className="max-w-2xl mx-auto">
                 <div className="text-center mb-8">
                     <h1 className="text-4xl font-bold text-gray-900 mb-2">RutaFem</h1>
-                    <h2 className="text-2xl font-semibold text-gray-700">Vérification de profil</h2>
+                    <h2 className="text-2xl font-semibold text-gray-700">
+                        Vérification du permis de conduire
+                    </h2>
                     <p className="text-gray-600 mt-2">
-                        Bonjour {userProfile.firstName} ! Pour utiliser RutaFem en toute sécurité,
-                        nous devons vérifier votre identité.
+                        Bonjour {userProfile.firstName} ! Pour devenir chauffeuse et proposer des
+                        trajets, nous devons vérifier votre permis de conduire.
                     </p>
                 </div>
 
@@ -127,25 +126,25 @@ export default function VerificationPage() {
                     <form onSubmit={handleSubmit} className="space-y-6">
                         <div className="space-y-4">
                             <h3 className="text-lg font-semibold text-gray-900">
-                                Carte d&apos;identité
+                                Permis de conduire
                             </h3>
                             <p className="text-sm text-gray-600">
                                 Pour votre sécurité et celle de la communauté, nous devons vérifier
-                                votre identité.
+                                votre permis de conduire.
                             </p>
 
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <div>
                                     <label
-                                        htmlFor="idCardFront"
+                                        htmlFor="licenseFront"
                                         className="block text-sm font-medium text-gray-700 mb-2"
                                     >
-                                        Carte d&apos;identité recto{' '}
+                                        Permis de conduire recto{' '}
                                         <span className="text-pink-500">*</span>
                                     </label>
                                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-pink-400 transition-colors duration-200">
                                         <div className="space-y-1 text-center">
-                                            {idCardFront ? (
+                                            {licenseFront ? (
                                                 <div className="flex items-center space-x-2">
                                                     <svg
                                                         className="mx-auto h-12 w-12 text-green-400"
@@ -162,7 +161,7 @@ export default function VerificationPage() {
                                                     </svg>
                                                     <div className="flex flex-col">
                                                         <p className="text-sm text-gray-600">
-                                                            {idCardFront.name}
+                                                            {licenseFront.name}
                                                         </p>
                                                         <button
                                                             type="button"
@@ -190,12 +189,12 @@ export default function VerificationPage() {
                                                     </svg>
                                                     <div className="flex text-sm text-gray-600">
                                                         <label
-                                                            htmlFor="idCardFront"
+                                                            htmlFor="licenseFront"
                                                             className="relative cursor-pointer bg-white rounded-md font-medium text-pink-600 hover:text-pink-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500"
                                                         >
                                                             <span>Télécharger un fichier</span>
                                                             <input
-                                                                id="idCardFront"
+                                                                id="licenseFront"
                                                                 type="file"
                                                                 accept="image/*"
                                                                 onChange={(e) =>
@@ -217,15 +216,15 @@ export default function VerificationPage() {
 
                                 <div>
                                     <label
-                                        htmlFor="idCardBack"
+                                        htmlFor="licenseBack"
                                         className="block text-sm font-medium text-gray-700 mb-2"
                                     >
-                                        Carte d&apos;identité verso
+                                        Permis de conduire verso
                                         <span className="text-pink-500">*</span>
                                     </label>
                                     <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-pink-400 transition-colors duration-200">
                                         <div className="space-y-1 text-center">
-                                            {idCardBack ? (
+                                            {licenseBack ? (
                                                 <div className="flex items-center space-x-2">
                                                     <svg
                                                         className="mx-auto h-12 w-12 text-green-400"
@@ -242,7 +241,7 @@ export default function VerificationPage() {
                                                     </svg>
                                                     <div className="flex flex-col">
                                                         <p className="text-sm text-gray-600">
-                                                            {idCardBack.name}
+                                                            {licenseBack.name}
                                                         </p>
                                                         <button
                                                             type="button"
@@ -270,12 +269,12 @@ export default function VerificationPage() {
                                                     </svg>
                                                     <div className="flex text-sm text-gray-600">
                                                         <label
-                                                            htmlFor="idCardBack"
+                                                            htmlFor="licenseBack"
                                                             className="relative cursor-pointer bg-white rounded-md font-medium text-pink-600 hover:text-pink-500 focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-pink-500"
                                                         >
                                                             <span>Télécharger un fichier</span>
                                                             <input
-                                                                id="idCardBack"
+                                                                id="licenseBack"
                                                                 type="file"
                                                                 accept="image/*"
                                                                 onChange={(e) =>
@@ -327,7 +326,7 @@ export default function VerificationPage() {
                                     Envoi en cours...
                                 </div>
                             ) : (
-                                'Envoyer les documents'
+                                'Envoyer les documents de permis'
                             )}
                         </button>
                     </form>
