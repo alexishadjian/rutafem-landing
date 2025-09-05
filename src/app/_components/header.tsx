@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { SmartButton } from '@/app/_components/smart-button';
 import Socials from '@/components/socials';
 import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
@@ -143,6 +144,14 @@ export default function Header() {
                         Nous connaitre
                     </Link>
                     <Link
+                        href="/join-trip"
+                        className="hover:text-[--accent-color] transition-all duration-300"
+                        onClick={() => setIsMenuOpen(false)}
+                    >
+                        Trouver un trajet
+                    </Link>
+
+                    {/* <Link
                         href="/#safe"
                         className="hover:text-[--accent-color] transition-all duration-300"
                         onClick={() => setIsMenuOpen(false)}
@@ -162,13 +171,24 @@ export default function Header() {
                         onClick={() => setIsMenuOpen(false)}
                     >
                         M&apos;avertir
-                    </Link>
+                    </Link> */}
+                    <SmartButton
+                        href="/create-trip"
+                        requireAuth={true}
+                        requireVerified={true}
+                        requireDriver={true}
+                        requireDriverVerified={true}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="hover:text-[--accent-color] transition-all duration-300"
+                    >
+                        Créer un trajet
+                    </SmartButton>
                     <Link
-                        href="/join-trip"
+                        href="/#mobile"
                         className="hover:text-[--accent-color] transition-all duration-300"
                         onClick={() => setIsMenuOpen(false)}
                     >
-                        Rejoindre un trajet
+                        Découvrir l&apos;application mobile
                     </Link>
 
                     {loading ? (

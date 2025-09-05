@@ -1,5 +1,6 @@
 'use client';
 
+import { RouteGuard } from '@/app/_components/route-guard';
 import Stepper from '@/components/ui/stepper';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState } from 'react';
@@ -66,14 +67,21 @@ export default function CreateTripPage() {
     };
 
     return (
-        <div className="create-trip">
-            <section id="welcome-message" className="wrapper">
-                <div className="p-6">
-                    <Stepper totalSteps={3} currentStep={currentStep} />
-                </div>
+        <RouteGuard
+            requireAuth={true}
+            requireVerified={true}
+            requireDriver={true}
+            requireDriverVerified={true}
+        >
+            <div className="create-trip">
+                <section id="welcome-message" className="wrapper">
+                    <div className="p-6">
+                        <Stepper totalSteps={3} currentStep={currentStep} />
+                    </div>
 
-                {renderCurrentStep()}
-            </section>
-        </div>
+                    {renderCurrentStep()}
+                </section>
+            </div>
+        </RouteGuard>
     );
 }

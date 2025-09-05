@@ -44,6 +44,7 @@ export const registerUser = async (
             phoneNumber,
             role: 'passenger',
             isUserVerified: false,
+            isUserDriverVerified: false,
             createdAt: new Date(),
             verificationStatus: 'A vérifier', // A vérifier, En cours, Vérifié, Rejeté
         });
@@ -196,6 +197,7 @@ export const uploadDriverLicenseDocuments = async (
             driverLicenseBack: backUrl,
             driverLicenseVerificationStatus: 'En cours',
             role: 'driver',
+            isUserDriverVerified: false,
         });
 
         return { success: true };

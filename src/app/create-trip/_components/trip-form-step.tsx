@@ -263,7 +263,7 @@ export default function TripFormStep({
                                 type="submit"
                                 className="order-1 sm:order-2 btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
                             >
-                                Continuer -&gt;
+                                Continuer →
                             </button>
                         </div>
                     </form>

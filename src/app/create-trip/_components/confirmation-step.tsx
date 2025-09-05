@@ -136,7 +136,7 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                             onClick={() => router.push('/join-trip')}
                             className="btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
                         >
-                            ← Retour au formulaire
+                            ← Retour aux trajets
                         </button>
                     </div>
                 </div>

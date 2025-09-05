@@ -13,6 +13,7 @@ type UserProfile = {
     phoneNumber: string;
     role: 'passenger' | 'driver';
     isUserVerified: boolean;
+    isUserDriverVerified: boolean;
     verificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     driverLicenseVerificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     createdAt: Date;
@@ -64,6 +65,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     phoneNumber: data.phoneNumber || '',
                     role: data.role || 'passenger',
                     isUserVerified: data.isUserVerified || false,
+                    isUserDriverVerified: data.isUserDriverVerified || false,
                     verificationStatus: data.verificationStatus || 'A vérifier',
                     driverLicenseVerificationStatus:
                         data.driverLicenseVerificationStatus || 'A vérifier',
@@ -111,6 +113,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                             phoneNumber: data.phoneNumber || '',
                             role: data.role || 'passenger',
                             isUserVerified: data.isUserVerified || false,
+                            isUserDriverVerified: data.isUserDriverVerified || false,
                             verificationStatus: data.verificationStatus || 'A vérifier',
                             driverLicenseVerificationStatus:
                                 data.driverLicenseVerificationStatus || 'A vérifier',

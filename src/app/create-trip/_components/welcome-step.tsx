@@ -36,7 +36,7 @@ export default function WelcomeStep({ onNext }: WelcomeStepProps) {
                             onClick={onNext}
                             className="btn mt-4 px-8 py-3 text-base md:text-lg"
                         >
-                            Commencer -&gt;
+                            Commencer →
                         </button>
                     </div>
                 </div>

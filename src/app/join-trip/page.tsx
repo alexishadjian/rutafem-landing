@@ -1,4 +1,6 @@
-import Link from 'next/link';
+'use client';
+
+import { SmartButton } from '@/app/_components/smart-button';
 import SearchBar from './_components/search-bar';
 import TripCard from './_components/trip-card';
 import { mockTrips } from './_data/mock-trips';
@@ -17,12 +19,16 @@ export default function JoinTripPage() {
                         </p>
                     </div>
 
-                    <Link
+                    <SmartButton
                         href="/create-trip"
+                        requireAuth={true}
+                        requireVerified={true}
+                        requireDriver={true}
+                        requireDriverVerified={true}
                         className="btn bg-[--accent-color] hover:bg-[--accent-color]/90 text-white px-6 py-3 rounded-lg font-medium transition-colors"
                     >
                         + Publier un trajet
-                    </Link>
+                    </SmartButton>
                 </div>
             </div>
 

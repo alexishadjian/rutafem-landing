@@ -39,8 +39,8 @@ export default function Home() {
                         &quot;Bientôt, partagez vos trajets entre femmes en toute sécurité et avec
                         l&apos;esprit d&apos;une communauté bienveillante.&quot;
                     </p>
-                    <Link className="btn mt-8" href="/#cta">
-                        M&apos;avertir !
+                    <Link className="btn mt-8" href="/join-trip">
+                        Trouver un trajet
                     </Link>
                 </div>
             </section>

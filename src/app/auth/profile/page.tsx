@@ -213,7 +213,7 @@ export default function ProfilePage() {
                                                 clipRule="evenodd"
                                             />
                                         </svg>
-                                        Vérifié
+                                        Vérifiée
                                     </>
                                 ) : userProfile.driverLicenseVerificationStatus === 'Rejeté' ? (
                                     <>
