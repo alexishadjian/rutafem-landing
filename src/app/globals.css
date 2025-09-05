@@ -25,6 +25,10 @@
     --accent-color: #ff0381;
 }
 
+.user-name {
+    color: var(--white);
+}
+
 html {
     scroll-behavior: smooth;
     scroll-padding: 100px;
@@ -53,6 +57,10 @@ body.not-home header {
 
     .socials svg path {
         fill: var(--black);
+    }
+
+    .user-name {
+        color: var(--black);
     }
 
     .burger-menu svg path {

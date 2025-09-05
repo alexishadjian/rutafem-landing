@@ -4,10 +4,10 @@ import { useAuth } from '@/contexts/AuthContext';
 import { uploadDriverLicenseDocuments } from '@/lib/firebaseAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default function DriverLicenseVerificationPage() {
-    const { user, userProfile, loading } = useAuth();
+    const { user, userProfile, loading, refreshUserProfile } = useAuth();
     const router = useRouter();
 
     const [licenseFront, setLicenseFront] = useState<File | null>(null);
@@ -15,6 +15,13 @@ export default function DriverLicenseVerificationPage() {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    // Redirection vers login si pas connecté
+    useEffect(() => {
+        if (!loading && (!user || !userProfile)) {
+            router.push('/auth/login');
+        }
+    }, [user, userProfile, loading, router]);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'front' | 'back') => {
         const file = e.target.files?.[0];
@@ -70,6 +77,9 @@ export default function DriverLicenseVerificationPage() {
                 'Documents de permis envoyés avec succès ! Votre permis sera vérifié par notre équipe.',
             );
 
+            // Mettre à jour le profil utilisateur
+            await refreshUserProfile();
+
             setTimeout(() => {
                 router.push('/auth/profile');
             }, 2000);
@@ -91,8 +101,8 @@ export default function DriverLicenseVerificationPage() {
         );
     }
 
+    // Si pas connecté, on affiche rien (la redirection se fait dans useEffect)
     if (!user || !userProfile) {
-        router.push('/auth/login');
         return null;
     }
 

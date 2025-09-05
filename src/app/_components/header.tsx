@@ -3,10 +3,12 @@
 import Link from 'next/link';
 
 import Socials from '@/components/socials';
+import { useAuth } from '@/contexts/AuthContext';
 import { useState } from 'react';
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const { user, userProfile, loading } = useAuth();
 
     return (
         <header
@@ -169,17 +171,74 @@ export default function Header() {
                         Rejoindre un trajet
                     </Link>
 
-                    <Link
-                        href="/auth/login"
-                        className="lg:hidden hover:text-[--accent-color] transition-all duration-300"
-                        onClick={() => setIsMenuOpen(false)}
-                    >
-                        Se connecter
-                    </Link>
+                    {loading ? (
+                        <div className="lg:hidden flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-pink-600"></div>
+                        </div>
+                    ) : user ? (
+                        <Link
+                            href="/auth/profile"
+                            className="lg:hidden hover:text-[--accent-color] transition-all duration-300 flex items-center gap-2 user-name"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                />
+                            </svg>
+                            {userProfile?.firstName || 'Mon profil'}
+                        </Link>
+                    ) : (
+                        <Link
+                            href="/auth/login"
+                            className="lg:hidden hover:text-[--accent-color] transition-all duration-300"
+                            onClick={() => setIsMenuOpen(false)}
+                        >
+                            Se connecter
+                        </Link>
+                    )}
                 </nav>
 
                 <div className="hidden lg:block">
-                    <Socials />
+                    {loading ? (
+                        <div className="flex items-center justify-center">
+                            <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-pink-600"></div>
+                        </div>
+                    ) : user ? (
+                        <Link
+                            href="/auth/profile"
+                            className="flex items-center gap-2 hover:opacity-80 transition-opacity duration-200 user-name"
+                        >
+                            <div className="w-8 h-8 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center">
+                                <svg
+                                    className="w-5 h-5 text-white"
+                                    fill="none"
+                                    stroke="currentColor"
+                                    viewBox="0 0 24 24"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth={2}
+                                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                    />
+                                </svg>
+                            </div>
+                            <span className="text-sm font-medium">
+                                {userProfile?.firstName || 'Profil'}
+                            </span>
+                        </Link>
+                    ) : (
+                        <Socials />
+                    )}
                 </div>
 
                 <button

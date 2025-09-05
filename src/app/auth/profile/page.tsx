@@ -4,10 +4,18 @@ import { useAuth } from '@/contexts/AuthContext';
 import { logoutUser } from '@/lib/firebaseAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 export default function ProfilePage() {
     const { user, userProfile, loading } = useAuth();
     const router = useRouter();
+
+    // Redirection vers login si pas connecté
+    useEffect(() => {
+        if (!loading && (!user || !userProfile)) {
+            router.push('/auth/login');
+        }
+    }, [user, userProfile, loading, router]);
 
     const handleLogout = async () => {
         try {
@@ -29,8 +37,8 @@ export default function ProfilePage() {
         );
     }
 
+    // Si pas connecté, on affiche rien (la redirection se fait dans useEffect)
     if (!user || !userProfile) {
-        router.push('/auth/login');
         return null;
     }
 
