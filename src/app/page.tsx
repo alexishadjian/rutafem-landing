@@ -1,6 +1,6 @@
 import Image from "next/image";
 import EmailForm from "@/components/email-form";
-import { HeroBanner, Feature1, Feature2, Feature3, Value1, Value2, Value3, ValueBg, Advantage1, Advantage2, Functioning, Cta } from "@/images";
+import { HeroBanner, Feature1, Feature2, Feature3, Value1, Value2, Value3, ValueBg, Advantage1, Advantage2, Functioning, Cta, RideCta } from "@/images";
 import Link from "next/link";
 
 
@@ -23,6 +23,50 @@ export default function Home() {
                     <Link className="btn mt-8" href="/#cta">M'avertir !</Link>
                 </div>
             </section>
+
+            {/* <section id="ride-cta" className="section-margin wrapper flex rounded-3xl overflow-hidden bg-[#f9f5fa]">
+                <div className="w-1/2 flex flex-col items-start gap-4 p-10">
+                    <h2 className="font-staatliches leading-tight text-2xl">Propose ton trajet dès maintenant !</h2>
+                    <p className="text-[16px]">Rejoins notre communauté de voyageuses et partage tes trajets en toute sécurité. Aide d'autres femmes à voyager sereinement tout en partageant les frais.</p>
+                    <div className="flex gap-2 mt-2">
+                        <div className="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-users">
+                                <path d="M9 7m-4 0a4 4 0 1 0 8 0a4 4 0 1 0 -8 0" />
+                                <path d="M3 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+                                <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                                <path d="M21 21v-2a4 4 0 0 0 -3 -3.85" />
+                            </svg>
+                            <span className="text-[13px]">100% féminin</span>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-map-pin">
+                                <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                                <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+                            </svg>
+                            <span className="text-[13px]">Partout en France</span>
+                        </div>
+                    </div>
+                    <Link className="btn small mt-2 flex items-center gap-2 hover:gap-4" href="/#cta">
+                        <span>Publier mon trajet</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-arrow-narrow-right">
+                            <path d="M5 12l14 0" />
+                            <path d="M15 16l4 -4" />
+                            <path d="M15 8l4 4" />
+                        </svg>
+                    </Link>
+                </div>
+                <div className="w-1/2 relative">
+                    <Image src={RideCta} alt="ride cta" className="h-full w-full object-cover" />
+
+                    <div className="flex items-center gap-2 absolute bottom-5 left-5 p-2 bg-white rounded-xl">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="var(--accent-color)" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" className="icon icon-tabler icons-tabler-outline icon-tabler-map-pin">
+                            <path d="M9 11a3 3 0 1 0 6 0a3 3 0 0 0 -6 0" />
+                            <path d="M17.657 16.657l-4.243 4.243a2 2 0 0 1 -2.827 0l-4.244 -4.243a8 8 0 1 1 11.314 0z" />
+                        </svg>
+                        <span className="text-[13px]">Paris → Lyon</span>
+                    </div>
+                </div>
+            </section> */}
 
             <section id="about" className="flex gap-10 wrapper flex-col md:flex-row">
                 <div className="md:w-1/2 flex items-center">

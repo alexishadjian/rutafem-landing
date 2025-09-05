@@ -143,6 +143,11 @@ p {
     &:hover {
         background-color: var(--accent-color);
     }
+
+    &.small {
+        padding: 10px 18px;
+        font-size: 16px;
+    }
 }
 
 .title-gradient {
