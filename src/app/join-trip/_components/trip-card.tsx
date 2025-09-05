@@ -20,15 +20,31 @@ export default function TripCard({ trip }: TripCardProps) {
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
                             >
-                                <path
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="8"
                                     strokeLinecap="round"
                                     strokeLinejoin="round"
                                     strokeWidth={2}
-                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                />
+                                <circle
+                                    cx="12"
+                                    cy="12"
+                                    r="3"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                />
+                                <path
+                                    d="M12 4v2M12 18v2M4 12h2M18 12h2"
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
                                 />
                             </svg>
                         </div>
-                        <span className="font-medium text-gray-900">Conductrice</span>
+                        <span className="font-medium text-gray-900">Pilote anonyme</span>
                     </div>
 
                     <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
