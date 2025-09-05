@@ -18,12 +18,15 @@
     padding-right: 5%;
 }
 
-
 :root {
     --white: #ffffff;
     --black: #000000;
-    --black-taupe: #3B3B3D;
-    --accent-color: #FF0381;
+    --black-taupe: #3b3b3d;
+    --accent-color: #ff0381;
+}
+
+.user-name {
+    color: var(--white);
 }
 
 html {
@@ -32,7 +35,6 @@ html {
 }
 
 @media (min-width: 768px) {
-
     /* Hide menu on scroll down */
     body.scroll-down header:not(.mobile-menu-open) {
         transform: translateY(-100%);
@@ -57,6 +59,10 @@ body.not-home header {
         fill: var(--black);
     }
 
+    .user-name {
+        color: var(--black);
+    }
+
     .burger-menu svg path {
         stroke: var(--black);
     }
@@ -64,6 +70,12 @@ body.not-home header {
     & nav {
         background-color: transparent;
         color: var(--black);
+    }
+}
+
+@media (max-width: 1023px) {
+    header nav {
+        background-color: white !important;
     }
 }
 
@@ -80,8 +92,6 @@ body {
 main {
     flex: 1;
 }
-
-
 
 h1,
 .h1 {
@@ -115,7 +125,6 @@ p {
     font-size: 18px;
 }
 
-
 .section-margin {
     margin-top: 150px;
     margin-bottom: 150px;
@@ -129,7 +138,6 @@ p {
 .section-margin:first-child {
     margin-top: 0;
 }
-
 
 .btn {
     color: white;
@@ -151,7 +159,13 @@ p {
 }
 
 .title-gradient {
-    background-image: linear-gradient(180deg, #FF0381 0%, #FF2F76 36.98%, #F5831B 84.37%, #FBBC05 98.53%);
+    background-image: linear-gradient(
+        180deg,
+        #ff0381 0%,
+        #ff2f76 36.98%,
+        #f5831b 84.37%,
+        #fbbc05 98.53%
+    );
     color: transparent;
     background-clip: text;
 }
@@ -162,7 +176,7 @@ p {
 }
 
 .title-line:before {
-    content: "";
+    content: '';
     left: -100px;
     right: -100px;
     bottom: -60px;
@@ -181,10 +195,16 @@ p {
 }
 
 .bg-linear {
-    background: linear-gradient(264deg, #FF0381 -24.85%, #FF2F76 23.42%, #F5831B 85.29%, #FBBC05 103.76%);
+    background: linear-gradient(
+        264deg,
+        #ff0381 -24.85%,
+        #ff2f76 23.42%,
+        #f5831b 85.29%,
+        #fbbc05 103.76%
+    );
 }
 
-input[type=checkbox] {
+input[type='checkbox'] {
     position: relative;
     border: 2px solid var(--white);
     border-radius: 3px;
@@ -200,18 +220,16 @@ input[type=checkbox] {
     transition: 0.2s;
 }
 
-
-input[type=checkbox]:checked {
+input[type='checkbox']:checked {
     background-color: var(--accent-color);
 }
 
-input[type=checkbox]:checked:before {
+input[type='checkbox']:checked:before {
     border-color: var(--white);
-
 }
 
-input[type=checkbox]:before {
-    content: "";
+input[type='checkbox']:before {
+    content: '';
     position: absolute;
     width: 6px;
     height: 12px;
@@ -224,7 +242,6 @@ input[type=checkbox]:before {
 }
 
 .legal {
-
     h3 {
         margin: 1.5em 0 0.5em 0;
     }
