@@ -87,5 +87,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
             changeFrequency: 'yearly',
             priority: 0.3,
         },
+        {
+            url: 'https://rutafem.com/trip/[id]',
+            lastModified: new Date(),
+            changeFrequency: 'daily',
+            priority: 0.7,
+        },
     ];
 }

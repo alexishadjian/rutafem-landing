@@ -12,6 +12,7 @@ type TripFormData = {
     departure: string;
     arrival: string;
     date: string;
+    time: string;
     seats: string;
     price: string;
     departurePlace: string;
@@ -27,6 +28,7 @@ export default function CreateTripPage() {
         departure: '',
         arrival: '',
         date: '',
+        time: '',
         seats: '1',
         price: '',
         departurePlace: '',

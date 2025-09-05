@@ -5,6 +5,7 @@ import { logoutUser } from '@/lib/firebaseAuth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import UserTrips from './_components/user-trips';
 
 export default function ProfilePage() {
     const { user, userProfile, loading } = useAuth();
@@ -415,6 +416,36 @@ export default function ProfilePage() {
                             Se déconnecter
                         </button>
                     </div>
+                </div>
+
+                {/* Section Trajets */}
+                <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-4">
+                    <div className="flex items-center justify-between mb-6">
+                        <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
+                            <svg
+                                className="w-6 h-6 text-pink-600"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                />
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                />
+                            </svg>
+                            Mes trajets
+                        </h2>
+                    </div>
+
+                    {user && <UserTrips userId={user.uid} />}
                 </div>
             </div>
         </div>

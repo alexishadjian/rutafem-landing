@@ -1,7 +1,7 @@
 'use client';
 
-import { SmartButton } from '@/app/_components/smart-button';
-import { Trip } from '../_data/mock-trips';
+import { Trip } from '@/types/trip';
+import Link from 'next/link';
 
 type TripCardProps = {
     trip: Trip;
@@ -14,13 +14,25 @@ export default function TripCard({ trip }: TripCardProps) {
                 <div className="flex items-center justify-between mb-4">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-[--accent-color] rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            {trip.driver.initial}
+                            <svg
+                                className="w-5 h-5"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                                />
+                            </svg>
                         </div>
-                        <span className="font-medium text-gray-900">{trip.driver.name}</span>
+                        <span className="font-medium text-gray-900">Conductrice</span>
                     </div>
 
                     <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
-                        {trip.price}€
+                        {trip.pricePerSeat}€
                     </div>
                 </div>
 
@@ -45,7 +57,7 @@ export default function TripCard({ trip }: TripCardProps) {
                                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                             />
                         </svg>
-                        <span className="font-medium">{trip.route.departure}</span>
+                        <span className="font-medium">{trip.departureCity}</span>
                     </div>
 
                     <svg
@@ -82,7 +94,7 @@ export default function TripCard({ trip }: TripCardProps) {
                                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                             />
                         </svg>
-                        <span className="font-medium">{trip.route.arrival}</span>
+                        <span className="font-medium">{trip.arrivalCity}</span>
                     </div>
                 </div>
 
@@ -101,7 +113,7 @@ export default function TripCard({ trip }: TripCardProps) {
                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                             />
                         </svg>
-                        <span>{trip.date}</span>
+                        <span>{new Date(trip.departureDate).toLocaleDateString('fr-FR')}</span>
                         <span className="text-gray-400">•</span>
                         <svg
                             className="w-4 h-4"
@@ -116,7 +128,7 @@ export default function TripCard({ trip }: TripCardProps) {
                                 d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                             />
                         </svg>
-                        <span>{trip.time}</span>
+                        <span>{trip.departureTime.slice(0, 5)}</span>
                     </div>
 
                     <div className="flex items-center gap-2 text-sm text-gray-600">
@@ -142,13 +154,8 @@ export default function TripCard({ trip }: TripCardProps) {
             </div>
 
             <div className="px-4 sm:px-5 pb-4 sm:pb-5">
-                <SmartButton
-                    requireAuth={true}
-                    requireVerified={true}
-                    onClick={() => {
-                        // TODO: Implémenter la logique de contact
-                        console.log(`Contacter ${trip.driver.name} pour le trajet ${trip.id}`);
-                    }}
+                <Link
+                    href={`/trip/${trip.id}`}
                     className="w-full bg-[--accent-color] hover:bg-[--accent-color]/90 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                 >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -156,11 +163,17 @@ export default function TripCard({ trip }: TripCardProps) {
                             strokeLinecap="round"
                             strokeLinejoin="round"
                             strokeWidth={2}
-                            d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
+                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
                         />
                     </svg>
-                    Contacter {trip.driver.name}
-                </SmartButton>
+                    Voir les détails
+                </Link>
             </div>
         </div>
     );

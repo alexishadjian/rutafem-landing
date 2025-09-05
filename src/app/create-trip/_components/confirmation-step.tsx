@@ -1,9 +1,14 @@
+import { useAuth } from '@/contexts/AuthContext';
+import { createTrip } from '@/lib/firebaseAuth';
+import { CreateTripData } from '@/types/trip';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 
 type TripFormData = {
     departure: string;
     arrival: string;
     date: string;
+    time: string;
     seats: string;
     price: string;
     departurePlace: string;
@@ -17,6 +22,10 @@ type ConfirmationStepProps = {
 
 export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
     const router = useRouter();
+    const { user } = useAuth();
+    const [isCreating, setIsCreating] = useState(false);
+    const [isCreated, setIsCreated] = useState(false);
+    const [error, setError] = useState('');
 
     const formatDate = (dateString: string) => {
         if (!dateString) return '[Date non spécifiée]';
@@ -27,6 +36,40 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
             month: 'long',
             day: 'numeric',
         });
+    };
+
+    const handleCreateTrip = async () => {
+        if (!user) {
+            setError('Vous devez être connecté pour créer un trajet');
+            return;
+        }
+
+        setIsCreating(true);
+        setError('');
+
+        try {
+            // Convertir les données du formulaire au format attendu
+            const tripData: CreateTripData = {
+                departureTime: formData.time,
+                departureDate: formData.date,
+                departureCity: formData.departure,
+                arrivalCity: formData.arrival,
+                totalSeats: parseInt(formData.seats),
+                pricePerSeat: parseFloat(formData.price),
+                departureAddress: formData.departurePlace,
+                description: formData.description,
+            };
+
+            await createTrip(user.uid, tripData);
+            setIsCreated(true);
+        } catch (error) {
+            console.error('Erreur lors de la création du trajet:', error);
+            setError(
+                error instanceof Error ? error.message : 'Erreur lors de la création du trajet',
+            );
+        } finally {
+            setIsCreating(false);
+        }
     };
 
     return (
@@ -50,14 +93,30 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                             </svg>
                         </div>
 
-                        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-3 sm:mb-4">
-                            Trajet créé avec succès ! 🎉
-                        </h2>
+                        {isCreated ? (
+                            <>
+                                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-3 sm:mb-4">
+                                    Trajet créé avec succès ! 🎉
+                                </h2>
 
-                        <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-6 px-2">
-                            Ton trajet de covoiturage a été publié. D&apos;autres utilisatrices
-                            pourront maintenant le voir et demander à y participer.
-                        </p>
+                                <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-6 px-2">
+                                    Ton trajet de covoiturage a été publié. D&apos;autres
+                                    utilisatrices pourront maintenant le voir et demander à y
+                                    participer.
+                                </p>
+                            </>
+                        ) : (
+                            <>
+                                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-3 sm:mb-4">
+                                    Confirmer la création du trajet
+                                </h2>
+
+                                <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-6 px-2">
+                                    Vérifie les informations ci-dessous et clique sur &quot;Créer le
+                                    trajet&quot; pour le publier.
+                                </p>
+                            </>
+                        )}
 
                         <div className="bg-white rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 text-left">
                             <h3 className="font-semibold text-gray-800 mb-4 sm:mb-6 text-center text-lg sm:text-xl">
@@ -125,19 +184,52 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                             </div>
                         </div>
 
-                        <p className="text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8 px-2">
-                            Tu recevras une notification dès qu&apos;une utilisatrice
-                            s&apos;intéressera à ton trajet.
-                        </p>
+                        {isCreated && (
+                            <p className="text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8 px-2">
+                                Tu recevras une notification dès qu&apos;une utilisatrice
+                                s&apos;intéressera à ton trajet.
+                            </p>
+                        )}
+
+                        {error && (
+                            <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                                <p className="text-red-800 text-sm">{error}</p>
+                            </div>
+                        )}
                     </div>
 
-                    <div className="flex justify-center">
-                        <button
-                            onClick={() => router.push('/join-trip')}
-                            className="btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
-                        >
-                            ← Retour aux trajets
-                        </button>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        {isCreated ? (
+                            <button
+                                onClick={() => router.push('/join-trip')}
+                                className="btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
+                            >
+                                ← Retour aux trajets
+                            </button>
+                        ) : (
+                            <>
+                                <button
+                                    onClick={() => router.push('/create-trip?step=2')}
+                                    className="btn-secondary px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
+                                >
+                                    ← Retour
+                                </button>
+                                <button
+                                    onClick={handleCreateTrip}
+                                    disabled={isCreating}
+                                    className="btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
+                                >
+                                    {isCreating ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                            Création...
+                                        </>
+                                    ) : (
+                                        'Créer le trajet'
+                                    )}
+                                </button>
+                            </>
+                        )}
                     </div>
                 </div>
             </div>

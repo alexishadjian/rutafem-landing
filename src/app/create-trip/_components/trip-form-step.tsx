@@ -4,6 +4,7 @@ type TripFormData = {
     departure: string;
     arrival: string;
     date: string;
+    time: string;
     seats: string;
     price: string;
     departurePlace: string;
@@ -29,22 +30,25 @@ export default function TripFormStep({
         const newErrors: Partial<TripFormData> = {};
 
         if (!formData.departure.trim()) {
-            newErrors.departure = 'La ville de départ est requise';
+            newErrors.departure = 'Veuillez indiquer une ville de départ';
         }
         if (!formData.arrival.trim()) {
-            newErrors.arrival = "La ville d'arrivée est requise";
+            newErrors.arrival = 'Veuillez indiquer une ville d&apos;arrivée';
         }
         if (!formData.date) {
-            newErrors.date = 'La date est requise';
+            newErrors.date = 'Veuillez indiquer une date de départ';
+        }
+        if (!formData.time) {
+            newErrors.time = 'Veuillez indiquer une heure de départ';
         }
         if (!formData.seats) {
-            newErrors.seats = 'Le nombre de places est requis';
+            newErrors.seats = 'Veuillez indiquer le nombre de places disponibles';
         }
         if (!formData.price.trim()) {
-            newErrors.price = 'Le prix est requis';
+            newErrors.price = 'Veuillez indiquer le prix par place';
         }
         if (!formData.departurePlace.trim()) {
-            newErrors.departurePlace = 'Le lieu de départ est requis';
+            newErrors.departurePlace = 'Veuillez indiquer le lieu de départ';
         }
 
         setErrors(newErrors);
@@ -145,6 +149,29 @@ export default function TripFormStep({
                                 {errors.date && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
                                         {errors.date}
+                                    </p>
+                                )}
+                            </div>
+
+                            <div className="mb-4 sm:mb-6">
+                                <label
+                                    htmlFor="time"
+                                    className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
+                                >
+                                    Heure de départ <span className="text-[--accent-color]">*</span>
+                                </label>
+                                <input
+                                    type="time"
+                                    id="time"
+                                    value={formData.time}
+                                    onChange={(e) => handleInputChange('time', e.target.value)}
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
+                                        errors.time ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                />
+                                {errors.time && (
+                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
+                                        {errors.time}
                                     </p>
                                 )}
                             </div>
