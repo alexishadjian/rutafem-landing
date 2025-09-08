@@ -41,13 +41,13 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
 
     const handleCreateTrip = async () => {
         if (!user) {
-            setError('Vous devez être connecté pour créer un trajet');
+            setError('Vous devez être connecté pour publier un trajet');
             return;
         }
 
         if (!acceptTerms) {
             setError(
-                'Vous devez accepter les conditions générales de vente et le partage d&apos;informations pour créer un trajet',
+                'Vous devez accepter les conditions générales de vente et le partage d&apos;informations pour publier un trajet',
             );
             return;
         }
@@ -120,8 +120,8 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                                 </h2>
 
                                 <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-6 px-2">
-                                    Vérifie les informations ci-dessous et clique sur &quot;Créer le
-                                    trajet&quot; pour le publier.
+                                    Vérifie les informations ci-dessous et clique sur &quot;Publier
+                                    le trajet&quot; pour le publier.
                                 </p>
                             </>
                         )}
@@ -265,7 +265,7 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                                             Création...
                                         </>
                                     ) : (
-                                        'Créer le trajet'
+                                        'Publier le trajet'
                                     )}
                                 </button>
                             </>

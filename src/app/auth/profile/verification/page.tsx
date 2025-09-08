@@ -120,7 +120,7 @@ export default function VerificationPage() {
                         nous devons vérifier votre identité.
                     </p>
 
-                    <div className="mt-4 p-4 bg-pink-50 border border-pink-400 rounded-lg">
+                    <div className="mt-4 p-4 bg-blue-50 border border-blue-400 rounded-lg">
                         <div className="flex items-start gap-3">
                             <div className="flex-shrink-0"></div>
                             <div>

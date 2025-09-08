@@ -1,13 +1,64 @@
 'use client';
 
-import { Trip } from '@/types/trip';
+import { useAuth } from '@/contexts/AuthContext';
+import { db } from '@/lib/firebaseConfig';
+import { Trip, TripWithDriver } from '@/types/trip';
+import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
+import { useEffect, useState } from 'react';
 
 type TripCardProps = {
-    trip: Trip;
+    trip: Trip | TripWithDriver;
 };
 
 export default function TripCard({ trip }: TripCardProps) {
+    const { user } = useAuth();
+    const [driverFirstName, setDriverFirstName] = useState<string | null>(null);
+    const [loadingDriver, setLoadingDriver] = useState(false);
+
+    useEffect(() => {
+        const fetchDriverInfo = async () => {
+            if (!user || !trip.driverId) {
+                setDriverFirstName(null);
+                return;
+            }
+
+            setLoadingDriver(true);
+            try {
+                const driverDoc = await getDoc(doc(db, 'users', trip.driverId));
+                if (driverDoc.exists()) {
+                    const driverData = driverDoc.data();
+                    setDriverFirstName(driverData.firstName || null);
+                } else {
+                    setDriverFirstName(null);
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des informations du pilote:', error);
+                setDriverFirstName(null);
+            } finally {
+                setLoadingDriver(false);
+            }
+        };
+
+        fetchDriverInfo();
+    }, [user, trip.driverId]);
+
+    const getDriverDisplayName = () => {
+        if (!user) {
+            return 'Pilote anonyme';
+        }
+
+        if (loadingDriver) {
+            return 'Chargement...';
+        }
+
+        if (driverFirstName) {
+            return driverFirstName;
+        }
+
+        return 'Pilote anonyme';
+    };
+
     return (
         <div className="bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow duration-200 overflow-hidden">
             <div className="p-4 sm:p-5">
@@ -44,7 +95,7 @@ export default function TripCard({ trip }: TripCardProps) {
                                 />
                             </svg>
                         </div>
-                        <span className="font-medium text-gray-900">Pilote anonyme</span>
+                        <span className="font-medium text-gray-900">{getDriverDisplayName()}</span>
                     </div>
 
                     <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">

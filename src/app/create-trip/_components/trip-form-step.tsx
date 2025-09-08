@@ -74,7 +74,7 @@ export default function TripFormStep({
             <div className="bg-gray-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
                 <div className="max-w-4xl mx-auto">
                     <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-4 sm:mb-6 text-center">
-                        Créer ton trajet
+                        Publier ton trajet
                     </h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">

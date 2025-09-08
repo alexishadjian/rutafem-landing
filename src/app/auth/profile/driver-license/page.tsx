@@ -119,7 +119,7 @@ export default function DriverLicenseVerificationPage() {
                         trajets, nous devons vérifier votre permis de conduire.
                     </p>
 
-                    <div className="mt-4 p-4 bg-pink-50 border border-pink-200 rounded-lg">
+                    <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                         <div className="flex items-start gap-3">
                             <div>
                                 <p className="text-sm text-black font-medium mb-1">

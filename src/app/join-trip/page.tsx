@@ -127,7 +127,7 @@ export default function JoinTripPage() {
                             requireDriverVerified={true}
                             className="btn"
                         >
-                            Créer un trajet
+                            Publier un trajet
                         </SmartButton>
                     </div>
                 ) : (

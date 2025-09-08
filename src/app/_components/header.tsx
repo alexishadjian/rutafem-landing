@@ -181,7 +181,7 @@ export default function Header() {
                         onClick={() => setIsMenuOpen(false)}
                         className="hover:text-[--accent-color] transition-all duration-300"
                     >
-                        Créer un trajet
+                        Publier un trajet
                     </SmartButton>
                     <Link
                         href="/#mobile"
