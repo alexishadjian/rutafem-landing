@@ -126,7 +126,7 @@ export default function TripCard({ trip }: TripCardProps) {
                 <div className="flex items-center gap-2 mb-4">
                     <div className="flex items-center gap-2 text-gray-700">
                         <svg
-                            className="w-4 h-4 text-gray-500"
+                            className="w-4 h-4"
                             fill="none"
                             stroke="currentColor"
                             viewBox="0 0 24 24"
@@ -135,13 +135,7 @@ export default function TripCard({ trip }: TripCardProps) {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth={2}
-                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"
-                            />
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M6 20v-2a4 4 0 014-4h0a4 4 0 014 4v2"
+                                d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                             />
                         </svg>
                         <span className="font-medium">{getDriverDisplayName()}</span>
