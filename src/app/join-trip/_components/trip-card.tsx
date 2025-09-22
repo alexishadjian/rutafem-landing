@@ -95,10 +95,30 @@ export default function TripCard({ trip }: TripCardProps) {
                                 />
                             </svg>
                         </div>
-                        <span className="font-medium text-gray-900">{getDriverDisplayName()}</span>
+                        <div className="flex items-center">
+                            <span className="font-medium text-lg text-gray-900">
+                                {trip.departureCity}
+                            </span>
+                            <svg
+                                className="w-5 h-5 text-gray-400 mx-1"
+                                fill="none"
+                                stroke="currentColor"
+                                viewBox="0 0 24 24"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth={2}
+                                    d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                />
+                            </svg>
+                            <span className="font-medium text-lg text-gray-900">
+                                {trip.arrivalCity}
+                            </span>
+                        </div>
                     </div>
 
-                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-lg font-semibold">
                         {trip.pricePerSeat}€
                     </div>
                 </div>
@@ -115,53 +135,16 @@ export default function TripCard({ trip }: TripCardProps) {
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth={2}
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+                                d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4z"
                             />
                             <path
                                 strokeLinecap="round"
                                 strokeLinejoin="round"
                                 strokeWidth={2}
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+                                d="M6 20v-2a4 4 0 014-4h0a4 4 0 014 4v2"
                             />
                         </svg>
-                        <span className="font-medium">{trip.departureCity}</span>
-                    </div>
-
-                    <svg
-                        className="w-4 h-4 text-gray-400"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M17 8l4 4m0 0l-4 4m4-4H3"
-                        />
-                    </svg>
-
-                    <div className="flex items-center gap-2 text-gray-700">
-                        <svg
-                            className="w-4 h-4 text-gray-500"
-                            fill="none"
-                            stroke="currentColor"
-                            viewBox="0 0 24 24"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                            />
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                strokeWidth={2}
-                                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                            />
-                        </svg>
-                        <span className="font-medium">{trip.arrivalCity}</span>
+                        <span className="font-medium">{getDriverDisplayName()}</span>
                     </div>
                 </div>
 
