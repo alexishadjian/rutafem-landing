@@ -5,13 +5,12 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 type TripFormData = {
-    departure: string;
+    departurePlace: string;
     arrival: string;
     date: string;
     time: string;
     seats: string;
     price: string;
-    departurePlace: string;
     description: string;
 };
 
@@ -60,7 +59,7 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
             const tripData: CreateTripData = {
                 departureTime: formData.time,
                 departureDate: formData.date,
-                departureCity: formData.departure,
+                departureCity: formData.departurePlace,
                 arrivalCity: formData.arrival,
                 totalSeats: parseInt(formData.seats),
                 pricePerSeat: parseFloat(formData.price),
@@ -137,7 +136,7 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                                         Trajet :
                                     </span>
                                     <span className="font-medium text-gray-800 text-sm sm:text-base">
-                                        {formData.departure || '[Ville de départ]'} →{' '}
+                                        {formData.departurePlace || '[Lieu de départ]'} →{' '}
                                         {formData.arrival || "[Ville d'arrivée]"}
                                     </span>
                                 </div>

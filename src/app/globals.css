@@ -142,7 +142,7 @@ p {
 .btn {
     color: white;
     padding: 15px 20px;
-    background-color: #ff03819c;
+    background-color: var(--accent-color);
     border-radius: 12px;
     font-size: 18px;
     display: inline-flex;

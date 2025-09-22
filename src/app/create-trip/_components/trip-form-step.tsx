@@ -1,13 +1,12 @@
 import { useState } from 'react';
 
 type TripFormData = {
-    departure: string;
+    departurePlace: string;
     arrival: string;
     date: string;
     time: string;
     seats: string;
     price: string;
-    departurePlace: string;
     description: string;
 };
 
@@ -29,26 +28,17 @@ export default function TripFormStep({
     const validateForm = (): boolean => {
         const newErrors: Partial<TripFormData> = {};
 
-        if (!formData.departure.trim()) {
-            newErrors.departure = 'Veuillez indiquer une ville de départ';
-        }
-        if (!formData.arrival.trim()) {
-            newErrors.arrival = 'Veuillez indiquer une ville d&apos;arrivée';
-        }
         if (!formData.date) {
-            newErrors.date = 'Veuillez indiquer une date de départ';
+            newErrors.date = 'Veuillez indiquer la date de départ';
         }
         if (!formData.time) {
-            newErrors.time = 'Veuillez indiquer une heure de départ';
+            newErrors.time = 'Veuillez indiquer l&apos;heure de départ';
         }
         if (!formData.seats) {
             newErrors.seats = 'Veuillez indiquer le nombre de places disponibles';
         }
         if (!formData.price.trim()) {
             newErrors.price = 'Veuillez indiquer le prix par place';
-        }
-        if (!formData.departurePlace.trim()) {
-            newErrors.departurePlace = 'Veuillez indiquer le lieu de départ';
         }
 
         setErrors(newErrors);
@@ -78,64 +68,14 @@ export default function TripFormStep({
                     </h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
-                            <div>
-                                <label
-                                    htmlFor="departure"
-                                    className="block text-sm font-medium text-gray-700 mb-2"
-                                >
-                                    Ville de départ <span className="text-[--accent-color]">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="departure"
-                                    value={formData.departure}
-                                    onChange={(e) => handleInputChange('departure', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                        errors.departure ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                    placeholder="Ex: Paris"
-                                />
-                                {errors.departure && (
-                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                                        {errors.departure}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="arrival"
-                                    className="block text-sm font-medium text-gray-700 mb-2"
-                                >
-                                    Ville d&apos;arrivée{' '}
-                                    <span className="text-[--accent-color]">*</span>
-                                </label>
-                                <input
-                                    type="text"
-                                    id="arrival"
-                                    value={formData.arrival}
-                                    onChange={(e) => handleInputChange('arrival', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                        errors.arrival ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                    placeholder="Ex: Lyon"
-                                />
-                                {errors.arrival && (
-                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                                        {errors.arrival}
-                                    </p>
-                                )}
-                            </div>
-                        </div>
-
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label
                                     htmlFor="date"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    Date du trajet <span className="text-[--accent-color]">*</span>
+                                    Quand souhaite-tu partir ?{' '}
+                                    <span className="text-[--accent-color]">*</span>
                                 </label>
                                 <input
                                     type="date"
@@ -153,12 +93,13 @@ export default function TripFormStep({
                                 )}
                             </div>
 
-                            <div className="mb-4 sm:mb-6">
+                            <div>
                                 <label
                                     htmlFor="time"
-                                    className="block text-sm sm:text-base font-medium text-gray-700 mb-2"
+                                    className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    Heure de départ <span className="text-[--accent-color]">*</span>
+                                    À quelle heure ?{' '}
+                                    <span className="text-[--accent-color]">*</span>
                                 </label>
                                 <input
                                     type="time"
@@ -175,7 +116,9 @@ export default function TripFormStep({
                                     </p>
                                 )}
                             </div>
+                        </div>
 
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label
                                     htmlFor="seats"
@@ -203,9 +146,7 @@ export default function TripFormStep({
                                     </p>
                                 )}
                             </div>
-                        </div>
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
                             <div>
                                 <label
                                     htmlFor="price"
@@ -229,32 +170,6 @@ export default function TripFormStep({
                                 {errors.price && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
                                         {errors.price}
-                                    </p>
-                                )}
-                            </div>
-
-                            <div>
-                                <label
-                                    htmlFor="departure-place"
-                                    className="block text-sm font-medium text-gray-700 mb-2"
-                                >
-                                    Lieu de départ <span className="text-[--accent-color]">*</span>
-                                </label>
-                                <textarea
-                                    id="departure-place"
-                                    rows={1}
-                                    value={formData.departurePlace}
-                                    onChange={(e) =>
-                                        handleInputChange('departurePlace', e.target.value)
-                                    }
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base resize-none ${
-                                        errors.departurePlace ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                    placeholder="Ex: Gare de Lyon, 75000 Paris"
-                                />
-                                {errors.departurePlace && (
-                                    <p className="text-red-500 text-xs sm:text-sm mt-1">
-                                        {errors.departurePlace}
                                     </p>
                                 )}
                             </div>

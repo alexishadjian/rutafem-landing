@@ -9,13 +9,12 @@ import TripFormStep from './_components/trip-form-step';
 import WelcomeStep from './_components/welcome-step';
 
 type TripFormData = {
-    departure: string;
+    departurePlace: string;
     arrival: string;
     date: string;
     time: string;
     seats: string;
     price: string;
-    departurePlace: string;
     description: string;
 };
 
@@ -25,13 +24,12 @@ function CreateTripContent() {
     const currentStep = parseInt(searchParams.get('step') || '1');
 
     const [formData, setFormData] = useState<TripFormData>({
-        departure: '',
+        departurePlace: '',
         arrival: '',
         date: '',
         time: '',
         seats: '1',
         price: '',
-        departurePlace: '',
         description: '',
     });
 
@@ -51,7 +49,13 @@ function CreateTripContent() {
     const renderCurrentStep = () => {
         switch (currentStep) {
             case 1:
-                return <WelcomeStep onNext={goToNextStep} />;
+                return (
+                    <WelcomeStep
+                        formData={formData}
+                        updateFormData={updateFormData}
+                        onNext={goToNextStep}
+                    />
+                );
             case 2:
                 return (
                     <TripFormStep
@@ -64,7 +68,13 @@ function CreateTripContent() {
             case 3:
                 return <ConfirmationStep formData={formData} onBack={() => goToStep(2)} />;
             default:
-                return <WelcomeStep onNext={goToNextStep} />;
+                return (
+                    <WelcomeStep
+                        formData={formData}
+                        updateFormData={updateFormData}
+                        onNext={goToNextStep}
+                    />
+                );
         }
     };
 

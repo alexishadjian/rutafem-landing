@@ -42,6 +42,9 @@ export default function Home() {
                     <Link className="btn mt-8" href="/join-trip">
                         Trouver un trajet
                     </Link>
+                    <Link className="btn mt-8 sm:ml-8" href="/create-trip">
+                        Créer un trajet
+                    </Link>
                 </div>
             </section>
 
