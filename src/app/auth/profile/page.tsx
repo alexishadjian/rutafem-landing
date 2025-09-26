@@ -11,7 +11,7 @@ import { useEffect, useState } from 'react';
 import UserTrips from './_components/user-trips';
 
 export default function ProfilePage() {
-    const { user, userProfile, loading } = useAuth();
+    const { user, userProfile, loading, refreshUserProfile } = useAuth();
     const router = useRouter();
     const [stripeStatus, setStripeStatus] = useState<
         | { charges_enabled: boolean; payouts_enabled: boolean; accountId: string }
@@ -558,6 +558,9 @@ export default function ProfilePage() {
                             const json = await res.json();
                             if (!res.ok) throw new Error(json.error || 'Erreur Stripe');
                             await updateDoc(doc(db, 'users', user.uid), { stripeAccountId: '' });
+                            // Rafraîchir le profil et l'état Stripe pour mise à jour immédiate de l'UI
+                            await refreshUserProfile();
+                            setStripeStatus(null);
                             setStripeMessage('Compte bancaire déconnecté.');
                         } catch (e: unknown) {
                             setStripeMessage(e instanceof Error ? e.message : 'Erreur');
