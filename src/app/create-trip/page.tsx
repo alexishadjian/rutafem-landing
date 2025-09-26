@@ -1,6 +1,7 @@
 'use client';
 
 import { RouteGuard } from '@/app/_components/route-guard';
+import { useAuth } from '@/contexts/AuthContext';
 import Stepper from '@/components/ui/stepper';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
@@ -22,6 +23,8 @@ function CreateTripContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const currentStep = parseInt(searchParams.get('step') || '1');
+    const { userProfile } = useAuth();
+    const [stripeOk, setStripeOk] = useState<boolean | null>(null);
 
     const [formData, setFormData] = useState<TripFormData>({
         departurePlace: '',
@@ -78,6 +81,32 @@ function CreateTripContent() {
         }
     };
 
+    // Vérifier Stripe Connect (payouts_enabled) et bloquer si non connecté
+    useState(() => {
+        const check = async () => {
+            if (!userProfile?.stripeAccountId) {
+                setStripeOk(false);
+                return;
+            }
+            try {
+                const res = await fetch('/api/stripe/connect/status', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ accountId: userProfile.stripeAccountId }),
+                });
+                if (!res.ok) {
+                    setStripeOk(false);
+                    return;
+                }
+                const json = await res.json();
+                setStripeOk(Boolean(json.payouts_enabled));
+            } catch {
+                setStripeOk(false);
+            }
+        };
+        check();
+    });
+
     return (
         <RouteGuard
             requireAuth={true}
@@ -91,7 +120,20 @@ function CreateTripContent() {
                         <Stepper totalSteps={3} currentStep={currentStep} />
                     </div>
 
-                    {renderCurrentStep()}
+                    {stripeOk === false ? (
+                        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-yellow-800">
+                            <h3 className="font-semibold mb-2">Compte bancaire requis</h3>
+                            <p className="mb-4">Pour publier un trajet, connecte d'abord ton compte bancaire Stripe.</p>
+                            <button
+                                onClick={() => router.push('/auth/profile/banking')}
+                                className="btn"
+                            >
+                                Connecter mon compte bancaire
+                            </button>
+                        </div>
+                    ) : (
+                        renderCurrentStep()
+                    )}
                 </section>
             </div>
         </RouteGuard>
