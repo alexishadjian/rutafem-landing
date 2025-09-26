@@ -3,6 +3,9 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { logoutUser } from '@/lib/firebaseAuth';
 import Link from 'next/link';
+import { ConfirmationModal } from '@/app/_components/confirmation-modal';
+import { doc, updateDoc } from 'firebase/firestore';
+import { db } from '@/lib/firebaseConfig';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import UserTrips from './_components/user-trips';
@@ -15,6 +18,34 @@ export default function ProfilePage() {
         | null
     >(null);
     const [checkingStripe, setCheckingStripe] = useState(false);
+    const [unlinkOpen, setUnlinkOpen] = useState(false);
+    const [unlinkLoading, setUnlinkLoading] = useState(false);
+    const [stripeMessage, setStripeMessage] = useState<string>('');
+    const [error, setError] = useState<string>('');
+    const [success, setSuccess] = useState<string>('');
+
+    const unlinkStripe = async () => {
+        if (!user || !userProfile?.stripeAccountId) return;
+        try {
+            setUnlinkLoading(true);
+            setError('');
+            setSuccess('');
+            const res = await fetch('/api/stripe/connect/unlink', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accountId: userProfile.stripeAccountId }),
+            });
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error || 'Erreur Stripe');
+            await updateDoc(doc(db, 'users', user.uid), { stripeAccountId: '' });
+            setSuccess('Compte bancaire déconnecté avec succès');
+        } catch (e: unknown) {
+            setError(e instanceof Error ? e.message : 'Erreur');
+        } finally {
+            setUnlinkLoading(false);
+            setUnlinkOpen(false);
+        }
+    };
 
     // Redirection vers login si pas connecté
     useEffect(() => {
@@ -418,8 +449,38 @@ export default function ProfilePage() {
                         )}
 
                         {userProfile.role === 'driver' && (!stripeStatus || !stripeStatus.payouts_enabled) && (
-                            <Link
-                                href="/auth/profile/banking"
+                            <button
+                                onClick={async () => {
+                                    if (!user) return;
+                                    try {
+                                        setStripeMessage('');
+                                        const createRes = await fetch('/api/stripe/connect/create-or-link', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ uid: user.uid, existingAccountId: userProfile?.stripeAccountId, email: user.email }),
+                                        });
+                                        const createJson = await createRes.json();
+                                        if (!createRes.ok) throw new Error(createJson.error || 'Erreur Stripe');
+
+                                        const returnUrl = `${window.location.origin}/auth/profile`;
+                                        const linkRes = await fetch('/api/stripe/connect/account-link', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify({ accountId: createJson.accountId, returnUrl }),
+                                        });
+                                        const linkJson = await linkRes.json();
+                                        if (!linkRes.ok) throw new Error(linkJson.error || 'Erreur AccountLink');
+
+                                        try {
+                                            await updateDoc(doc(db, 'users', user.uid), { stripeAccountId: createJson.accountId });
+                                        } catch {
+                                            setStripeMessage('Erreur lors de la mise à jour du compte bancaire');
+                                        }
+                                        window.location.href = linkJson.url as string;
+                                    } catch (e: unknown) {
+                                        setStripeMessage(e instanceof Error ? e.message : 'Erreur');
+                                    }
+                                }}
                                 className="w-full flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-[1.02]"
                             >
                                 <svg
@@ -436,16 +497,27 @@ export default function ProfilePage() {
                                     />
                                 </svg>
                                 Connecter mon compte bancaire
-                            </Link>
+                            </button>
                         )}
 
                         {userProfile.role === 'driver' && stripeStatus?.payouts_enabled && (
-                            <div className="w-full flex justify-center items-center py-3 px-4 rounded-lg text-sm font-medium text-green-700 bg-green-50 border border-green-200">
-                                <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                </svg>
-                                Compte bancaire connecté
+                            <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                                <div className="flex-1 w-full flex justify-center items-center py-3 px-4 rounded-lg text-sm font-medium text-green-700 bg-green-50 border border-green-200">
+                                    <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                    </svg>
+                                    Compte bancaire connecté
+                                </div>
+                                <button
+                                    onClick={() => setUnlinkOpen(true)}
+                                    className="w-full sm:w-auto inline-flex justify-center items-center py-3 px-4 rounded-lg text-sm font-medium text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                >
+                                    Déconnecter mon compte
+                                </button>
                             </div>
+                        )}
+                        {stripeMessage && (
+                            <div className="text-sm text-red-600">{stripeMessage}</div>
                         )}
 
                         <button
@@ -469,6 +541,38 @@ export default function ProfilePage() {
                         </button>
                     </div>
                 </div>
+
+                <ConfirmationModal
+                    isOpen={unlinkOpen}
+                    onClose={() => setUnlinkOpen(false)}
+                    onConfirm={async () => {
+                        if (!user || !userProfile?.stripeAccountId) return;
+                        try {
+                            setUnlinkLoading(true);
+                            setStripeMessage('');
+                            const res = await fetch('/api/stripe/connect/unlink', {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ accountId: userProfile.stripeAccountId }),
+                            });
+                            const json = await res.json();
+                            if (!res.ok) throw new Error(json.error || 'Erreur Stripe');
+                            await updateDoc(doc(db, 'users', user.uid), { stripeAccountId: '' });
+                            setStripeMessage('Compte bancaire déconnecté.');
+                        } catch (e: unknown) {
+                            setStripeMessage(e instanceof Error ? e.message : 'Erreur');
+                        } finally {
+                            setUnlinkLoading(false);
+                            setUnlinkOpen(false);
+                        }
+                    }}
+                    title="Déconnecter le compte bancaire"
+                    message="Cette action supprime le lien entre votre profil RutaFem et votre compte Stripe. Vous pourrez le reconnecter plus tard si nécessaire."
+                    confirmText="Déconnecter"
+                    cancelText="Annuler"
+                    type="danger"
+                    loading={unlinkLoading}
+                />
 
                 {/* Section Trajets */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-4">
