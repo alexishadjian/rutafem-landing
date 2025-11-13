@@ -152,7 +152,9 @@ export default function CreateTripPage() {
                 </div>
             }
         >
-            <CreateTripContent />
+            <Suspense fallback={<div>Chargement...</div>}>
+                <CreateTripContent />
+            </Suspense>
         </Suspense>
     );
 }

@@ -1,11 +1,8 @@
-'use client';
 
 import Link from 'next/link';
-import { useSearchParams } from 'next/navigation';
 
-export default function JoinTripCancelPage() {
-    const params = useSearchParams();
-    const tripId = params.get('tripId');
+export default function JoinTripCancelPage({ searchParams }: { searchParams: { tripId: string } }) {
+    const tripId = searchParams.tripId;
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
