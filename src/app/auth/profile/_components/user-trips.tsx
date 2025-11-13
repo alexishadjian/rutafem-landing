@@ -1,7 +1,7 @@
 'use client';
 
-import { getUserTrips } from '@/lib/firebaseAuth';
-import { Trip } from '@/types/trip';
+import { getUserTrips } from '@/lib/firebase/trips';
+import { Trip } from '@/types/trips.types';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 

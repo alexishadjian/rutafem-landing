@@ -1,0 +1,290 @@
+import { CreateTripData, Trip, TripDoc, TripWithDriver } from '@/types/trips.types';
+import {
+    collection,
+    doc,
+    DocumentData,
+    getDoc,
+    getDocs,
+    query,
+    Query,
+    setDoc,
+    Timestamp,
+    updateDoc,
+    where,
+} from 'firebase/firestore';
+
+import { db } from '../firebaseConfig';
+import { logFirebaseError } from './errors';
+
+const tripsCollection = collection(db, 'trips');
+
+const toDate = (value: Timestamp | Date): Date =>
+    value instanceof Timestamp ? value.toDate() : value;
+
+const mapTripDoc = (tripId: string, data: TripDoc): Trip => ({
+    id: tripId,
+    departureTime: data.departureTime,
+    departureDate: data.departureDate,
+    departureCity: data.departureCity,
+    arrivalCity: data.arrivalCity,
+    totalSeats: data.totalSeats,
+    availableSeats: data.availableSeats,
+    pricePerSeat: data.pricePerSeat,
+    departureAddress: data.departureAddress,
+    description: data.description,
+    driverId: data.driverId,
+    participants: data.participants,
+    isActive: data.isActive,
+    createdAt: toDate(data.createdAt),
+    updatedAt: toDate(data.updatedAt),
+});
+
+const sortByDeparture = (a: Trip, b: Trip) => {
+    const dateA = new Date(`${a.departureDate} ${a.departureTime}`);
+    const dateB = new Date(`${b.departureDate} ${b.departureTime}`);
+    return dateA.getTime() - dateB.getTime();
+};
+
+const fetchTrips = async (tripQuery: Query<DocumentData>): Promise<Trip[]> => {
+    const snapshot = await getDocs(tripQuery);
+    return snapshot.docs
+        .map((tripDoc) => mapTripDoc(tripDoc.id, tripDoc.data() as TripDoc))
+        .sort(sortByDeparture);
+};
+
+export const createTrip = async (driverId: string, tripData: CreateTripData): Promise<string> => {
+    try {
+        const tripRef = doc(tripsCollection);
+        await setDoc(tripRef, {
+            ...tripData,
+            driverId,
+            participants: [],
+            availableSeats: tripData.totalSeats,
+            isActive: true,
+            createdAt: new Date(),
+            updatedAt: new Date(),
+        });
+        return tripRef.id;
+    } catch (error) {
+        logFirebaseError('createTrip', error);
+        throw new Error('Erreur lors de la création du trajet');
+    }
+};
+
+export const getActiveTrips = async (): Promise<Trip[]> => {
+    try {
+        return fetchTrips(
+            query(tripsCollection, where('isActive', '==', true), where('availableSeats', '>', 0)),
+        );
+    } catch (error) {
+        logFirebaseError('getActiveTrips', error);
+        throw new Error('Erreur lors de la récupération des trajets');
+    }
+};
+
+export const getTripById = async (tripId: string): Promise<TripWithDriver | null> => {
+    try {
+        const tripDoc = await getDoc(doc(db, 'trips', tripId));
+        if (!tripDoc.exists()) {
+            return null;
+        }
+
+        const trip = mapTripDoc(tripDoc.id, tripDoc.data() as TripDoc);
+
+        try {
+            const driverDoc = await getDoc(doc(db, 'users', trip.driverId));
+            if (!driverDoc.exists()) {
+                throw new Error('Conductrice non trouvée');
+            }
+            const driverData = driverDoc.data();
+            return {
+                ...trip,
+                driver: {
+                    id: trip.driverId,
+                    firstName: (driverData.firstName as string) ?? '',
+                    lastName: (driverData.lastName as string) ?? '',
+                    email: (driverData.email as string) ?? '',
+                    phoneNumber: (driverData.phoneNumber as string) ?? '',
+                },
+            };
+        } catch (driverError) {
+            logFirebaseError('getTripDriver', driverError);
+            return {
+                ...trip,
+                driver: {
+                    id: trip.driverId,
+                    firstName: 'Conductrice',
+                    lastName: '',
+                    email: '',
+                    phoneNumber: '',
+                },
+            };
+        }
+    } catch (error) {
+        logFirebaseError('getTripById', error);
+        throw new Error('Erreur lors de la récupération du trajet');
+    }
+};
+
+export const joinTrip = async (tripId: string, userId: string): Promise<void> => {
+    try {
+        const tripRef = doc(db, 'trips', tripId);
+        const tripSnapshot = await getDoc(tripRef);
+        if (!tripSnapshot.exists()) {
+            throw new Error('Trajet non trouvé');
+        }
+
+        const tripData = tripSnapshot.data() as TripDoc;
+
+        if (tripData.participants.includes(userId)) {
+            throw new Error('Vous participez déjà à ce trajet');
+        }
+        if (tripData.availableSeats <= 0) {
+            throw new Error('Plus de places disponibles pour ce trajet');
+        }
+        if (!tripData.isActive) {
+            throw new Error("Ce trajet n'est plus actif");
+        }
+
+        await updateDoc(tripRef, {
+            participants: [...tripData.participants, userId],
+            availableSeats: tripData.availableSeats - 1,
+            updatedAt: new Date(),
+        });
+    } catch (error) {
+        logFirebaseError('joinTrip', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error('Erreur lors de la participation au trajet');
+    }
+};
+
+export const leaveTrip = async (tripId: string, userId: string): Promise<void> => {
+    try {
+        const tripRef = doc(db, 'trips', tripId);
+        const tripSnapshot = await getDoc(tripRef);
+        if (!tripSnapshot.exists()) {
+            throw new Error('Trajet non trouvé');
+        }
+
+        const tripData = tripSnapshot.data() as TripDoc;
+        if (!tripData.participants.includes(userId)) {
+            throw new Error('Vous ne participez pas à ce trajet');
+        }
+        if (!tripData.isActive) {
+            throw new Error("Ce trajet n'est plus actif");
+        }
+
+        await updateDoc(tripRef, {
+            participants: tripData.participants.filter((id) => id !== userId),
+            availableSeats: tripData.availableSeats + 1,
+            updatedAt: new Date(),
+        });
+    } catch (error) {
+        logFirebaseError('leaveTrip', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error("Erreur lors de l'annulation de la participation au trajet");
+    }
+};
+
+export const cancelTrip = async (tripId: string, userId: string): Promise<void> => {
+    try {
+        const tripRef = doc(db, 'trips', tripId);
+        const tripSnapshot = await getDoc(tripRef);
+        if (!tripSnapshot.exists()) {
+            throw new Error('Trajet non trouvé');
+        }
+
+        const tripData = tripSnapshot.data() as TripDoc;
+        if (tripData.driverId !== userId) {
+            throw new Error('Vous ne pouvez pas annuler ce trajet');
+        }
+        if (!tripData.isActive) {
+            throw new Error("Ce trajet n'est plus actif");
+        }
+
+        await updateDoc(tripRef, {
+            isActive: false,
+            updatedAt: new Date(),
+        });
+    } catch (error) {
+        logFirebaseError('cancelTrip', error);
+        if (error instanceof Error) {
+            throw error;
+        }
+        throw new Error("Erreur lors de l'annulation du trajet");
+    }
+};
+
+export const getParticipantsInfo = async (
+    participantIds: string[],
+): Promise<
+    {
+        id: string;
+        firstName: string;
+        lastName: string;
+        phoneNumber: string;
+    }[]
+> => {
+    try {
+        const results = await Promise.all(
+            participantIds.map(async (participantId) => {
+                const userSnapshot = await getDoc(doc(db, 'users', participantId));
+                if (!userSnapshot.exists()) {
+                    return null;
+                }
+                const data = userSnapshot.data();
+                return {
+                    id: participantId,
+                    firstName: (data.firstName as string) ?? '',
+                    lastName: (data.lastName as string) ?? '',
+                    phoneNumber: (data.phoneNumber as string) ?? '',
+                };
+            }),
+        );
+
+        return results.filter(
+            (
+                participant,
+            ): participant is {
+                id: string;
+                firstName: string;
+                lastName: string;
+                phoneNumber: string;
+            } => participant !== null,
+        );
+    } catch (error) {
+        logFirebaseError('getParticipantsInfo', error);
+        throw new Error('Erreur lors de la récupération des informations des participants');
+    }
+};
+
+export const getUserTrips = async (
+    userId: string,
+): Promise<{ createdTrips: Trip[]; participatedTrips: Trip[] }> => {
+    try {
+        const [createdTrips, participatedTrips] = await Promise.all([
+            fetchTrips(
+                query(
+                    tripsCollection,
+                    where('driverId', '==', userId),
+                    where('isActive', '==', true),
+                ),
+            ),
+            fetchTrips(
+                query(
+                    tripsCollection,
+                    where('participants', 'array-contains', userId),
+                    where('isActive', '==', true),
+                ),
+            ),
+        ]);
+        return { createdTrips, participatedTrips };
+    } catch (error) {
+        logFirebaseError('getUserTrips', error);
+        throw new Error('Erreur lors de la récupération des trajets utilisateur');
+    }
+};

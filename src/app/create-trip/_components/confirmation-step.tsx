@@ -1,6 +1,6 @@
 import { useAuth } from '@/contexts/AuthContext';
-import { createTrip } from '@/lib/firebaseAuth';
-import { CreateTripData } from '@/types/trip';
+import { createTrip } from '@/lib/firebase/trips';
+import { CreateTripData } from '@/types/trips.types';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 

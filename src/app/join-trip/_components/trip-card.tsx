@@ -2,7 +2,7 @@
 
 import { useAuth } from '@/contexts/AuthContext';
 import { db } from '@/lib/firebaseConfig';
-import { Trip, TripWithDriver } from '@/types/trip';
+import { Trip, TripWithDriver } from '@/types/trips.types';
 import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';

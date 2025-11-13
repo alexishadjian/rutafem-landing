@@ -1,11 +1,11 @@
-import { villes } from "@/datas/villes";
-import { notFound } from "next/navigation";
-import Link from "next/link";
-import { Metadata } from "next";
+import { villes } from '@/datas/villes';
+import { Metadata } from 'next';
+import Link from 'next/link';
+import { notFound } from 'next/navigation';
 
 type Props = {
-    params: Promise<{ city: string }>
-    searchParams: Promise<{ [key: string]: string | string[] | undefined }>
+    params: Promise<{ city: string }>;
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
 };
 
 export async function generateStaticParams() {
@@ -15,7 +15,6 @@ export async function generateStaticParams() {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-
     console.log('params', await params);
     console.log('params.city', (await params).city);
 
@@ -25,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
     if (!city) {
         return {
-            title: "Page non trouvée",
+            title: 'Page non trouvée',
         };
     }
 
@@ -36,7 +35,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 }
 
 export default async function CovoiturageVillePage({ params }: Props) {
-
     const slugCity = (await params).city;
     const city = villes.find((v) => v.slug === slugCity);
 
@@ -48,10 +46,13 @@ export default async function CovoiturageVillePage({ params }: Props) {
         <main className="wrapper py-8">
             <h1 className="text-3xl font-bold mb-4">Covoiturage à {city.name} entre femmes</h1>
             <p className="mb-6">
-                Vous cherchez un covoiturage 100% féminin à {city.name} ? Avec RutaFem, profitez de trajets partagés entre femmes en toute sécurité et convivialité.
+                Vous cherchez un covoiturage 100% féminin à {city.name} ? Avec RutaFem, profitez de
+                trajets partagés entre femmes en toute sécurité et convivialité.
             </p>
 
-            <h2 className="text-2xl font-semibold mb-2">Des trajets sécurisés dans les quartiers de {city.name}</h2>
+            <h2 className="text-2xl font-semibold mb-2">
+                Des trajets sécurisés dans les quartiers de {city.name}
+            </h2>
             <ul className="list-disc list-inside mb-6">
                 {city.quartiers.map((quartier: string) => (
                     <li key={quartier}>Disponible à {quartier}</li>
@@ -66,7 +67,9 @@ export default async function CovoiturageVillePage({ params }: Props) {
             </Link>
 
             <div className="mb-8">
-                <h2 className="text-2xl font-semibold mb-4">RutaFem est disponible dans ces villes</h2>
+                <h2 className="text-2xl font-semibold mb-4">
+                    RutaFem est disponible dans ces villes
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                     {villes.map((v) => (
                         <Link
@@ -75,12 +78,13 @@ export default async function CovoiturageVillePage({ params }: Props) {
                             className="block p-4 border rounded-lg hover:bg-gray-50 transition"
                         >
                             <h3 className="font-medium">{v.name}</h3>
-                            <p className="text-sm text-gray-600">{v.quartiers.length} quartiers disponibles</p>
+                            <p className="text-sm text-gray-600">
+                                {v.quartiers.length} quartiers disponibles
+                            </p>
                         </Link>
                     ))}
                 </div>
             </div>
-
         </main>
     );
 }

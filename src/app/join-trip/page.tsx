@@ -1,8 +1,8 @@
 'use client';
 
 import { SmartButton } from '@/app/_components/smart-button';
-import { getActiveTrips } from '@/lib/firebaseAuth';
-import { Trip } from '@/types/trip';
+import { getActiveTrips } from '@/lib/firebase/trips';
+import { Trip } from '@/types/trips.types';
 import { useEffect, useState } from 'react';
 import SearchBar from './_components/search-bar';
 import TripCard from './_components/trip-card';

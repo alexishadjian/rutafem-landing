@@ -1,6 +1,6 @@
 'use client';
 
-import { registerUser } from '@/lib/firebaseAuth';
+import { registerUser } from '@/lib/firebase/auth';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

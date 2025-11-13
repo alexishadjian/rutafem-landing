@@ -1,8 +1,8 @@
 'use client';
 
 import { RouteGuard } from '@/app/_components/route-guard';
-import { useAuth } from '@/contexts/AuthContext';
 import Stepper from '@/components/ui/stepper';
+import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { Suspense, useState } from 'react';
 import ConfirmationStep from './_components/confirmation-step';
@@ -81,7 +81,7 @@ function CreateTripContent() {
         }
     };
 
-    // Vérifier Stripe Connect (payouts_enabled) et bloquer si non connecté
+    // check Stripe Connect (payouts_enabled) and block if not connected
     useState(() => {
         const check = async () => {
             if (!userProfile?.stripeAccountId) {
@@ -123,7 +123,10 @@ function CreateTripContent() {
                     {stripeOk === false ? (
                         <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-yellow-800">
                             <h3 className="font-semibold mb-2">Compte bancaire requis</h3>
-                            <p className="mb-4">Pour publier un trajet, connecte d'abord ton compte bancaire Stripe.</p>
+                            <p className="mb-4">
+                                Pour publier un trajet, connecte d&apos;abord ton compte bancaire
+                                Stripe.
+                            </p>
                             <button
                                 onClick={() => router.push('/auth/profile/banking')}
                                 className="btn"

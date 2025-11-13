@@ -1,10 +1,16 @@
 'use client';
 
+import { db } from '@/lib/firebaseConfig';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState, Suspense } from 'react';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
-import { db } from '@/lib/firebaseConfig';
+import { Suspense, useEffect, useState } from 'react';
+
+type TripDoc = {
+    isActive: boolean;
+    availableSeats: number;
+    participants?: string[];
+};
 
 function SuccessContent() {
     const params = useSearchParams();
@@ -25,17 +31,19 @@ function SuccessContent() {
                 const tripRef = doc(db, 'trips', tripId);
                 const tripSnap = await getDoc(tripRef);
                 if (!tripSnap.exists()) return;
-                const trip = tripSnap.data() as any;
+                const trip = tripSnap.data() as TripDoc | undefined;
+                if (!trip) return;
                 const buyerUid = session.metadata?.buyerUid as string | undefined;
                 const quantity = Number(session.metadata?.quantity || '1');
                 if (!buyerUid) return;
                 if (!trip.isActive || trip.availableSeats < quantity) return;
-                if (trip.participants?.includes(buyerUid)) {
+                const participants = trip.participants ?? [];
+                if (participants.includes(buyerUid)) {
                     setDone(true);
                     return;
                 }
                 await updateDoc(tripRef, {
-                    participants: [...trip.participants, buyerUid],
+                    participants: [...participants, buyerUid],
                     availableSeats: trip.availableSeats - quantity,
                     updatedAt: new Date(),
                     lastCheckoutSessionId: sessionId,
@@ -53,8 +61,18 @@ function SuccessContent() {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
             <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
                 <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    <svg
+                        className="w-8 h-8 text-green-600"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                        />
                     </svg>
                 </div>
                 <h1 className="text-xl font-bold text-gray-900 mb-2">Paiement réussi</h1>
@@ -76,13 +94,15 @@ function SuccessContent() {
 
 export default function JoinTripSuccessPage() {
     return (
-        <Suspense fallback={
-            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-                <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
-                    <p className="text-gray-600">Chargement...</p>
+        <Suspense
+            fallback={
+                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                    <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
+                        <p className="text-gray-600">Chargement...</p>
+                    </div>
                 </div>
-            </div>
-        }>
+            }
+        >
             <SuccessContent />
         </Suspense>
     );

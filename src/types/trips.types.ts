@@ -1,7 +1,9 @@
+import { Timestamp } from 'firebase/firestore';
+
 export type Trip = {
     id: string;
-    departureTime: string; // Format: "HH:MM"
-    departureDate: string; // Format: "YYYY-MM-DD"
+    departureTime: string; // format: "HH:MM"
+    departureDate: string; // format: "YYYY-MM-DD"
     departureCity: string;
     arrivalCity: string;
     totalSeats: number;
@@ -9,8 +11,8 @@ export type Trip = {
     pricePerSeat: number;
     departureAddress: string;
     description?: string;
-    driverId: string; // ID de l'utilisateur qui crée le trajet
-    participants: string[]; // IDs des utilisateurs participants
+    driverId: string; // user id of the driver
+    participants: string[]; // user ids of the participants
     isActive: boolean;
     createdAt: Date;
     updatedAt: Date;
@@ -34,5 +36,11 @@ export type TripWithDriver = Trip & {
         lastName: string;
         email: string;
         phoneNumber: string;
+        stripeAccountId?: string | null;
     };
+};
+
+export type TripDoc = Omit<Trip, 'id' | 'createdAt' | 'updatedAt'> & {
+    createdAt: Timestamp | Date;
+    updatedAt: Timestamp | Date;
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { uploadVerificationDocuments } from '@/lib/firebaseAuth';
+import { uploadVerificationDocuments } from '@/lib/firebase/users';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -16,7 +16,7 @@ export default function VerificationPage() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
-    // Redirection vers login si pas connecté
+    // redirect to login if not authenticated
     useEffect(() => {
         if (!loading && (!user || !userProfile)) {
             router.push('/auth/login');
@@ -80,7 +80,7 @@ export default function VerificationPage() {
                 'Documents envoyés avec succès ! Votre profil sera vérifié par notre équipe.',
             );
 
-            // Mettre à jour le profil utilisateur
+            // update user profile
             await refreshUserProfile();
 
             setTimeout(() => {
@@ -104,7 +104,7 @@ export default function VerificationPage() {
         );
     }
 
-    // Si pas connecté, on affiche rien (la redirection se fait dans useEffect)
+    // if not authenticated, display nothing (the redirection is done in useEffect)
     if (!user || !userProfile) {
         return null;
     }

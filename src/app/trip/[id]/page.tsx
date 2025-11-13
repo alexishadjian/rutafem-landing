@@ -3,17 +3,16 @@
 import { ConfirmationModal } from '@/app/_components/confirmation-modal';
 import { RouteGuard } from '@/app/_components/route-guard';
 import { useAuth } from '@/contexts/AuthContext';
-import {
-    cancelTrip,
-    getParticipantsInfo,
-    getTripById,
-    leaveTrip,
-} from '@/lib/firebaseAuth';
+import { cancelTrip, getParticipantsInfo, getTripById, leaveTrip } from '@/lib/firebase/trips';
 import { db } from '@/lib/firebaseConfig';
-import { TripWithDriver } from '@/types/trip';
+import { TripWithDriver } from '@/types/trips.types';
 import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
+
+type DriverDoc = {
+    stripeAccountId?: string | null;
+};
 
 type TripDetailsPageProps = {
     params: Promise<{
@@ -95,7 +94,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
             const driverRes = await fetch('/api/stripe/connect/status', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ accountId: (trip as any).driver?.stripeAccountId || '' }),
+                body: JSON.stringify({ accountId: trip.driver?.stripeAccountId ?? '' }),
             });
             // Si le profil conducteur ne contient pas l'accountId, on va le chercher depuis Firestore
             let destinationAccount: string | null = null;
@@ -107,12 +106,18 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                 // fallback: lire depuis Firestore directement côté client
                 try {
                     const driverDoc = await getDoc(doc(db, 'users', trip.driverId));
-                    if (driverDoc.exists()) destinationAccount = (driverDoc.data() as any)?.stripeAccountId || null;
+                    if (driverDoc.exists()) {
+                        const driverData = driverDoc.data() as DriverDoc | undefined;
+                        destinationAccount = driverData?.stripeAccountId ?? null;
+                    }
                 } catch {
-                    console.error('Erreur lors de la récupération du compte bancaire de la conductrice:');
+                    console.error(
+                        'Erreur lors de la récupération du compte bancaire de la conductrice:',
+                    );
                 }
             }
-            if (!destinationAccount) throw new Error('La conductrice doit connecter son compte bancaire');
+            if (!destinationAccount)
+                throw new Error('La conductrice doit connecter son compte bancaire');
 
             const amountCents = Math.round(Number(trip.pricePerSeat) * 100);
             const res = await fetch('/api/stripe/checkout', {
