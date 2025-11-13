@@ -1,8 +1,12 @@
+'use client';
 
 import Link from 'next/link';
+import { useSearchParams } from 'next/navigation';
+import { Suspense } from 'react';
 
-export default function JoinTripCancelPage({ searchParams }: { searchParams: { tripId: string } }) {
-    const tripId = searchParams.tripId;
+function CancelContent() {
+    const searchParams = useSearchParams();
+    const tripId = searchParams.get('tripId');
 
     return (
         <div className="min-h-screen bg-gray-50 flex items-center justify-center">
@@ -25,5 +29,19 @@ export default function JoinTripCancelPage({ searchParams }: { searchParams: { t
                 )}
             </div>
         </div>
+    );
+}
+
+export default function JoinTripCancelPage() {
+    return (
+        <Suspense fallback={
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
+                    <p className="text-gray-600">Chargement...</p>
+                </div>
+            </div>
+        }>
+            <CancelContent />
+        </Suspense>
     );
 }
