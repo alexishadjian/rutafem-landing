@@ -7,10 +7,11 @@ import {
     cancelTrip,
     getParticipantsInfo,
     getTripById,
-    joinTrip,
     leaveTrip,
 } from '@/lib/firebaseAuth';
+import { db } from '@/lib/firebaseConfig';
 import { TripWithDriver } from '@/types/trip';
+import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
 
@@ -90,19 +91,49 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         setSuccess('');
 
         try {
-            await joinTrip(trip.id, user.uid);
-            setSuccess('Vous avez rejoint le trajet avec succès !');
-            // Recharger les données du trajet pour mettre à jour les places disponibles
-            const updatedTrip = await getTripById(resolvedParams.id);
-            if (updatedTrip) {
-                setTrip(updatedTrip);
+            // Récupérer la destination (stripeAccountId) de la conductrice côté client
+            const driverRes = await fetch('/api/stripe/connect/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ accountId: (trip as any).driver?.stripeAccountId || '' }),
+            });
+            // Si le profil conducteur ne contient pas l'accountId, on va le chercher depuis Firestore
+            let destinationAccount: string | null = null;
+            if (driverRes.ok) {
+                const st = await driverRes.json();
+                destinationAccount = st.accountId as string;
             }
+            if (!destinationAccount) {
+                // fallback: lire depuis Firestore directement côté client
+                try {
+                    const driverDoc = await getDoc(doc(db, 'users', trip.driverId));
+                    if (driverDoc.exists()) destinationAccount = (driverDoc.data() as any)?.stripeAccountId || null;
+                } catch {
+                    console.error('Erreur lors de la récupération du compte bancaire de la conductrice:');
+                }
+            }
+            if (!destinationAccount) throw new Error('La conductrice doit connecter son compte bancaire');
+
+            const amountCents = Math.round(Number(trip.pricePerSeat) * 100);
+            const res = await fetch('/api/stripe/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tripId: trip.id,
+                    buyerUid: user.uid,
+                    quantity: 1,
+                    amountCents,
+                    destinationAccount,
+                    tripLabel: `Trajet ${trip.departureCity}  ${trip.arrivalCity}`,
+                }),
+            });
+            const json = await res.json();
+            if (!res.ok) throw new Error(json.error || 'Erreur de paiement');
+            window.location.href = json.url as string;
         } catch (error) {
-            console.error('Erreur lors de la participation au trajet:', error);
+            console.error('Erreur lors de la création du paiement:', error);
             setError(
-                error instanceof Error
-                    ? error.message
-                    : 'Erreur lors de la participation au trajet',
+                error instanceof Error ? error.message : 'Erreur lors de la création du paiement',
             );
         } finally {
             setJoining(false);

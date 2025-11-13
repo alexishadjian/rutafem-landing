@@ -15,6 +15,7 @@ type UserProfile = {
     isUserVerified: boolean;
     isUserDriverVerified: boolean;
     verificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
+    stripeAccountId: string;
     driverLicenseVerificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     createdAt: Date;
 };
@@ -30,7 +31,7 @@ const AuthContext = createContext<AuthContextType>({
     user: null,
     userProfile: null,
     loading: true,
-    refreshUserProfile: async () => {},
+    refreshUserProfile: async () => { },
 });
 
 export const useAuth = () => {
@@ -67,6 +68,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                     isUserVerified: data.isUserVerified || false,
                     isUserDriverVerified: data.isUserDriverVerified || false,
                     verificationStatus: data.verificationStatus || 'A vérifier',
+                    stripeAccountId: data.stripeAccountId || '',
                     driverLicenseVerificationStatus:
                         data.driverLicenseVerificationStatus || 'A vérifier',
                     createdAt: data.createdAt?.toDate() || new Date(),
@@ -115,6 +117,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
                             isUserVerified: data.isUserVerified || false,
                             isUserDriverVerified: data.isUserDriverVerified || false,
                             verificationStatus: data.verificationStatus || 'A vérifier',
+                            stripeAccountId: data.stripeAccountId || '',
                             driverLicenseVerificationStatus:
                                 data.driverLicenseVerificationStatus || 'A vérifier',
                             createdAt: data.createdAt?.toDate() || new Date(),
