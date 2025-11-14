@@ -1,4 +1,5 @@
 import { CreateTripData, Trip, TripDoc, TripWithDriver } from '@/types/trips.types';
+import { timestampToDate } from '@/utils/date';
 import {
     collection,
     doc,
@@ -8,18 +9,14 @@ import {
     query,
     Query,
     setDoc,
-    Timestamp,
     updateDoc,
     where,
 } from 'firebase/firestore';
 
+import { logFirebaseError } from '@/utils/errors';
 import { db } from '../firebaseConfig';
-import { logFirebaseError } from './errors';
 
 const tripsCollection = collection(db, 'trips');
-
-const toDate = (value: Timestamp | Date): Date =>
-    value instanceof Timestamp ? value.toDate() : value;
 
 const mapTripDoc = (tripId: string, data: TripDoc): Trip => ({
     id: tripId,
@@ -35,8 +32,8 @@ const mapTripDoc = (tripId: string, data: TripDoc): Trip => ({
     driverId: data.driverId,
     participants: data.participants,
     isActive: data.isActive,
-    createdAt: toDate(data.createdAt),
-    updatedAt: toDate(data.updatedAt),
+    createdAt: timestampToDate(data.createdAt),
+    updatedAt: timestampToDate(data.updatedAt),
 });
 
 const sortByDeparture = (a: Trip, b: Trip) => {

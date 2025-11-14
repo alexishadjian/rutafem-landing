@@ -2,6 +2,7 @@
 
 import { getUserTrips } from '@/lib/firebase/trips';
 import { Trip } from '@/types/trips.types';
+import { formatShortDate, formatTime } from '@/utils/date';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 
@@ -31,18 +32,6 @@ export default function UserTrips({ userId }: UserTripsProps) {
 
         fetchUserTrips();
     }, [userId]);
-
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('fr-FR', {
-            day: 'numeric',
-            month: 'short',
-        });
-    };
-
-    const formatTime = (timeString: string) => {
-        return timeString.slice(0, 5);
-    };
 
     const TripCard = ({ trip, isCreated = false }: { trip: Trip; isCreated?: boolean }) => (
         <Link
@@ -101,7 +90,7 @@ export default function UserTrips({ userId }: UserTripsProps) {
                                 d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
                             />
                         </svg>
-                        <span>{formatDate(trip.departureDate)}</span>
+                        <span>{formatShortDate(trip.departureDate)}</span>
                     </div>
                     <div className="flex items-center gap-1">
                         <svg

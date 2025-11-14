@@ -3,16 +3,12 @@
 import { ConfirmationModal } from '@/app/_components/confirmation-modal';
 import { RouteGuard } from '@/app/_components/route-guard';
 import { useAuth } from '@/contexts/AuthContext';
-import { cancelTrip, getParticipantsInfo, getTripById, leaveTrip } from '@/lib/firebase/trips';
-import { db } from '@/lib/firebaseConfig';
+import { cancelTrip, getTripById, leaveTrip } from '@/lib/firebase/trips';
+import { fetchParticipantsDetails, startTripCheckout } from '@/services/trips';
 import { TripWithDriver } from '@/types/trips.types';
-import { doc, getDoc } from 'firebase/firestore';
+import { formatDate, formatTime } from '@/utils/date';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
-
-type DriverDoc = {
-    stripeAccountId?: string | null;
-};
 
 type TripDetailsPageProps = {
     params: Promise<{
@@ -61,7 +57,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         fetchTrip();
     }, [resolvedParams.id]);
 
-    // Charger les informations des participants si l'utilisateur est le créateur
+    // get participants information if the user is the creator
     useEffect(() => {
         const fetchParticipants = async () => {
             if (!trip || !user || trip.driverId !== user.uid || trip.participants.length === 0) {
@@ -70,7 +66,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
 
             setLoadingParticipants(true);
             try {
-                const participantsInfo = await getParticipantsInfo(trip.participants);
+                const participantsInfo = await fetchParticipantsDetails(trip);
                 setParticipants(participantsInfo);
             } catch (error) {
                 console.error('Erreur lors du chargement des participants:', error);
@@ -90,51 +86,8 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         setSuccess('');
 
         try {
-            // Récupérer la destination (stripeAccountId) de la conductrice côté client
-            const driverRes = await fetch('/api/stripe/connect/status', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ accountId: trip.driver?.stripeAccountId ?? '' }),
-            });
-            // Si le profil conducteur ne contient pas l'accountId, on va le chercher depuis Firestore
-            let destinationAccount: string | null = null;
-            if (driverRes.ok) {
-                const st = await driverRes.json();
-                destinationAccount = st.accountId as string;
-            }
-            if (!destinationAccount) {
-                // fallback: lire depuis Firestore directement côté client
-                try {
-                    const driverDoc = await getDoc(doc(db, 'users', trip.driverId));
-                    if (driverDoc.exists()) {
-                        const driverData = driverDoc.data() as DriverDoc | undefined;
-                        destinationAccount = driverData?.stripeAccountId ?? null;
-                    }
-                } catch {
-                    console.error(
-                        'Erreur lors de la récupération du compte bancaire de la conductrice:',
-                    );
-                }
-            }
-            if (!destinationAccount)
-                throw new Error('La conductrice doit connecter son compte bancaire');
-
-            const amountCents = Math.round(Number(trip.pricePerSeat) * 100);
-            const res = await fetch('/api/stripe/checkout', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    tripId: trip.id,
-                    buyerUid: user.uid,
-                    quantity: 1,
-                    amountCents,
-                    destinationAccount,
-                    tripLabel: `Trajet ${trip.departureCity}  ${trip.arrivalCity}`,
-                }),
-            });
-            const json = await res.json();
-            if (!res.ok) throw new Error(json.error || 'Erreur de paiement');
-            window.location.href = json.url as string;
+            const { url } = await startTripCheckout(trip, user.uid);
+            window.location.href = url;
         } catch (error) {
             console.error('Erreur lors de la création du paiement:', error);
             setError(
@@ -155,7 +108,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         try {
             await leaveTrip(trip.id, user.uid);
             setSuccess('Vous avez annulé votre participation au trajet !');
-            // Recharger les données du trajet pour mettre à jour les places disponibles
+            // reload the trip data to update the available seats
             const updatedTrip = await getTripById(resolvedParams.id);
             if (updatedTrip) {
                 setTrip(updatedTrip);
@@ -187,7 +140,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         try {
             await cancelTrip(trip.id, user.uid);
             setSuccess('Trajet annulé avec succès !');
-            // Recharger les données du trajet
+            // reload the trip data to update the available seats
             const updatedTrip = await getTripById(resolvedParams.id);
             if (updatedTrip) {
                 setTrip(updatedTrip);
@@ -200,20 +153,6 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         } finally {
             setCancelling(false);
         }
-    };
-
-    const formatDate = (dateString: string) => {
-        const date = new Date(dateString);
-        return date.toLocaleDateString('fr-FR', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
-    };
-
-    const formatTime = (timeString: string) => {
-        return timeString.slice(0, 5); // Format HH:MM
     };
 
     const isUserParticipant = user && trip && trip.participants.includes(user.uid);

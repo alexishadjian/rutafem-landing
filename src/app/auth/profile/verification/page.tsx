@@ -1,10 +1,12 @@
 'use client';
 
 import { useAuth } from '@/contexts/AuthContext';
-import { uploadVerificationDocuments } from '@/lib/firebase/users';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+
+import { uploadVerificationDocuments } from '@/lib/firebase/users';
+import { createFileSchema } from '@/utils/validation';
 
 export default function VerificationPage() {
     const { user, userProfile, loading, refreshUserProfile } = useAuth();
@@ -16,6 +18,14 @@ export default function VerificationPage() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    const { frontSchema, backSchema } = useMemo(
+        () => ({
+            frontSchema: createFileSchema({ label: 'La carte avant' }),
+            backSchema: createFileSchema({ label: 'La carte arrière' }),
+        }),
+        [],
+    );
+
     // redirect to login if not authenticated
     useEffect(() => {
         if (!loading && (!user || !userProfile)) {
@@ -23,37 +33,25 @@ export default function VerificationPage() {
         }
     }, [user, userProfile, loading, router]);
 
-    const handleFileChange = (
-        e: React.ChangeEvent<HTMLInputElement>,
-        type: 'front' | 'back' | 'license',
-    ) => {
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>, type: 'front' | 'back') => {
         const file = e.target.files?.[0];
         if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-                setError('Le fichier doit faire moins de 5MB');
+            const schema = type === 'front' ? frontSchema : backSchema;
+            const parsed = schema.safeParse(file);
+            if (!parsed.success) {
+                setError(parsed.error.issues[0]?.message ?? 'Fichier invalide');
                 return;
             }
 
-            if (!['image/jpeg', 'image/jpg', 'image/png', 'application/pdf'].includes(file.type)) {
-                setError('Seuls les formats JPG, PNG et PDF sont acceptés');
-                return;
-            }
-
-            if (type === 'front') {
-                setIdCardFront(file);
-            } else if (type === 'back') {
-                setIdCardBack(file);
-            }
+            if (type === 'front') setIdCardFront(parsed.data);
+            if (type === 'back') setIdCardBack(parsed.data);
             setError('');
         }
     };
 
-    const removeFile = (type: 'front' | 'back' | 'license') => {
-        if (type === 'front') {
-            setIdCardFront(null);
-        } else if (type === 'back') {
-            setIdCardBack(null);
-        }
+    const removeFile = (type: 'front' | 'back') => {
+        if (type === 'front') setIdCardFront(null);
+        if (type === 'back') setIdCardBack(null);
     };
 
     const handleSubmit = async (e: React.FormEvent) => {

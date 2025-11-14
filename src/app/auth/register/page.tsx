@@ -1,6 +1,7 @@
 'use client';
 
 import { registerUser } from '@/lib/firebase/auth';
+import { registerUserSchema } from '@/utils/validation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -22,30 +23,17 @@ export default function RegisterPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
 
-        if (password !== confirmPassword) {
-            setError('Les mots de passe ne correspondent pas');
-            return;
-        }
-
-        if (password.length < 6) {
-            setError('Le mot de passe doit contenir au moins 6 caractères');
-            return;
-        }
-
-        if (!firstName.trim() || !lastName.trim()) {
-            setError('Veuillez renseigner votre nom et prénom');
-            return;
-        }
-
-        if (!phoneNumber.trim()) {
-            setError('Veuillez renseigner votre numéro de téléphone');
-            return;
-        }
-
-        if (!acceptTerms) {
-            setError(
-                'Vous devez accepter les conditions générales de vente et la politique de confidentialité pour créer un compte',
-            );
+        const validation = registerUserSchema.safeParse({
+            email,
+            password,
+            confirmPassword,
+            firstName,
+            lastName,
+            phoneNumber,
+            acceptTerms,
+        });
+        if (!validation.success) {
+            setError(validation.error.issues[0]?.message ?? 'Formulaire invalide');
             return;
         }
 

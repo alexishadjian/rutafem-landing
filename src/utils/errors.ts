@@ -8,9 +8,13 @@ const authErrorMessages: Record<string, string> = {
     'auth/network-request-failed': 'Erreur de connexion. Vérifiez votre internet',
 };
 
-export const mapAuthErrorCode = (code: string): string =>
+export const mapFirebaseAuthError = (code: string): string =>
     authErrorMessages[code] ?? 'Une erreur est survenue. Réessayez';
 
 export const logFirebaseError = (context: string, error: unknown) => {
     console.error(`[Firebase] ${context}`, error);
+};
+
+export const logWithContext = (context: string, error: unknown) => {
+    console.error(`[RutaFem] ${context}`, error);
 };

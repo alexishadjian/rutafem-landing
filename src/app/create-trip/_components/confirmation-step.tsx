@@ -1,6 +1,8 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { createTrip } from '@/lib/firebase/trips';
 import { CreateTripData } from '@/types/trips.types';
+import { formatDate } from '@/utils/date';
+import { createTripSchema } from '@/utils/validation';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
@@ -27,17 +29,6 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
     const [error, setError] = useState('');
     const [acceptTerms, setAcceptTerms] = useState(false);
 
-    const formatDate = (dateString: string) => {
-        if (!dateString) return '[Date non spécifiée]';
-        const date = new Date(dateString);
-        return date.toLocaleDateString('fr-FR', {
-            weekday: 'long',
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-        });
-    };
-
     const handleCreateTrip = async () => {
         if (!user) {
             setError('Vous devez être connecté pour publier un trajet');
@@ -55,19 +46,18 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
         setError('');
 
         try {
-            // Convertir les données du formulaire au format attendu
-            const tripData: CreateTripData = {
+            const parsed = createTripSchema.parse({
                 departureTime: formData.time,
                 departureDate: formData.date,
                 departureCity: formData.departurePlace,
                 arrivalCity: formData.arrival,
-                totalSeats: parseInt(formData.seats),
-                pricePerSeat: parseFloat(formData.price),
+                totalSeats: formData.seats,
+                pricePerSeat: formData.price,
                 departureAddress: formData.departurePlace,
                 description: formData.description,
-            };
+            }) as CreateTripData;
 
-            await createTrip(user.uid, tripData);
+            await createTrip(user.uid, parsed);
             setIsCreated(true);
         } catch (error) {
             console.error('Erreur lors de la création du trajet:', error);

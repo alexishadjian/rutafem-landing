@@ -1,9 +1,9 @@
 'use client';
 
-import { logFirebaseError } from '@/lib/firebase/errors';
 import { getUserProfile } from '@/lib/firebase/users';
 import { auth } from '@/lib/firebaseConfig';
 import { UserProfile } from '@/types/users.types';
+import { logFirebaseError } from '@/utils/errors';
 import { User, browserLocalPersistence, onAuthStateChanged, setPersistence } from 'firebase/auth';
 import { ReactNode, createContext, useCallback, useContext, useEffect, useState } from 'react';
 

@@ -1,8 +1,8 @@
 import { FirebaseError } from 'firebase/app';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from 'firebase/auth';
 
+import { logFirebaseError, mapFirebaseAuthError } from '@/utils/errors';
 import { auth } from '../firebaseConfig';
-import { logFirebaseError, mapAuthErrorCode } from './errors';
 import { createUserProfile } from './users';
 
 export const registerUser = async (
@@ -25,7 +25,7 @@ export const registerUser = async (
     } catch (error) {
         logFirebaseError('registerUser', error);
         if (error instanceof FirebaseError) {
-            throw new Error(mapAuthErrorCode(error.code));
+            throw new Error(mapFirebaseAuthError(error.code));
         }
         if (error instanceof Error) {
             throw error;
@@ -41,7 +41,7 @@ export const loginUser = async (email: string, password: string) => {
     } catch (error) {
         logFirebaseError('loginUser', error);
         if (error instanceof FirebaseError) {
-            throw new Error(mapAuthErrorCode(error.code));
+            throw new Error(mapFirebaseAuthError(error.code));
         }
         throw new Error('Erreur lors de la connexion');
     }

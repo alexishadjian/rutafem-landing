@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, Timestamp, updateDoc } from 'firebase/firestore';
+import { doc, getDoc, setDoc, updateDoc } from 'firebase/firestore';
 
 import {
     CreateUserProfileParams,
@@ -6,12 +6,11 @@ import {
     UserProfile,
     VerificationUpdate,
 } from '@/types/users.types';
+import { timestampToDate } from '@/utils/date';
+import { logFirebaseError } from '@/utils/errors';
+import { driverLicenseSchema, verificationDocumentsSchema } from '@/utils/validation';
 import { db } from '../firebaseConfig';
-import { logFirebaseError } from './errors';
-import { assertValidFile, buildStoragePath, timestampedFileName, uploadFile } from './storage';
-
-const toDate = (value?: Timestamp | Date): Date =>
-    value instanceof Timestamp ? value.toDate() : value ?? new Date();
+import { buildStoragePath, timestampedFileName, uploadFile } from './storage';
 
 const mapUserProfile = (uid: string, data: UserDoc): UserProfile => ({
     uid,
@@ -28,7 +27,7 @@ const mapUserProfile = (uid: string, data: UserDoc): UserProfile => ({
         (data.driverLicenseVerificationStatus as UserProfile['driverLicenseVerificationStatus']) ??
         'A vérifier',
     stripeAccountId: (data.stripeAccountId as string) ?? '',
-    createdAt: toDate(data.createdAt),
+    createdAt: timestampToDate(data.createdAt),
 });
 
 export const createUserProfile = async ({
@@ -76,19 +75,25 @@ export const uploadVerificationDocuments = async (
     driverLicense?: File,
 ) => {
     try {
-        assertValidFile(idCardFront, 'La carte avant');
-        assertValidFile(idCardBack, 'La carte arrière');
+        const parsed = verificationDocumentsSchema.parse({
+            idCardFront,
+            idCardBack,
+            driverLicense,
+        });
 
         const basePath = `id-cards/${uid}`;
         const frontPath = buildStoragePath([
             basePath,
-            timestampedFileName('front', idCardFront.name),
+            timestampedFileName('front', parsed.idCardFront.name),
         ]);
-        const backPath = buildStoragePath([basePath, timestampedFileName('back', idCardBack.name)]);
+        const backPath = buildStoragePath([
+            basePath,
+            timestampedFileName('back', parsed.idCardBack.name),
+        ]);
 
         const [frontUrl, backUrl] = await Promise.all([
-            uploadFile(frontPath, idCardFront),
-            uploadFile(backPath, idCardBack),
+            uploadFile(frontPath, parsed.idCardFront),
+            uploadFile(backPath, parsed.idCardBack),
         ]);
 
         const updateData: {
@@ -104,13 +109,12 @@ export const uploadVerificationDocuments = async (
             verificationStatus: 'En cours',
         };
 
-        if (driverLicense) {
-            assertValidFile(driverLicense, 'Le permis de conduire');
+        if (parsed.driverLicense) {
             const licensePath = buildStoragePath([
                 `driver-licenses/${uid}`,
-                timestampedFileName('license', driverLicense.name),
+                timestampedFileName('license', parsed.driverLicense.name),
             ]);
-            updateData.driverLicense = await uploadFile(licensePath, driverLicense);
+            updateData.driverLicense = await uploadFile(licensePath, parsed.driverLicense);
             updateData.role = 'driver';
             updateData.driverVerificationStatus = 'En cours';
         }
@@ -134,8 +138,7 @@ export const uploadDriverLicenseDocuments = async (
     licenseBack: File,
 ) => {
     try {
-        assertValidFile(licenseFront, 'Le permis recto');
-        assertValidFile(licenseBack, 'Le permis verso');
+        driverLicenseSchema.parse({ licenseFront, licenseBack });
 
         const basePath = `driver-licenses/${uid}`;
         const [frontUrl, backUrl] = await Promise.all([

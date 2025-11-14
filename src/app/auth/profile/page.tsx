@@ -4,6 +4,12 @@ import { ConfirmationModal } from '@/app/_components/confirmation-modal';
 import { useAuth } from '@/contexts/AuthContext';
 import { logoutUser } from '@/lib/firebase/auth';
 import { db } from '@/lib/firebaseConfig';
+import {
+    createOrLinkStripeAccount,
+    createStripeAccountLink,
+    getStripeStatus,
+    unlinkStripeAccount,
+} from '@/services/stripe';
 import { doc, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -18,35 +24,9 @@ export default function ProfilePage() {
         payouts_enabled: boolean;
         accountId: string;
     } | null>(null);
-    const [checkingStripe, setCheckingStripe] = useState(false);
     const [unlinkOpen, setUnlinkOpen] = useState(false);
     const [unlinkLoading, setUnlinkLoading] = useState(false);
     const [stripeMessage, setStripeMessage] = useState<string>('');
-    const [error, setError] = useState<string>('');
-    const [success, setSuccess] = useState<string>('');
-
-    const unlinkStripe = async () => {
-        if (!user || !userProfile?.stripeAccountId) return;
-        try {
-            setUnlinkLoading(true);
-            setError('');
-            setSuccess('');
-            const res = await fetch('/api/stripe/connect/unlink', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ accountId: userProfile.stripeAccountId }),
-            });
-            const json = await res.json();
-            if (!res.ok) throw new Error(json.error || 'Erreur Stripe');
-            await updateDoc(doc(db, 'users', user.uid), { stripeAccountId: '' });
-            setSuccess('Compte bancaire déconnecté avec succès');
-        } catch (e: unknown) {
-            setError(e instanceof Error ? e.message : 'Erreur');
-        } finally {
-            setUnlinkLoading(false);
-            setUnlinkOpen(false);
-        }
-    };
 
     // Redirection vers login si pas connecté
     useEffect(() => {
@@ -58,17 +38,10 @@ export default function ProfilePage() {
     useEffect(() => {
         const check = async () => {
             if (!userProfile?.stripeAccountId) return;
-            setCheckingStripe(true);
             try {
-                const res = await fetch('/api/stripe/connect/status', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ accountId: userProfile?.stripeAccountId }),
-                });
-                const json = await res.json();
-                if (res.ok) setStripeStatus(json);
+                const status = await getStripeStatus(userProfile.stripeAccountId);
+                setStripeStatus(status);
             } finally {
-                setCheckingStripe(false);
             }
         };
         check();
@@ -94,7 +67,7 @@ export default function ProfilePage() {
         );
     }
 
-    // Si pas connecté, on affiche rien (la redirection se fait dans useEffect)
+    // if the user is not authenticated or the user profile does not exist, display nothing
     if (!user || !userProfile) {
         return null;
     }
@@ -108,7 +81,7 @@ export default function ProfilePage() {
                 </div>
 
                 <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
-                    {/* En-tête du profil */}
+                    {/* header of the profile */}
                     <div className="text-center pb-6 border-b border-gray-200">
                         <div className="w-24 h-24 bg-gradient-to-r from-pink-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg
@@ -131,7 +104,7 @@ export default function ProfilePage() {
                         <p className="text-gray-600">{userProfile.email}</p>
                     </div>
 
-                    {/* Informations du profil */}
+                    {/* profile information */}
                     <div className="space-y-4">
                         <div className="flex items-center justify-between py-3 border-b border-gray-100">
                             <span className="text-sm font-medium text-gray-600">Nom complet</span>
@@ -370,7 +343,7 @@ export default function ProfilePage() {
                         </div>
                     )}
 
-                    {/* Notice en cours de vérification */}
+                    {/* verification in progress */}
                     {userProfile.verificationStatus === 'En cours' && (
                         <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
                             <div className="flex">
@@ -459,53 +432,26 @@ export default function ProfilePage() {
                                         if (!user) return;
                                         try {
                                             setStripeMessage('');
-                                            const createRes = await fetch(
-                                                '/api/stripe/connect/create-or-link',
-                                                {
-                                                    method: 'POST',
-                                                    headers: { 'Content-Type': 'application/json' },
-                                                    body: JSON.stringify({
-                                                        uid: user.uid,
-                                                        existingAccountId:
-                                                            userProfile?.stripeAccountId,
-                                                        email: user.email,
-                                                    }),
-                                                },
-                                            );
-                                            const createJson = await createRes.json();
-                                            if (!createRes.ok)
-                                                throw new Error(
-                                                    createJson.error || 'Erreur Stripe',
-                                                );
-
+                                            const { accountId } = await createOrLinkStripeAccount({
+                                                uid: user.uid,
+                                                existingAccountId: userProfile?.stripeAccountId,
+                                                email: user.email,
+                                            });
                                             const returnUrl = `${window.location.origin}/auth/profile`;
-                                            const linkRes = await fetch(
-                                                '/api/stripe/connect/account-link',
-                                                {
-                                                    method: 'POST',
-                                                    headers: { 'Content-Type': 'application/json' },
-                                                    body: JSON.stringify({
-                                                        accountId: createJson.accountId,
-                                                        returnUrl,
-                                                    }),
-                                                },
+                                            const { url } = await createStripeAccountLink(
+                                                accountId,
+                                                returnUrl,
                                             );
-                                            const linkJson = await linkRes.json();
-                                            if (!linkRes.ok)
-                                                throw new Error(
-                                                    linkJson.error || 'Erreur AccountLink',
-                                                );
-
                                             try {
                                                 await updateDoc(doc(db, 'users', user.uid), {
-                                                    stripeAccountId: createJson.accountId,
+                                                    stripeAccountId: accountId,
                                                 });
                                             } catch {
                                                 setStripeMessage(
                                                     'Erreur lors de la mise à jour du compte bancaire',
                                                 );
                                             }
-                                            window.location.href = linkJson.url as string;
+                                            window.location.href = url;
                                         } catch (e: unknown) {
                                             setStripeMessage(
                                                 e instanceof Error ? e.message : 'Erreur',
@@ -591,13 +537,7 @@ export default function ProfilePage() {
                         try {
                             setUnlinkLoading(true);
                             setStripeMessage('');
-                            const res = await fetch('/api/stripe/connect/unlink', {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ accountId: userProfile.stripeAccountId }),
-                            });
-                            const json = await res.json();
-                            if (!res.ok) throw new Error(json.error || 'Erreur Stripe');
+                            await unlinkStripeAccount(userProfile.stripeAccountId);
                             await updateDoc(doc(db, 'users', user.uid), { stripeAccountId: '' });
                             // Rafraîchir le profil et l'état Stripe pour mise à jour immédiate de l'UI
                             await refreshUserProfile();
@@ -618,7 +558,7 @@ export default function ProfilePage() {
                     loading={unlinkLoading}
                 />
 
-                {/* Section Trajets */}
+                {/* trips section */}
                 <div className="bg-white rounded-xl shadow-sm border border-gray-200 p-6 mt-4">
                     <div className="flex items-center justify-between mb-6">
                         <h2 className="text-xl font-bold text-gray-900 flex items-center gap-2">
