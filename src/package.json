@@ -11,14 +11,16 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "clsx": "^2.1.1",
+    "dayjs": "^1.11.19",
     "firebase": "^12.2.1",
     "next": "15.0.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-tailwindcss-datepicker": "^2.0.0",
     "stripe": "^19.3.1",
-    "zod": "^4.1.12",
     "tailwind-merge": "^3.4.0",
-    "tailwind-variants": "^3.1.1"
+    "tailwind-variants": "^3.1.1",
+    "zod": "^4.1.12"
   },
   "devDependencies": {
     "@types/node": "^20",

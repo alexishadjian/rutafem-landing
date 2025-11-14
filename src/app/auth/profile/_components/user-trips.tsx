@@ -35,7 +35,7 @@ export default function UserTrips({ userId }: UserTripsProps) {
 
     const TripCard = ({ trip, isCreated = false }: { trip: Trip; isCreated?: boolean }) => (
         <Link
-            href={`/trip/${trip.id}`}
+            href={`/join-trip/${trip.id}`}
             className="block bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition-shadow duration-200"
         >
             <div className="flex items-center justify-between mb-3">

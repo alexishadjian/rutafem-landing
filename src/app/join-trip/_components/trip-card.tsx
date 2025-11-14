@@ -1,7 +1,9 @@
 'use client';
 
+import Icon from '@/app/_components/ui/icon';
 import { useAuth } from '@/contexts/AuthContext';
 import { db } from '@/lib/firebaseConfig';
+import { cn } from '@/lib/utils';
 import { Trip, TripWithDriver } from '@/types/trips.types';
 import { doc, getDoc } from 'firebase/firestore';
 import Link from 'next/link';
@@ -59,48 +61,42 @@ export default function TripCard({ trip }: TripCardProps) {
         return 'Pilote anonyme';
     };
 
+    const shouldStackCities = trip.departureCity.length > 18 || trip.arrivalCity.length > 18;
+
     return (
         <div className="bg-white rounded-xl shadow-sm border hover:shadow-md transition-shadow duration-200 overflow-hidden">
             <div className="p-4 sm:p-5">
-                <div className="flex items-center justify-between mb-4">
-                    <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 bg-[--accent-color] rounded-full flex items-center justify-center text-white font-semibold text-sm">
-                            <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <circle
-                                    cx="12"
-                                    cy="12"
-                                    r="8"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                />
-                                <circle
-                                    cx="12"
-                                    cy="12"
-                                    r="3"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                />
-                                <path
-                                    d="M12 4v2M12 18v2M4 12h2M18 12h2"
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                />
-                            </svg>
+                <div className="flex gap-3 justify-between items-start sm:items-center sm:justify-between mb-4">
+                    <div className="flex items-center gap-3 min-w-0">
+                        <div className="flex-shrink-0 flex-grow-0 w-10 h-10 min-w-10 min-h-10 max-w-10 max-h-10 rounded-full bg-[var(--pink)] flex items-center justify-center">
+                            <Icon
+                                name="mapPoint"
+                                strokeWidth={1}
+                                strokeColor="var(--black)"
+                                fillColor="var(--black)"
+                                width={14}
+                                height={16}
+                            />
                         </div>
-                        <div className="flex items-center">
-                            <span className="font-medium text-lg text-gray-900">
+                        <div
+                            className={cn(
+                                'flex min-w-0 sm:flex-row sm:items-center',
+                                shouldStackCities
+                                    ? 'flex-col items-start gap-1'
+                                    : 'flex-row items-center gap-1',
+                            )}
+                        >
+                            <span
+                                className="font-medium text-base text-gray-900 break-words sm:truncate"
+                                title={trip.departureCity}
+                            >
                                 {trip.departureCity}
                             </span>
                             <svg
-                                className="w-5 h-5 text-gray-400 mx-1"
+                                className={cn(
+                                    'w-5 h-5 text-gray-400 transition-transform sm:rotate-0 sm:mx-1 sm:my-0',
+                                    shouldStackCities ? 'rotate-90 my-1' : 'rotate-0 mx-1',
+                                )}
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -112,13 +108,15 @@ export default function TripCard({ trip }: TripCardProps) {
                                     d="M17 8l4 4m0 0l-4 4m4-4H3"
                                 />
                             </svg>
-                            <span className="font-medium text-lg text-gray-900">
+                            <span
+                                className="font-medium text-base text-gray-900 break-words sm:truncate"
+                                title={trip.arrivalCity}
+                            >
                                 {trip.arrivalCity}
                             </span>
                         </div>
                     </div>
-
-                    <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-lg font-semibold">
+                    <div className="bg-[var(--light-blue)] text-[var(--black)] px-3 py-1 rounded-full text-base font-medium ml-auto w-fit">
                         {trip.pricePerSeat}€
                     </div>
                 </div>
@@ -200,22 +198,8 @@ export default function TripCard({ trip }: TripCardProps) {
             <div className="px-4 sm:px-5 pb-4 sm:pb-5">
                 <Link
                     href={`/trip/${trip.id}`}
-                    className="w-full bg-[--accent-color] hover:bg-[--accent-color]/90 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                    className="w-full bg-[var(--yellow)] hover:bg-[var(--yellow)]/90 text-[var(--black)] py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                 >
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                        />
-                        <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                        />
-                    </svg>
                     Voir les détails
                 </Link>
             </div>
