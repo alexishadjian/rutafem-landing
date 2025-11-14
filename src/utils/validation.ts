@@ -50,7 +50,7 @@ export const driverLicenseSchema = z.object({
 
 export const registerUserSchema = z
     .object({
-        email: z.string().email("Format d'email invalide"),
+        email: z.email("Format d'email invalide"),
         password: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
         confirmPassword: z.string(),
         firstName: z.string().min(1, 'Prénom requis'),
