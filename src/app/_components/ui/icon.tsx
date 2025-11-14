@@ -5,6 +5,12 @@ const icons: { [key: string]: ({ strokeColor, strokeWidth, fillColor, width, hei
             <path d="M21 21l-6 -6" />
         </svg>
     ),
+    user: ({ strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
+        <svg xmlns="http://www.w3.org/2000/svg" {...(width && { width })} {...(height && { height })} viewBox="0 0 24 24" strokeWidth={strokeWidth} stroke={strokeColor} fill={fillColor} strokeLinecap="round" strokeLinejoin="round">
+            <path d="M12 10C14.2091 10 16 8.20914 16 6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6C8 8.20914 9.79086 10 12 10Z" fill="#222639" />
+            <path d="M20 17.5C20 19.985 20 22 12 22C4 22 4 19.985 4 17.5C4 15.015 7.582 13 12 13C16.418 13 20 15.015 20 17.5Z" fill="#222639" />
+        </svg>
+    ),
 
     default: ({ strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
         <svg xmlns="http://www.w3.org/2000/svg" {...(width && { width })} {...(height && { height })} viewBox="0 0 22 24" strokeWidth={strokeWidth} stroke={strokeColor} fill={fillColor} strokeLinecap="round" strokeLinejoin="round">
@@ -24,7 +30,7 @@ interface SvgProps {
     name: string
 }
 
-export default function Svg({ name, strokeColor = '#000000', strokeWidth = 1.75, fillColor = 'none', width, height }: SvgProps) {
-    const svg = icons[name] || icons.default;
-    return svg({ strokeColor, strokeWidth, fillColor, width, height, name });
+export default function Icon({ name, strokeColor = 'var(--black)', strokeWidth = 1.75, fillColor = 'none', width, height }: SvgProps) {
+    const icon = icons[name] || icons.default;
+    return icon({ strokeColor, strokeWidth, fillColor, width, height, name });
 }

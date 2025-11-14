@@ -31,17 +31,18 @@
 }
 
 :root {
-    --white: #ffffff;
-    --black: #000000;
+    /* --white: #ffffff;
+    --black: #000000; */
     --black-taupe: #3b3b3d;
     --accent-color: #ff0381;
 }
 
-.user-name {
+/* .user-name {
     color: var(--white);
-}
+} */
 
 html {
+    background-color: var(--white);
     scroll-behavior: smooth;
     scroll-padding: 100px;
 }
@@ -61,34 +62,34 @@ html {
 
 body.scroll header:not(.mobile-menu-open),
 body.not-home header {
-    background-color: var(--white);
+    background-color: var(--dark-green);
     box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.15);
 
-    .logo-letters {
+    /* .logo-letters {
         fill: var(--black);
-    }
+    } */
 
-    .socials svg path {
+    /* .socials svg path {
         fill: var(--black);
-    }
+    } */
 
-    .user-name {
+    /* .user-name {
         color: var(--black);
-    }
+    } */
 
-    .burger-menu svg path {
+    /* .burger-menu svg path {
         stroke: var(--black);
-    }
+    } */
 
     & nav {
         background-color: transparent;
-        color: var(--black);
+        color: var(--white);
     }
 }
 
 @media (max-width: 1023px) {
     header nav {
-        background-color: white !important;
+        background-color: var(--white) !important;
     }
 }
 

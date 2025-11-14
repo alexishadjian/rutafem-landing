@@ -10,11 +10,11 @@ const buttonStyles = tv({
     ],
     variants: {
         fill: {
-            true: 'bg-[var(--accent-color)] !border-none !text-[var(--white)] hover:opacity-90',
-            false: '!bg-transparent border-2 border-[var(--accent-color)] text-[var(--accent-color)] hover:opacity-70',
+            true: 'bg-[var(--accent-color)] !border-none !text-[var(--black)] hover:opacity-90',
+            false: '!bg-transparent border-2 border-[var(--accent-color)] hover:opacity-70',
         },
         color: {
-            pink: 'bg-[var(--pink)] border-[var(--pink)] text-[var(--pink)]',
+            pink: 'bg-[var(--pink)] border-[var(--pink)]',
             yellow: 'bg-[var(--yellow)] border-[var(--yellow)] text-[var(--yellow)]',
             orange: 'bg-[var(--orange)] border-[var(--orange)] text-[var(--orange)]',
         },
@@ -35,11 +35,12 @@ interface BaseButtonProps extends VariantProps<typeof buttonStyles> {
     afterIcon?: React.ReactNode;
     className?: string;
     link?: string;
+    onClick?: () => void;
 }
 
 export default function Button(props: BaseButtonProps) {
 
-    const { text, fill, color, fullWidth, beforeIcon, afterIcon, className, ...restProps } = props;
+    const { text, fill, color, fullWidth, beforeIcon, afterIcon, className, onClick, ...restProps } = props;
 
     const classes = cn(buttonStyles({ fill, color, fullWidth }), className);
 
@@ -66,6 +67,7 @@ export default function Button(props: BaseButtonProps) {
         <button
             className={classes}
             {...restProps}
+            onClick={onClick}
         >
             {content}
         </button>
