@@ -7,6 +7,7 @@ import {
     getDocs,
     orderBy,
     query,
+    runTransaction,
     where,
 } from 'firebase/firestore';
 
@@ -17,6 +18,52 @@ import { logFirebaseError } from '@/utils/errors';
 import { db } from '../firebaseConfig';
 
 const reviewsCollection = collection(db, 'reviews');
+const usersCollection = collection(db, 'users');
+
+const updateUserAverageRating = async (userId: string, ratingChange: number, isAdding: boolean) => {
+    try {
+        await runTransaction(db, async (transaction) => {
+            const userRef = doc(usersCollection, userId);
+            const userSnap = await transaction.get(userRef);
+
+            if (!userSnap.exists()) {
+                throw new Error('Utilisateur introuvable');
+            }
+
+            const userData = userSnap.data();
+            const currentTotalReviews = (userData.totalReviews as number) ?? 0;
+            const currentAverageRating = (userData.averageRating as number) ?? 0;
+
+            let newTotalReviews: number;
+            let newAverageRating: number;
+
+            if (isAdding) {
+                newTotalReviews = currentTotalReviews + 1;
+                const currentTotalRating = currentAverageRating * currentTotalReviews;
+                newAverageRating = (currentTotalRating + ratingChange) / newTotalReviews;
+            } else {
+                newTotalReviews = Math.max(0, currentTotalReviews - 1);
+                if (newTotalReviews === 0) {
+                    newAverageRating = 0;
+                } else {
+                    const currentTotalRating = currentAverageRating * currentTotalReviews;
+                    newAverageRating = (currentTotalRating - ratingChange) / newTotalReviews;
+                }
+            }
+
+            transaction.update(userRef, {
+                averageRating: Math.round(newAverageRating * 10) / 10,
+                totalReviews: newTotalReviews,
+                updatedAt: new Date(),
+            });
+        });
+    } catch (error) {
+        logFirebaseError('updateUserAverageRating', error);
+        throw error instanceof Error
+            ? error
+            : new Error('Erreur lors de la mise à jour de la moyenne');
+    }
+};
 
 const buildReviewerSummary = async (reviewerId: string) => {
     try {
@@ -108,9 +155,11 @@ export const createReview = async ({
             created_at: new Date(),
             updated_at: new Date(),
         });
+
+        await updateUserAverageRating(reviewedId, rating, true);
     } catch (error) {
         logFirebaseError('createReview', error);
-        throw error instanceof Error ? error : new Error('Erreur lors de la création de l’avis.');
+        throw error instanceof Error ? error : new Error("Erreur lors de la création de l'avis.");
     }
 };
 
@@ -125,11 +174,16 @@ export const deleteReview = async (reviewId: string, reviewerId: string) => {
         if (data.reviewer_id !== reviewerId) {
             throw new Error('Tu ne peux supprimer que tes propres avis.');
         }
+
+        const reviewedId = data.reviewed_id;
+        const rating = data.rating;
+
         await deleteDoc(reviewRef);
+        await updateUserAverageRating(reviewedId, rating, false);
     } catch (error) {
         logFirebaseError('deleteReview', error);
         throw error instanceof Error
             ? error
-            : new Error('Erreur lors de la suppression de l’avis.');
+            : new Error("Erreur lors de la suppression de l'avis.");
     }
 };

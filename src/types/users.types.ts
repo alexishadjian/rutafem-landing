@@ -11,6 +11,8 @@ export type UserDoc = {
     verificationStatus?: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     driverLicenseVerificationStatus?: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     stripeAccountId?: string;
+    averageRating?: number;
+    totalReviews?: number;
     createdAt?: Timestamp | Date;
     updatedAt?: Timestamp | Date;
 };
@@ -27,6 +29,8 @@ export type UserProfile = {
     verificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     driverLicenseVerificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
     stripeAccountId: string;
+    averageRating?: number;
+    totalReviews?: number;
     createdAt: Date;
 };
 

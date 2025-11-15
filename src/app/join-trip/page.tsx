@@ -8,10 +8,14 @@ import Button from '../_components/ui/button';
 import SearchBar from './_components/search-bar';
 import TripCard from './_components/trip-card';
 
+const INITIAL_DISPLAY_COUNT = 6;
+const LOAD_MORE_COUNT = 6;
+
 export default function JoinTripPage() {
     const [trips, setTrips] = useState<Trip[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
+    const [displayedCount, setDisplayedCount] = useState(INITIAL_DISPLAY_COUNT);
 
     useEffect(() => {
         const fetchTrips = async () => {
@@ -28,6 +32,13 @@ export default function JoinTripPage() {
 
         fetchTrips();
     }, []);
+
+    const handleLoadMore = () => {
+        setDisplayedCount((prev) => prev + LOAD_MORE_COUNT);
+    };
+
+    const displayedTrips = trips.slice(0, displayedCount);
+    const hasMoreTrips = displayedCount < trips.length;
 
     return (
         <div className="min-h-screen bg-[var(--dark-green)] py-6 lg:p-12">
@@ -144,19 +155,24 @@ export default function JoinTripPage() {
                             </SmartButton>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                            {trips.map((trip) => (
-                                <TripCard key={trip.id} trip={trip} />
-                            ))}
-                            <div className="col-span-full flex justify-center">
-                                <Button
-                                    text="Voir plus de trajets"
-                                    color="pink"
-                                    fill={true}
-                                    className="text-white"
-                                />
+                        <>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                                {displayedTrips.map((trip) => (
+                                    <TripCard key={trip.id} trip={trip} />
+                                ))}
                             </div>
-                        </div>
+                            {hasMoreTrips && (
+                                <div className="flex justify-center mt-8">
+                                    <Button
+                                        text="Voir plus de trajets"
+                                        color="pink"
+                                        fill={true}
+                                        className="text-white"
+                                        onClick={handleLoadMore}
+                                    />
+                                </div>
+                            )}
+                        </>
                     )}
                 </div>
             </div>

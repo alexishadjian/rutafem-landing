@@ -27,6 +27,8 @@ const mapUserProfile = (uid: string, data: UserDoc): UserProfile => ({
         (data.driverLicenseVerificationStatus as UserProfile['driverLicenseVerificationStatus']) ??
         'A vérifier',
     stripeAccountId: (data.stripeAccountId as string) ?? '',
+    averageRating: data.averageRating,
+    totalReviews: data.totalReviews,
     createdAt: timestampToDate(data.createdAt),
 });
 

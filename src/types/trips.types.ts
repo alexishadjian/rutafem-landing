@@ -37,6 +37,8 @@ export type TripWithDriver = Trip & {
         email: string;
         phoneNumber: string;
         stripeAccountId?: string | null;
+        averageRating?: number;
+        totalReviews?: number;
     };
 };
 

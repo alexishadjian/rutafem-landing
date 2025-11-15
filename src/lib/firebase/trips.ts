@@ -102,6 +102,8 @@ export const getTripById = async (tripId: string): Promise<TripWithDriver | null
                     lastName: (driverData.lastName as string) ?? '',
                     email: (driverData.email as string) ?? '',
                     phoneNumber: (driverData.phoneNumber as string) ?? '',
+                    averageRating: driverData.averageRating as number | undefined,
+                    totalReviews: driverData.totalReviews as number | undefined,
                 },
             };
         } catch (driverError) {

@@ -8,9 +8,16 @@ type TripInfoProps = {
     canJoinTrip: boolean;
     joining: boolean;
     onJoinTrip: () => void;
+    driverAverageRating?: number;
 };
 
-export const TripInfo = ({ trip, canJoinTrip, joining, onJoinTrip }: TripInfoProps) => (
+export const TripInfo = ({
+    trip,
+    canJoinTrip,
+    joining,
+    onJoinTrip,
+    driverAverageRating,
+}: TripInfoProps) => (
     <div className="bg-white rounded-xl shadow-sm border border-black p-6 mb-6">
         <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-3">
@@ -122,6 +129,7 @@ export const TripInfo = ({ trip, canJoinTrip, joining, onJoinTrip }: TripInfoPro
                     <h3 className="font-semibold text-gray-900">Conductrice</h3>
                     <UserInformation
                         firstName={trip.driver.firstName}
+                        rating={driverAverageRating ? Math.round(driverAverageRating) : undefined}
                         subtitle="Conductrice vérifiée"
                         avatarColor="#FBD5E1"
                     />

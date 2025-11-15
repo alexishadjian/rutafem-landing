@@ -212,6 +212,19 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         ? 'Tu peux contacter ta conductrice dès maintenant.'
         : 'Les informations de contact seront visibles une fois ta réservation confirmée.';
 
+    const calculateAverageRating = (): number | undefined => {
+        if (trip?.driver.averageRating !== undefined) {
+            return trip.driver.averageRating;
+        }
+        if (reviews.length > 0) {
+            const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
+            return Math.round((sum / reviews.length) * 10) / 10;
+        }
+        return undefined;
+    };
+
+    const driverAverageRating = calculateAverageRating();
+
     if (loading) {
         return (
             <div className="min-h-screen bg-[var(--dark-green)] flex items-center justify-center">
@@ -309,6 +322,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                                 canJoinTrip={canJoinTrip}
                                 joining={joining}
                                 onJoinTrip={handleJoinTrip}
+                                driverAverageRating={driverAverageRating}
                             />
                         </div>
 
