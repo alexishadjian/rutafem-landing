@@ -108,7 +108,7 @@ export default function SearchBar() {
                                 id="flexible-dates"
                                 className="w-full px-3 py-2.5 border border-black rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
                             />
-                            <p className="text-sm whitespace-nowrap">
+                            <p className="text-sm md:whitespace-nowrap">
                                 Suggérer des trajets à proximité de mon point de départ
                             </p>
                         </div>

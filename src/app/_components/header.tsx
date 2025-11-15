@@ -1,6 +1,6 @@
 'use client';
 
-import { SmartButton } from '@/app/_components/smart-button';
+import { SmartButton } from '@/app/_components/ui/smart-button';
 import Button from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { useAuth } from '@/contexts/AuthContext';

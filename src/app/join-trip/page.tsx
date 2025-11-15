@@ -1,6 +1,6 @@
 'use client';
 
-import { SmartButton } from '@/app/_components/smart-button';
+import { SmartButton } from '@/app/_components/ui/smart-button';
 import { getActiveTrips } from '@/lib/firebase/trips';
 import { Trip } from '@/types/trips.types';
 import { useEffect, useState } from 'react';
@@ -35,7 +35,7 @@ export default function JoinTripPage() {
                 <div className="px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="text-center sm:text-left">
-                            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+                            <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 font-staatliches">
                                 Trouver un trajet
                             </h3>
                             <p className="text-gray-600 mt-2">
@@ -62,7 +62,7 @@ export default function JoinTripPage() {
                 </div>
                 <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-6">
                     <div className="text-center sm:text-left">
-                        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900">
+                        <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 font-staatliches">
                             Les trajets de la communauté
                         </h3>
                         <p className="text-gray-600 mt-2">
