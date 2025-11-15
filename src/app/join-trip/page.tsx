@@ -42,7 +42,7 @@ export default function JoinTripPage() {
 
     return (
         <div className="min-h-screen bg-[var(--dark-green)] py-6 lg:p-12">
-            <div className="md:wrapper wrapper bg-[var(--white)] rounded-xl ">
+            <div className="md:wrapper wrapper bg-[var(--white)] rounded-xl">
                 <div className="px-4 sm:px-6 lg:px-8 py-6">
                     <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                         <div className="text-center sm:text-left">
