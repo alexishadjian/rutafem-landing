@@ -18,6 +18,8 @@ type WelcomeStepProps = {
     onNext: () => void;
 };
 
+// TODO : ajouter un champ departureCity, autocompletion API maps
+
 export default function WelcomeStep({ formData, updateFormData, onNext }: WelcomeStepProps) {
     const [errors, setErrors] = useState<Partial<TripFormData>>({});
 

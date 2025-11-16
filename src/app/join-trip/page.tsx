@@ -11,6 +11,8 @@ import TripCard from './_components/trip-card';
 const INITIAL_DISPLAY_COUNT = 6;
 const LOAD_MORE_COUNT = 6;
 
+// TODO : filtrer, afficher seulement la ville
+
 export default function JoinTripPage() {
     const [trips, setTrips] = useState<Trip[]>([]);
     const [loading, setLoading] = useState(true);

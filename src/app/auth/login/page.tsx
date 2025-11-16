@@ -29,17 +29,18 @@ export default function LoginPage() {
     };
 
     return (
-        <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-            <div className="max-w-md w-full space-y-8">
-                <div className="text-center">
-                    <h1 className="text-4xl font-bold text-gray-900 mb-2">RutaFem</h1>
-                    <h2 className="text-2xl font-semibold text-gray-700 mb-2">
+        <div className="min-h-screen bg-[var(--white)] flex items-center justify-center p-4">
+            <div className="md:wrapper wrapper bg-[var(--dark-green)] rounded-xl">
+                <div className="text-center p-6">
+                    <h2 className="text-3xl md:text-5xl font-semibold text-[var(--white)] mb-2 font-staatliches">
                         Content de te revoir !
                     </h2>
-                    <p className="text-gray-600">Connecte-toi pour accéder à tous les services</p>
+                    <p className="text-[var(--white)] text-sm md:text-lg">
+                        Connecte-toi pour accéder à tous les services
+                    </p>
                 </div>
 
-                <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
+                <div className="rounded-2xl shadow-xl p-8 space-y-6">
                     {error && (
                         <div className="bg-red-50 border border-red-200 rounded-lg p-4">
                             <div className="flex">
@@ -67,7 +68,7 @@ export default function LoginPage() {
                         <div>
                             <label
                                 htmlFor="email"
-                                className="block text-sm font-medium text-gray-700 mb-2"
+                                className="block text-sm font-medium text-[var(--white)] mb-2"
                             >
                                 Adresse email
                             </label>
@@ -94,7 +95,7 @@ export default function LoginPage() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     required
-                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors duration-200"
+                                    className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-[var(--white)] transition-colors duration-200"
                                 />
                             </div>
                         </div>
@@ -102,7 +103,7 @@ export default function LoginPage() {
                         <div>
                             <label
                                 htmlFor="password"
-                                className="block text-sm font-medium text-gray-700 mb-2"
+                                className="block text-sm font-medium text-[var(--white)] mb-2"
                             >
                                 Mot de passe
                             </label>
@@ -129,7 +130,7 @@ export default function LoginPage() {
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
                                     required
-                                    className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors duration-200"
+                                    className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg bg-[var(--white)] transition-colors duration-200"
                                 />
                                 <button
                                     type="button"
@@ -175,47 +176,49 @@ export default function LoginPage() {
                             </div>
                         </div>
 
-                        <button
-                            type="submit"
-                            disabled={loading}
-                            className="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
-                        >
-                            {loading ? (
-                                <div className="flex items-center">
-                                    <svg
-                                        className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <circle
-                                            className="opacity-25"
-                                            cx="12"
-                                            cy="12"
-                                            r="10"
-                                            stroke="currentColor"
-                                            strokeWidth="4"
-                                        ></circle>
-                                        <path
-                                            className="opacity-75"
-                                            fill="currentColor"
-                                            d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                                        ></path>
-                                    </svg>
-                                    Connexion...
-                                </div>
-                            ) : (
-                                'Se connecter'
-                            )}
-                        </button>
+                        <div className="flex items-center justify-center">
+                            <button
+                                type="submit"
+                                disabled={loading}
+                                className="py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-medium text-white bg-[var(--pink)] opacity-90 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform"
+                            >
+                                {loading ? (
+                                    <div className="flex items-center">
+                                        <svg
+                                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            fill="none"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <circle
+                                                className="opacity-25"
+                                                cx="12"
+                                                cy="12"
+                                                r="10"
+                                                stroke="currentColor"
+                                                strokeWidth="4"
+                                            ></circle>
+                                            <path
+                                                className="opacity-75"
+                                                fill="currentColor"
+                                                d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                                            ></path>
+                                        </svg>
+                                        Connexion...
+                                    </div>
+                                ) : (
+                                    'Se connecter'
+                                )}
+                            </button>
+                        </div>
                     </form>
 
                     <div className="text-center">
-                        <p className="text-sm text-gray-600">
+                        <p className="text-sm text-[var(--white)]">
                             Pas encore de compte ?{' '}
                             <Link
                                 href="/auth/register"
-                                className="font-medium text-pink-600 hover:text-pink-500 transition-colors duration-200"
+                                className="font-medium text-[var(--pink)] hover:text-[var(--pink)] opacity-90 hover:opacity-100 transition-colors duration-200"
                             >
                                 Créer un compte
                             </Link>
