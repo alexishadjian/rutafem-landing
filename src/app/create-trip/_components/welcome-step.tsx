@@ -1,4 +1,4 @@
-import { HeroBanner } from '@/public/images';
+import { TwoWomanLaughing } from '@/public/images';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -49,28 +49,28 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
     };
 
     return (
-        <div className="p-6 mt-10">
-            <div className="bg-gray-100 rounded-3xl p-6 md:p-8">
+        <div className="p-6 md:wrapper wrapper">
+            <div className="bg-[var(--white)] rounded-3xl p-6 md:p-8 relative">
                 <div className="flex flex-col lg:flex-row lg:items-start lg:gap-8">
-                    <div className="flex justify-center lg:justify-start mb-6 lg:mb-0 lg:flex-1">
+                    <div className="flex justify-center lg:justify-start mb-6 lg:flex-1 lg:self-end lg:-mb-8 lg:pb-0">
                         <Image
-                            src={HeroBanner}
+                            src={TwoWomanLaughing}
                             alt="Bienvenue sur RutaFem !"
                             sizes="(max-width: 1024px) 100vw, 600px"
                             style={{ objectFit: 'cover' }}
                             width={600}
                             height={600}
-                            className="rounded-2xl w-full h-auto"
+                            className="rounded-2xl w-full h-auto lg:rounded-b-none"
                         />
                     </div>
 
                     <div className="flex flex-col lg:flex-1">
                         <div className="text-center lg:text-left mb-6">
-                            <h2 className="text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-4">
+                            <h2 className="text-2xl md:text-5xl font-bold font-montserrat text-[var(--black)] font-staatliches mb-4">
                                 Bienvenue !
                             </h2>
 
-                            <p className="text-base md:text-lg text-gray-700 leading-relaxed">
+                            <p className="text-base md:text-md text-gray-700 leading-relaxed">
                                 Ici, tu peux proposer ton trajet de covoiturage. Plus nous
                                 partageons, plus nous rendons les voyages accessibles, sûrs et
                                 solidaires. 💜
@@ -132,7 +132,7 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                         <div className="flex justify-center lg:justify-start mt-6">
                             <button
                                 onClick={handleNext}
-                                className="btn px-6 py-3 text-base md:text-lg"
+                                className="px-6 py-3 text-base md:text-lg bg-[var(--pink)] rounded-lg"
                             >
                                 Continuer →
                             </button>

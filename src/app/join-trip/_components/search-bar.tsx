@@ -70,6 +70,7 @@ export default function SearchBar() {
                             asSingle
                             value={startDate}
                             onChange={(newValue: DateValueType) => setStartDate(newValue)}
+                            minDate={new Date()}
                             inputClassName={
                                 'border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm w-full px-3 py-2.5'
                             }

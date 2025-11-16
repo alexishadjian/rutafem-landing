@@ -1,7 +1,8 @@
+import Icon from '@/app/_components/ui/icon';
 import { useAuth } from '@/contexts/AuthContext';
 import { createTrip } from '@/lib/firebase/trips';
 import { CreateTripData } from '@/types/trips.types';
-import { formatDate } from '@/utils/date';
+import { formatDate, formatTime } from '@/utils/date';
 import { createTripSchema } from '@/utils/validation';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -25,7 +26,6 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
     const router = useRouter();
     const { user } = useAuth();
     const [isCreating, setIsCreating] = useState(false);
-    const [isCreated, setIsCreated] = useState(false);
     const [error, setError] = useState('');
     const [acceptTerms, setAcceptTerms] = useState(false);
 
@@ -57,113 +57,166 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                 description: formData.description,
             }) as CreateTripData;
 
-            await createTrip(user.uid, parsed);
-            setIsCreated(true);
+            // Minimum loading time to show feedback
+            await Promise.all([
+                createTrip(user.uid, parsed),
+                new Promise((resolve) => setTimeout(resolve, 1000)),
+            ]);
+
+            router.push('/create-trip/success');
         } catch (error) {
             console.error('Erreur lors de la création du trajet:', error);
             setError(
                 error instanceof Error ? error.message : 'Erreur lors de la création du trajet',
             );
-        } finally {
             setIsCreating(false);
         }
     };
 
     return (
-        <div className="p-4 sm:p-6 mt-6 sm:mt-10">
-            <div className="bg-gray-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+        <div className="p-4 sm:p-6 mt-6 sm:mt-10 md:wrapper wrapper">
+            <div className="bg-[var(--white)] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
                 <div className="max-w-4xl mx-auto text-center">
                     <div className="mb-6 sm:mb-8">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                            <svg
-                                className="w-8 h-8 sm:w-10 sm:h-10 text-green-600"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M5 13l4 4L19 7"
-                                />
-                            </svg>
-                        </div>
+                        <h2 className="text-xl sm:text-2xl md:text-5xl font-bold font-montserrat text-[var(--black)] font-staatliches mb-4 sm:mb-6 text-center">
+                            Informations du trajet
+                        </h2>
 
-                        {isCreated ? (
-                            <>
-                                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-3 sm:mb-4">
-                                    Trajet créé avec succès ! 🎉
-                                </h2>
+                        <p className="text-base text-gray-700 mb-4 sm:mb-6 px-2 text-start">
+                            Vérifie les informations ci-dessous et clique sur “Publier le trajet”
+                            pour confirmer la création et publication de ton trajet. 💜
+                        </p>
 
-                                <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-6 px-2">
-                                    Ton trajet de covoiturage a été publié. D&apos;autres
-                                    utilisatrices pourront maintenant le voir et demander à y
-                                    participer.
-                                </p>
-                            </>
-                        ) : (
-                            <>
-                                <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-3 sm:mb-4">
-                                    Confirmer la création du trajet
-                                </h2>
-
-                                <p className="text-base sm:text-lg text-gray-700 mb-4 sm:mb-6 px-2">
-                                    Vérifie les informations ci-dessous et clique sur &quot;Publier
-                                    le trajet&quot; pour le publier.
-                                </p>
-                            </>
-                        )}
-
-                        <div className="bg-white rounded-lg p-4 sm:p-6 mb-6 sm:mb-8 text-left">
-                            <h3 className="font-semibold text-gray-800 mb-4 sm:mb-6 text-center text-lg sm:text-xl">
+                        <div className="bg-white rounded-xl p-4 sm:p-6 mb-6 sm:mb-8 text-left">
+                            <h3 className="font-semibold text-gray-800 mb-4 sm:mb-6 text-start text-xl sm:text-2xl">
                                 Récapitulatif :
                             </h3>
 
                             <div className="space-y-3 sm:space-y-4">
-                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 sm:py-3 border-b border-gray-100">
-                                    <span className="text-gray-600 text-sm sm:text-base mb-1 sm:mb-0">
-                                        Trajet :
-                                    </span>
-                                    <span className="font-medium text-gray-800 text-sm sm:text-base">
+                                <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-100 gap-3">
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="bg-[var(--yellow)] rounded-full p-2">
+                                            <Icon
+                                                name="mapPoint"
+                                                strokeColor="var(--black)"
+                                                fillColor="var(--black)"
+                                                width={16}
+                                                height={16}
+                                                strokeWidth={1}
+                                            />
+                                        </div>
+                                        <span className="text-gray-600 text-sm sm:text-base">
+                                            Trajet :
+                                        </span>
+                                    </div>
+                                    <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
                                         {formData.departurePlace || '[Lieu de départ]'} →{' '}
                                         {formData.arrival || "[Ville d'arrivée]"}
                                     </span>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 sm:py-3 border-b border-gray-100">
-                                    <span className="text-gray-600 text-sm sm:text-base mb-1 sm:mb-0">
-                                        Date :
-                                    </span>
-                                    <span className="font-medium text-gray-800 text-sm sm:text-base">
+                                <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-100 gap-3">
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="bg-[var(--yellow)] rounded-full p-2">
+                                            <Icon
+                                                name="calendar"
+                                                strokeColor="var(--black)"
+                                                fillColor="var(--black)"
+                                                width={16}
+                                                height={16}
+                                                strokeWidth={1}
+                                            />
+                                        </div>
+                                        <span className="text-gray-600 text-sm sm:text-base">
+                                            Date :
+                                        </span>
+                                    </div>
+                                    <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
                                         {formatDate(formData.date)}
                                     </span>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 sm:py-3 border-b border-gray-100">
-                                    <span className="text-gray-600 text-sm sm:text-base mb-1 sm:mb-0">
-                                        Places disponibles :
+                                <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-100 gap-3">
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="bg-[var(--yellow)] rounded-full p-2">
+                                            <Icon
+                                                name="clock"
+                                                strokeColor="var(--black)"
+                                                fillColor="none"
+                                                width={16}
+                                                height={16}
+                                                strokeWidth={1}
+                                            />
+                                        </div>
+                                        <span className="text-gray-600 text-sm sm:text-base">
+                                            Horaire :
+                                        </span>
+                                    </div>
+                                    <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
+                                        {formatTime(formData.time)}
                                     </span>
-                                    <span className="font-medium text-gray-800 text-sm sm:text-base">
+                                </div>
+
+                                <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-100 gap-3">
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="bg-[var(--yellow)] rounded-full p-2">
+                                            <Icon
+                                                name="user"
+                                                strokeColor="var(--black)"
+                                                fillColor="none"
+                                                width={16}
+                                                height={16}
+                                                strokeWidth={1}
+                                            />
+                                        </div>
+                                        <span className="text-gray-600 text-sm sm:text-base">
+                                            Places disponibles :
+                                        </span>
+                                    </div>
+                                    <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
                                         {formData.seats || '[Nombre]'} place
                                         {formData.seats && parseInt(formData.seats) > 1 ? 's' : ''}
                                     </span>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 sm:py-3 border-b border-gray-100">
-                                    <span className="text-gray-600 text-sm sm:text-base mb-1 sm:mb-0">
-                                        Prix :
-                                    </span>
-                                    <span className="font-medium text-gray-800 text-sm sm:text-base">
+                                <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-100 gap-3">
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="bg-[var(--yellow)] rounded-full p-2">
+                                            <Icon
+                                                name="euro"
+                                                strokeColor="var(--black)"
+                                                fillColor="var(--black)"
+                                                width={16}
+                                                height={16}
+                                                strokeWidth={1}
+                                            />
+                                        </div>
+                                        <span className="text-gray-600 text-sm sm:text-base">
+                                            Prix :
+                                        </span>
+                                    </div>
+                                    <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
                                         {formData.price ? `${formData.price}€` : '[Prix]'} par place
                                     </span>
                                 </div>
 
-                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center py-2 sm:py-3 border-b border-gray-100">
-                                    <span className="text-gray-600 text-sm sm:text-base mb-1 sm:mb-0">
-                                        Lieu de départ :
-                                    </span>
-                                    <span className="font-medium text-gray-800 text-sm sm:text-base">
+                                <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-100 gap-3">
+                                    <div className="flex items-center gap-2 flex-shrink-0">
+                                        <div className="bg-[var(--yellow)] rounded-full p-2">
+                                            <Icon
+                                                name="mapPoint"
+                                                strokeColor="var(--black)"
+                                                fillColor="var(--black)"
+                                                width={16}
+                                                height={16}
+                                                strokeWidth={1}
+                                            />
+                                        </div>
+                                        <span className="text-gray-600 text-sm sm:text-base">
+                                            Lieu de départ :
+                                        </span>
+                                    </div>
+                                    <span className="font-medium text-gray-800 text-sm sm:text-base text-right">
                                         {formData.departurePlace || '[Lieu]'}
                                     </span>
                                 </div>
@@ -181,13 +234,6 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                             </div>
                         </div>
 
-                        {isCreated && (
-                            <p className="text-xs sm:text-sm text-gray-500 mb-6 sm:mb-8 px-2">
-                                Tu recevras une notification dès qu&apos;une utilisatrice
-                                s&apos;intéressera à ton trajet.
-                            </p>
-                        )}
-
                         {error && (
                             <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
                                 <p className="text-red-800 text-sm">{error}</p>
@@ -195,70 +241,61 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                         )}
                     </div>
 
-                    {!isCreated && (
-                        <div className="mb-6">
-                            <div className="flex items-start gap-3 p-4 rounded-lg">
-                                <input
-                                    type="checkbox"
-                                    id="acceptTerms"
-                                    checked={acceptTerms}
-                                    onChange={(e) => setAcceptTerms(e.target.checked)}
-                                    className="mt-1 h-4 w-4 text-pink-600 focus:ring-pink-500 border-gray-900 rounded"
-                                />
-                                <label
-                                    htmlFor="acceptTerms"
-                                    className="text-sm text-gray-700 leading-relaxed"
-                                >
-                                    J&apos;accepte les{' '}
-                                    <a
-                                        href="/conditions-generales-de-vente"
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-pink-600 hover:text-pink-700 underline"
-                                    >
-                                        conditions générales de vente
-                                    </a>{' '}
-                                    et j&apos;autorise le partage de mes informations de contact
-                                    (prénom, numéro de téléphone) avec les autres participants du
-                                    trajet pour faciliter la communication et l&apos;organisation du
-                                    covoiturage.
-                                </label>
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        {isCreated ? (
-                            <button
-                                onClick={() => router.push('/join-trip')}
-                                className="btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
+                    <div className="mb-6">
+                        <div className="flex items-start gap-3 p-4 rounded-lg">
+                            <input
+                                type="checkbox"
+                                id="acceptTerms"
+                                checked={acceptTerms}
+                                onChange={(e) => setAcceptTerms(e.target.checked)}
+                                className="peer h-5 w-5 cursor-pointer transition-all appearance-none rounded shadow hover:shadow-md border-2 border-black checked:bg-pink-600 checked:border-pink-600"
+                            />
+                            <label
+                                htmlFor="acceptTerms"
+                                className="text-sm text-gray-700 leading-relaxed text-start"
                             >
-                                ← Retour aux trajets
-                            </button>
-                        ) : (
-                            <>
-                                <button
-                                    onClick={() => router.push('/create-trip?step=2')}
-                                    className="btn-secondary px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
+                                J&apos;accepte les{' '}
+                                <a
+                                    href="/conditions-generales-de-vente"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="text-pink-600 hover:text-pink-700 underline"
                                 >
-                                    ← Retour
-                                </button>
-                                <button
-                                    onClick={handleCreateTrip}
-                                    disabled={isCreating || !acceptTerms}
-                                    className="btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base disabled:opacity-50 disabled:cursor-not-allowed"
-                                >
-                                    {isCreating ? (
-                                        <>
-                                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
-                                            Création...
-                                        </>
-                                    ) : (
-                                        'Publier le trajet'
-                                    )}
-                                </button>
-                            </>
-                        )}
+                                    conditions générales de vente
+                                </a>{' '}
+                                et j&apos;autorise le partage de mes informations de contact
+                                (prénom, numéro de téléphone) avec les autres participants du trajet
+                                pour faciliter la communication et l&apos;organisation du
+                                covoiturage.
+                            </label>
+                        </div>
+                    </div>
+
+                    <div className="flex flex-col sm:flex-row gap-4 justify-between">
+                        <button
+                            onClick={() => router.push('/create-trip?step=2')}
+                            className="px-4 sm:px-6 py-2.5 sm:py-3 text-black bg-gray-300 hover:bg-gray-400 rounded-lg transition-colors text-sm sm:text-base"
+                        >
+                            ← Retour
+                        </button>
+                        <button
+                            onClick={handleCreateTrip}
+                            disabled={isCreating || !acceptTerms}
+                            className={`order-1 sm:order-2 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg transition-colors ${
+                                isCreating || !acceptTerms
+                                    ? 'bg-gray-400 cursor-not-allowed opacity-60'
+                                    : 'bg-[var(--pink)] opacity-90 hover:opacity-100'
+                            }`}
+                        >
+                            {isCreating ? (
+                                <>
+                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                                    Création...
+                                </>
+                            ) : (
+                                'Publier le trajet'
+                            )}
+                        </button>
                     </div>
                 </div>
             </div>

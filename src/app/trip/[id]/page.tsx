@@ -349,7 +349,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                     {/* Section Participants - Only visible for the creator */}
                     {isUserDriver && trip.participants.length > 0 && (
                         <div className="mt-8">
-                            <div className="bg-white rounded-xl shadow-sm border p-6">
+                            <div className="rounded-xl p-6">
                                 <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                     <svg
                                         className="w-5 h-5 text-pink-600"
@@ -457,7 +457,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                 onClose={() => setShowCancelModal(false)}
                 onConfirm={confirmCancelTrip}
                 title="Annuler le trajet"
-                message="Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible et tous les participants seront notifiés."
+                message="Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible et toutes les participantes seront notifiées."
                 confirmText="Oui, annuler le trajet"
                 cancelText="Non, garder le trajet"
                 type="danger"

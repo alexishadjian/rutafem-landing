@@ -9,6 +9,7 @@ import Feature3 from './feature-3.png';
 import Functioning from './functioning.png';
 import HeroBanner from './hero-banner.png';
 import RideCta from './ride-cta.png';
+import TwoWomanLaughing from './two_woman_laughing.png';
 import Value1 from './value-1.png';
 import Value2 from './value-2.png';
 import Value3 from './value-3.png';
@@ -26,6 +27,7 @@ export {
     Functioning,
     HeroBanner,
     RideCta,
+    TwoWomanLaughing,
     Value1,
     Value2,
     Value3,

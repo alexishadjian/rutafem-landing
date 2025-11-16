@@ -34,7 +34,7 @@ export const TripActions = ({
                             <button
                                 onClick={onCancelTrip}
                                 disabled={cancelling}
-                                className="w-full bg-pink-500 hover:bg-pink-700 text-white py-2 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                                className="w-full bg-[var(--pink)] opacity-90 hover:opacity-100 py-2 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                             >
                                 {cancelling ? (
                                     <>

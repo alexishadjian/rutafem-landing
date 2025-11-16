@@ -23,7 +23,7 @@ export const ReviewsSection = ({ title, reviews, loading }: ReviewsSectionProps)
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-sm border p-6">
+        <div className="rounded-xl shadow-sm p-6">
             <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
                 <h3 className="font-semibold text-gray-900">{title}</h3>
                 <div className="flex items-center gap-2">

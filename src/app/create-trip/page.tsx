@@ -114,30 +114,28 @@ function CreateTripContent() {
             requireDriver={true}
             requireDriverVerified={true}
         >
-            <div className="create-trip">
-                <section id="welcome-message" className="wrapper">
-                    <div className="p-6">
-                        <Stepper totalSteps={3} currentStep={currentStep} />
-                    </div>
+            <div id="welcome-message" className="min-h-screen bg-[var(--dark-green)] py-6 lg:p-12">
+                <div className="p-6">
+                    <Stepper totalSteps={3} currentStep={currentStep} />
+                </div>
 
-                    {stripeOk === false ? (
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-yellow-800">
-                            <h3 className="font-semibold mb-2">Compte bancaire requis</h3>
-                            <p className="mb-4">
-                                Pour publier un trajet, connecte d&apos;abord ton compte bancaire
-                                Stripe.
-                            </p>
-                            <button
-                                onClick={() => router.push('/auth/profile/banking')}
-                                className="btn"
-                            >
-                                Connecter mon compte bancaire
-                            </button>
-                        </div>
-                    ) : (
-                        renderCurrentStep()
-                    )}
-                </section>
+                {stripeOk === false ? (
+                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-yellow-800">
+                        <h3 className="font-semibold mb-2">Compte bancaire requis</h3>
+                        <p className="mb-4">
+                            Pour publier un trajet, connecte d&apos;abord ton compte bancaire
+                            Stripe.
+                        </p>
+                        <button
+                            onClick={() => router.push('/auth/profile/banking')}
+                            className="btn"
+                        >
+                            Connecter mon compte bancaire
+                        </button>
+                    </div>
+                ) : (
+                    renderCurrentStep()
+                )}
             </div>
         </RouteGuard>
     );
@@ -147,7 +145,7 @@ export default function CreateTripPage() {
     return (
         <Suspense
             fallback={
-                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
                         <p className="text-gray-600">Chargement...</p>
