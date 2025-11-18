@@ -40,6 +40,7 @@ export type CreateUserProfileParams = {
     firstName: string;
     lastName: string;
     phoneNumber: string;
+    role?: 'passenger' | 'driver';
 };
 
 export type VerificationUpdate = {

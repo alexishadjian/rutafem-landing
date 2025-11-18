@@ -44,8 +44,8 @@ export default function RegisterPage() {
         setError('');
 
         try {
-            await registerUser(email, password, firstName, lastName, phoneNumber);
-            router.push('/auth/profile');
+            await registerUser(email, password, firstName, lastName, phoneNumber, selectedRole);
+            router.push('/auth/profile/verification');
         } catch (error: unknown) {
             setError(error instanceof Error ? error.message : 'Une erreur est survenue');
         } finally {

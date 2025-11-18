@@ -11,6 +11,7 @@ export const registerUser = async (
     firstName: string,
     lastName: string,
     phoneNumber: string,
+    role: 'passenger' | 'driver' = 'passenger',
 ) => {
     try {
         const { user } = await createUserWithEmailAndPassword(auth, email, password);
@@ -20,6 +21,7 @@ export const registerUser = async (
             firstName,
             lastName,
             phoneNumber,
+            role,
         });
         return { success: true, user };
     } catch (error) {

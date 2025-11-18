@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
 
 import Icon from '@/app/_components/ui/icon';
-import { uploadVerificationDocuments } from '@/lib/firebase/users';
+import { getUserProfile, uploadVerificationDocuments } from '@/lib/firebase/users';
 import { createFileSchema } from '@/utils/validation';
 
 export default function VerificationPage() {
@@ -31,6 +31,15 @@ export default function VerificationPage() {
     useEffect(() => {
         if (!loading && (!user || !userProfile)) {
             router.push('/auth/login');
+            return;
+        }
+        // redirect if already verified
+        if (!loading && userProfile?.isUserVerified) {
+            const nextRoute =
+                userProfile.role === 'driver' && !userProfile.isUserDriverVerified
+                    ? '/auth/profile/driver-license'
+                    : '/auth/profile';
+            router.push(nextRoute);
         }
     }, [user, userProfile, loading, router]);
 
@@ -79,11 +88,16 @@ export default function VerificationPage() {
                 'Documents envoyés avec succès ! Votre profil sera vérifié par notre équipe.',
             );
 
-            // update user profile
+            // update user profile and get updated role
             await refreshUserProfile();
+            const updatedProfile = await getUserProfile(user.uid);
 
             setTimeout(() => {
-                router.push('/auth/profile');
+                const nextRoute =
+                    updatedProfile?.role === 'driver'
+                        ? '/auth/profile/driver-license'
+                        : '/auth/profile';
+                router.push(nextRoute);
             }, 2000);
         } catch (error: unknown) {
             setError(error instanceof Error ? error.message : 'Une erreur est survenue');

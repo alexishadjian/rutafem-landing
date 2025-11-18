@@ -38,6 +38,7 @@ export const createUserProfile = async ({
     firstName,
     lastName,
     phoneNumber,
+    role = 'passenger',
 }: CreateUserProfileParams) => {
     try {
         await setDoc(doc(db, 'users', uid), {
@@ -45,7 +46,7 @@ export const createUserProfile = async ({
             firstName,
             lastName,
             phoneNumber,
-            role: 'passenger',
+            role,
             isUserVerified: false,
             isUserDriverVerified: false,
             createdAt: new Date(),

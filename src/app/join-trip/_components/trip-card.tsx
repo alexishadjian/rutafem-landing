@@ -200,7 +200,7 @@ export default function TripCard({ trip }: TripCardProps) {
                     href={`/trip/${trip.id}`}
                     className="w-full bg-[var(--yellow)] hover:bg-[var(--yellow)]/90 text-[var(--black)] py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                 >
-                    Voir les détails
+                    Voir les détails du trajet
                 </Link>
             </div>
         </div>
