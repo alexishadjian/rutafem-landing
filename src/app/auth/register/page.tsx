@@ -1,7 +1,9 @@
 'use client';
 
 import { registerUser } from '@/lib/firebase/auth';
+import { BlueMoovingCar, TravelerPassenger } from '@/public/images';
 import { registerUserSchema } from '@/utils/validation';
+import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
@@ -18,6 +20,7 @@ export default function RegisterPage() {
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
     const [acceptTerms, setAcceptTerms] = useState(false);
+    const [selectedRole, setSelectedRole] = useState<'driver' | 'passenger'>('passenger');
     const router = useRouter();
 
     const handleSubmit = async (e: React.FormEvent) => {
@@ -87,39 +90,92 @@ export default function RegisterPage() {
                         )}
 
                         <form onSubmit={handleSubmit} className="space-y-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div
+                                    className={`flex flex-col gap-4 bg-white rounded-3xl p-6 md:p-10 max-w-md mx-auto cursor-pointer transition-all duration-200 min-h-[400px] sm:min-h-0 ${
+                                        selectedRole === 'driver'
+                                            ? 'border-8 border-[var(--pink)]'
+                                            : 'border-8 border-white'
+                                    }`}
+                                    onClick={() => setSelectedRole('driver')}
+                                >
+                                    <div className="flex-1 flex items-center justify-center">
+                                        <Image
+                                            src={BlueMoovingCar}
+                                            alt="Dessin d'une voiture bleue qui avance"
+                                            width={240}
+                                            height={240}
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                    <p className="text-center text-2xl font-bold">
+                                        Profil conductrice
+                                    </p>
+                                    <p className="text-start text-base text-gray-600">
+                                        Ne roule plus seule : partage ton trajet avec d&apos;autres
+                                        femmes et profite d&apos;une bonne compagnie tout en
+                                        réduisant tes frais de voyage !
+                                    </p>
+                                </div>
+                                <div
+                                    className={`flex flex-col gap-4 bg-white rounded-3xl p-6 md:p-10 max-w-md mx-auto cursor-pointer transition-all duration-200 min-h-[400px] sm:min-h-0 ${
+                                        selectedRole === 'passenger'
+                                            ? 'border-8 border-[var(--pink)]'
+                                            : 'border-8 border-white'
+                                    }`}
+                                    onClick={() => setSelectedRole('passenger')}
+                                >
+                                    <div className="flex-1 flex items-center justify-center">
+                                        <Image
+                                            src={TravelerPassenger}
+                                            alt="Dessin d'une femme accompagnée de sa valise pleine de stickers de voyage"
+                                            width={200}
+                                            height={200}
+                                            className="object-contain"
+                                        />
+                                    </div>
+                                    <p className="text-center text-2xl font-bold">
+                                        Profil voyageuse
+                                    </p>
+                                    <p className="text-start text-base text-gray-600">
+                                        Voyage où tu veux, l&apos;esprit léger et à petit prix. Avec
+                                        RutaFem, chaque trajet est sûr et solidaire. 🌸
+                                    </p>
+                                </div>
+                            </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>
                                     <label
                                         htmlFor="firstName"
-                                        className="block text-sm font-medium text-[var(--white)] mb-2"
+                                        className="block text-sm font-medium text-white mb-2"
                                     >
                                         Prénom
                                     </label>
                                     <input
                                         id="firstName"
                                         type="text"
-                                        placeholder="Votre prénom"
+                                        placeholder="ex: Mélina"
                                         value={firstName}
                                         onChange={(e) => setFirstName(e.target.value)}
                                         required
-                                        className="block w-full px-3 py-3 border border-gray-300 rounded-lg bg-[var(--white)] transition-colors duration-200"
+                                        className="block w-full px-3 py-3 border border-gray-300 rounded-lg bg-white transition-colors duration-200"
                                     />
                                 </div>
                                 <div>
                                     <label
                                         htmlFor="lastName"
-                                        className="block text-sm font-medium text-[var(--white)] mb-2"
+                                        className="block text-sm font-medium text-white mb-2"
                                     >
                                         Nom
                                     </label>
                                     <input
                                         id="lastName"
                                         type="text"
-                                        placeholder="Votre nom"
+                                        placeholder="ex: Dupont"
                                         value={lastName}
                                         onChange={(e) => setLastName(e.target.value)}
                                         required
-                                        className="block w-full px-3 py-3 border border-gray-300 rounded-lg bg-[var(--white)] transition-colors duration-200"
+                                        className="block w-full px-3 py-3 border border-gray-300 rounded-lg bg-white transition-colors duration-200"
                                     />
                                 </div>
                             </div>
@@ -127,7 +183,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor="email"
-                                    className="block text-sm font-medium text-[var(--white)] mb-2"
+                                    className="block text-sm font-medium text-white mb-2"
                                 >
                                     Adresse email
                                 </label>
@@ -154,7 +210,7 @@ export default function RegisterPage() {
                                         value={email}
                                         onChange={(e) => setEmail(e.target.value)}
                                         required
-                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-[var(--white)] transition-colors duration-200"
+                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-white transition-colors duration-200"
                                     />
                                 </div>
                             </div>
@@ -162,7 +218,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor="phoneNumber"
-                                    className="block text-sm font-medium text-[var(--white)] mb-2"
+                                    className="block text-sm font-medium text-white mb-2"
                                 >
                                     Numéro de téléphone
                                 </label>
@@ -189,7 +245,7 @@ export default function RegisterPage() {
                                         value={phoneNumber}
                                         onChange={(e) => setPhoneNumber(e.target.value)}
                                         required
-                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-[var(--white)] transition-colors duration-200"
+                                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-white transition-colors duration-200"
                                     />
                                 </div>
                             </div>
@@ -197,7 +253,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor="password"
-                                    className="block text-sm font-medium text-[var(--white)] mb-2"
+                                    className="block text-sm font-medium text-white mb-2"
                                 >
                                     Mot de passe
                                 </label>
@@ -220,12 +276,12 @@ export default function RegisterPage() {
                                     <input
                                         id="password"
                                         type={showPassword ? 'text' : 'password'}
-                                        placeholder="Votre mot de passe"
+                                        placeholder="**********"
                                         value={password}
                                         onChange={(e) => setPassword(e.target.value)}
                                         required
                                         minLength={6}
-                                        className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg bg-[var(--white)] transition-colors duration-200"
+                                        className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg bg-white transition-colors duration-200"
                                     />
                                     <button
                                         type="button"
@@ -275,7 +331,7 @@ export default function RegisterPage() {
                             <div>
                                 <label
                                     htmlFor="confirmPassword"
-                                    className="block text-sm font-medium text-[var(--white)] mb-2"
+                                    className="block text-sm font-medium text-white mb-2"
                                 >
                                     Confirmer le mot de passe
                                 </label>
@@ -298,11 +354,11 @@ export default function RegisterPage() {
                                     <input
                                         id="confirmPassword"
                                         type={showConfirmPassword ? 'text' : 'password'}
-                                        placeholder="Confirmez votre mot de passe"
+                                        placeholder="********"
                                         value={confirmPassword}
                                         onChange={(e) => setConfirmPassword(e.target.value)}
                                         required
-                                        className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg bg-[var(--white)] transition-colors duration-200"
+                                        className="block w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg bg-white transition-colors duration-200"
                                     />
                                     <button
                                         type="button"
@@ -359,7 +415,7 @@ export default function RegisterPage() {
                                     />
                                     <label
                                         htmlFor="acceptTerms"
-                                        className="text-sm text-[var(--white)] leading-relaxed"
+                                        className="text-sm text-white leading-relaxed"
                                     >
                                         J&apos;accepte les{' '}
                                         <a
@@ -390,12 +446,12 @@ export default function RegisterPage() {
                                 <button
                                     type="submit"
                                     disabled={loading || !acceptTerms}
-                                    className="py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-medium text-white bg-[var(--pink)] opacity-90 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform"
+                                    className="py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-medium bg-[var(--pink)] opacity-90 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform"
                                 >
                                     {loading ? (
                                         <div className="flex items-center">
                                             <svg
-                                                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                                className="animate-spin -ml-1 mr-3 h-5 w-5"
                                                 xmlns="http://www.w3.org/2000/svg"
                                                 fill="none"
                                                 viewBox="0 0 24 24"
@@ -424,7 +480,7 @@ export default function RegisterPage() {
                         </form>
 
                         <div className="text-center">
-                            <p className="text-sm text-[var(--white)]">
+                            <p className="text-sm text-white">
                                 Déjà un compte ?{' '}
                                 <Link
                                     href="/auth/login"

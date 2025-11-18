@@ -4,6 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import Icon from '../_components/ui/icon';
 
 export default function VerificationRequiredPage() {
     const { user, userProfile, loading } = useAuth();
@@ -29,7 +30,7 @@ export default function VerificationRequiredPage() {
 
     if (loading) {
         return (
-            <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+            <div className="bg-[var(--white)] flex items-center justify-center">
                 <div className="text-center">
                     <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
                     <p className="text-gray-600">Chargement...</p>
@@ -43,9 +44,9 @@ export default function VerificationRequiredPage() {
     }
 
     return (
-        <div className="min-h-screen bg-[var(--dark-green)] py-8">
-            <div className="md:wrapper wrapper bg-[var(--white)] rounded-xl mt-14">
-                <div className="max-w-md w-full bg-white rounded-xl shadow-lg p-8 text-center">
+        <div className="bg-[var(--dark-green)] flex-1 flex flex-col py-8 px-4">
+            <div className="md:wrapper wrapper flex-1 flex items-center justify-center">
+                <div className="max-w-md w-full bg-[var(--white)] rounded-3xl p-8 text-center shadow-xl">
                     <div className="mb-6">
                         <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
                             <svg
@@ -62,10 +63,10 @@ export default function VerificationRequiredPage() {
                                 />
                             </svg>
                         </div>
-                        <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                        <h2 className="text-3xl md:text-4xl font-semibold text-[var(--black)] font-staatliches mb-2">
                             Vérification requise
-                        </h1>
-                        <p className="text-gray-600">
+                        </h2>
+                        <p className="text-[var(--black)] mt-2">
                             Vous devez avoir un profil vérifié pour accéder à ce contenu !
                         </p>
                     </div>
@@ -73,28 +74,23 @@ export default function VerificationRequiredPage() {
                     <div className="space-y-4">
                         <Link
                             href="/auth/profile"
-                            className="btn w-full bg-[--accent-color] hover:bg-[--accent-color]/90 text-white py-3 px-6 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                            className="w-full bg-[var(--orange)] hover:bg-[var(--orange)] opacity-90 hover:opacity-100 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
                         >
-                            <svg
-                                className="w-5 h-5"
-                                fill="none"
-                                stroke="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth={2}
-                                    d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
-                                />
-                            </svg>
+                            <Icon
+                                name="check"
+                                width={20}
+                                height={20}
+                                strokeColor="var(--white)"
+                                strokeWidth={1}
+                                fillColor="none"
+                            />
                             Faire vérifier mon compte
                         </Link>
 
-                        <div className="mt-4">
+                        <div>
                             <Link
                                 href="/join-trip"
-                                className="w-full text-gray-600 hover:text-gray-800 py-2 px-4 rounded-lg font-medium transition-colors"
+                                className="text-[var(--black)] hover:text-[var(--orange)] font-medium transition-colors"
                             >
                                 Retour à la recherche de trajets
                             </Link>

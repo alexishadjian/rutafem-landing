@@ -1,6 +1,7 @@
 'use client';
 
 import { RouteGuard } from '@/app/_components/route-guard';
+import Icon from '@/app/_components/ui/icon';
 import Stepper from '@/components/ui/stepper';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -114,24 +115,62 @@ function CreateTripContent() {
             requireDriver={true}
             requireDriverVerified={true}
         >
-            <div id="welcome-message" className="min-h-screen bg-[var(--dark-green)] py-6 lg:p-12">
+            <div
+                id="welcome-message"
+                className="bg-[var(--dark-green)] flex-1 flex flex-col py-6 lg:p-12"
+            >
                 <div className="p-6">
                     <Stepper totalSteps={3} currentStep={currentStep} />
                 </div>
 
                 {stripeOk === false ? (
-                    <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-yellow-800">
-                        <h3 className="font-semibold mb-2">Compte bancaire requis</h3>
-                        <p className="mb-4">
-                            Pour publier un trajet, connecte d&apos;abord ton compte bancaire
-                            Stripe.
-                        </p>
-                        <button
-                            onClick={() => router.push('/auth/profile/banking')}
-                            className="btn"
-                        >
-                            Connecter mon compte bancaire
-                        </button>
+                    <div className="md:wrapper wrapper flex-1 flex items-center justify-center py-8">
+                        <div className="max-w-md w-full bg-[var(--white)] rounded-3xl p-8 text-center shadow-xl">
+                            <div className="mb-6">
+                                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Icon
+                                        name="creditCard"
+                                        width={32}
+                                        height={32}
+                                        strokeColor="var(--orange)"
+                                        strokeWidth={2}
+                                        fillColor="none"
+                                    />
+                                </div>
+                                <h2 className="text-3xl md:text-4xl font-semibold text-[var(--black)] font-staatliches mb-2">
+                                    Compte bancaire requis
+                                </h2>
+                                <p className="text-[var(--black)] mt-2">
+                                    Pour publier un trajet, connecte d&apos;abord ton compte
+                                    bancaire Stripe.
+                                </p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <button
+                                    onClick={() => router.push('/auth/profile/')}
+                                    className="w-full bg-[var(--orange)] hover:bg-[var(--orange)] opacity-90 hover:opacity-100 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <Icon
+                                        name="lock"
+                                        width={20}
+                                        height={20}
+                                        strokeColor="none"
+                                        fillColor="var(--white)"
+                                    />
+                                    Connecter mon compte bancaire
+                                </button>
+                            </div>
+
+                            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                                <p className="text-sm text-blue-800">
+                                    <strong>Pourquoi cette connexion ?</strong>
+                                    <br />
+                                    Nous utilisons Stripe pour sécuriser tes paiements et te
+                                    permettre de recevoir tes gains en toute sécurité.
+                                </p>
+                            </div>
+                        </div>
                     </div>
                 ) : (
                     renderCurrentStep()

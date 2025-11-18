@@ -180,12 +180,12 @@ export default function LoginPage() {
                             <button
                                 type="submit"
                                 disabled={loading}
-                                className="py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-medium text-white bg-[var(--pink)] opacity-90 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform"
+                                className="py-3 px-4 border border-transparent rounded-lg shadow-md text-sm font-medium bg-[var(--pink)] opacity-90 hover:opacity-100 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform"
                             >
                                 {loading ? (
                                     <div className="flex items-center">
                                         <svg
-                                            className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                                            className="animate-spin -ml-1 mr-3 h-5 w-5"
                                             xmlns="http://www.w3.org/2000/svg"
                                             fill="none"
                                             viewBox="0 0 24 24"

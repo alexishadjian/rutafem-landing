@@ -269,8 +269,8 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
 
     return (
         <RouteGuard requireAuth={true} requireVerified={true}>
-            <div className="min-h-screen bg-[var(--dark-green)] py-8">
-                <div className="md:wrapper wrapper bg-[var(--white)] rounded-xl ">
+            <div className="flex-1 flex flex-col bg-[var(--dark-green)] py-12">
+                <div className="md:wrapper wrapper bg-[var(--white)] rounded-xl flex-1">
                     {/* Header */}
                     <div className="mb-4 p-6">
                         <Link
