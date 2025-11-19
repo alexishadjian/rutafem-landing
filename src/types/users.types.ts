@@ -13,6 +13,10 @@ export type UserDoc = {
     stripeAccountId?: string;
     averageRating?: number;
     totalReviews?: number;
+    idCardFront?: string;
+    idCardBack?: string;
+    driverLicenseFront?: string;
+    driverLicenseBack?: string;
     createdAt?: Timestamp | Date;
     updatedAt?: Timestamp | Date;
 };
@@ -31,6 +35,10 @@ export type UserProfile = {
     stripeAccountId: string;
     averageRating?: number;
     totalReviews?: number;
+    idCardFront?: string;
+    idCardBack?: string;
+    driverLicenseFront?: string;
+    driverLicenseBack?: string;
     createdAt: Date;
 };
 

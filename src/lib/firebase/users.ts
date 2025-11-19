@@ -29,6 +29,10 @@ const mapUserProfile = (uid: string, data: UserDoc): UserProfile => ({
     stripeAccountId: (data.stripeAccountId as string) ?? '',
     averageRating: data.averageRating,
     totalReviews: data.totalReviews,
+    idCardFront: data.idCardFront,
+    idCardBack: data.idCardBack,
+    driverLicenseFront: data.driverLicenseFront,
+    driverLicenseBack: data.driverLicenseBack,
     createdAt: timestampToDate(data.createdAt),
 });
 

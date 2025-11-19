@@ -17,6 +17,7 @@ import {
 import { Review } from '@/types/reviews.types';
 import { Trip } from '@/types/trips.types';
 import { doc, updateDoc } from 'firebase/firestore';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { TripsSection } from './_components/trips-section';
@@ -267,6 +268,64 @@ export default function ProfilePage() {
                                 <div className="text-sm text-red-600 mb-4">{stripeMessage}</div>
                             )}
                         </>
+                    )}
+
+                    {/* Verification Cards */}
+                    {(!userProfile.idCardFront ||
+                        !userProfile.idCardBack ||
+                        (userProfile.role === 'driver' &&
+                            (!userProfile.driverLicenseFront ||
+                                !userProfile.driverLicenseBack))) && (
+                        <div className="mb-6 space-y-4">
+                            <h3 className="text-xl font-semibold text-[var(--black)] font-staatliches">
+                                Vérifications requises
+                            </h3>
+                            <div className="grid md:grid-cols-2 gap-4">
+                                {(!userProfile.idCardFront || !userProfile.idCardBack) && (
+                                    <Link
+                                        href="/auth/profile/verification"
+                                        className="inline-flex items-center gap-2 py-2 px-4 bg-[var(--orange)] text-[var(--white)] hover:opacity-100 hover:shadow-sm opacity-90 rounded-lg font-medium transition-colors"
+                                    >
+                                        <span>Vérifier mon identité</span>
+                                        <svg
+                                            width="18"
+                                            height="18"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path d="M5 12h14M12 5l7 7-7 7" />
+                                        </svg>
+                                    </Link>
+                                )}
+
+                                {userProfile.role === 'driver' &&
+                                    (!userProfile.driverLicenseFront ||
+                                        !userProfile.driverLicenseBack) && (
+                                        <Link
+                                            href="/auth/profile/driver-license"
+                                            className="inline-flex items-center gap-2 py-2 px-4 bg-[var(--pink)] text-[var(--white)] hover:opacity-100 hover:shadow-sm opacity-90 rounded-lg font-medium transition-colors"
+                                        >
+                                            <span>Vérifier mon permis</span>
+                                            <svg
+                                                width="18"
+                                                height="18"
+                                                viewBox="0 0 24 24"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            >
+                                                <path d="M5 12h14M12 5l7 7-7 7" />
+                                            </svg>
+                                        </Link>
+                                    )}
+                            </div>
+                        </div>
                     )}
 
                     {isVerified ? (

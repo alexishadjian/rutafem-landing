@@ -76,3 +76,24 @@ export const createTripSchema = z.object({
     departureAddress: z.string().min(1, 'Adresse de départ requise'),
     description: z.string().optional(),
 });
+
+// french license plate verification regex
+const FRENCH_LICENSE_PLATE_REGEX = /^([A-Z]{2}-\d{3}-[A-Z]{2}|\d{3,4}\s?[A-Z]{2,3}\s?\d{2})$/i;
+
+export const vehicleSchema = z.object({
+    licensePlate: z
+        .string()
+        .min(1, "La plaque d'immatriculation est requise")
+        .refine((plate) => FRENCH_LICENSE_PLATE_REGEX.test(plate.replace(/\s+/g, ' ').trim()), {
+            message: 'Format de plaque invalide. Format attendu : AB-123-CD ou 1234 AB 12',
+        }),
+    brand: z
+        .string()
+        .min(1, 'La marque est requise')
+        .min(2, 'La marque doit contenir au moins 2 caractères'),
+    model: z
+        .string()
+        .min(1, 'Le modèle est requis')
+        .min(2, 'Le modèle doit contenir au moins 2 caractères'),
+    color: z.string().min(1, 'La couleur est requise'),
+});

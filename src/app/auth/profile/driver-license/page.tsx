@@ -3,7 +3,8 @@
 import Icon from '@/app/_components/ui/icon';
 import { useAuth } from '@/contexts/AuthContext';
 import { uploadDriverLicenseDocuments } from '@/lib/firebase/users';
-import { createFileSchema } from '@/utils/validation';
+import { createOrUpdateVehicle } from '@/lib/firebase/vehicles';
+import { createFileSchema, vehicleSchema } from '@/utils/validation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useMemo, useState } from 'react';
@@ -17,6 +18,12 @@ export default function DriverLicenseVerificationPage() {
     const [uploading, setUploading] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+
+    // Vehicle information
+    const [licensePlate, setLicensePlate] = useState('');
+    const [brand, setBrand] = useState('');
+    const [model, setModel] = useState('');
+    const [color, setColor] = useState('');
 
     const { frontSchema, backSchema } = useMemo(
         () => ({
@@ -67,6 +74,19 @@ export default function DriverLicenseVerificationPage() {
             return;
         }
 
+        const vehicleValidation = vehicleSchema.safeParse({
+            licensePlate,
+            brand,
+            model,
+            color,
+        });
+
+        if (!vehicleValidation.success) {
+            const firstError = vehicleValidation.error.issues[0];
+            setError(firstError?.message ?? 'Données du véhicule invalides');
+            return;
+        }
+
         setUploading(true);
         setError('');
         setSuccess('');
@@ -74,8 +94,15 @@ export default function DriverLicenseVerificationPage() {
         try {
             await uploadDriverLicenseDocuments(user.uid, licenseFront, licenseBack);
 
+            await createOrUpdateVehicle(user.uid, {
+                licensePlate: licensePlate.toUpperCase().replace(/\s+/g, ' ').trim(),
+                brand: brand.trim(),
+                model: model.trim(),
+                color,
+            });
+
             setSuccess(
-                'Documents de permis envoyés avec succès ! Votre permis sera vérifié par notre équipe.',
+                'Documents de permis et informations du véhicule envoyés avec succès ! Votre permis sera vérifié par notre équipe.',
             );
 
             // update user profile
@@ -144,26 +171,25 @@ export default function DriverLicenseVerificationPage() {
                     </div>
                 </div>
 
-                <div className="bg-[var(--dark-green)] rounded-3xl p-8 mb-0">
-                    <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
-                        {error && (
-                            <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                                <p className="text-sm text-red-800">{error}</p>
-                            </div>
-                        )}
+                <form onSubmit={handleSubmit} className="space-y-6">
+                    <div className="bg-[var(--dark-green)] rounded-3xl p-8 mb-0">
+                        <div className="bg-white rounded-2xl shadow-xl p-8 space-y-6">
+                            {error && (
+                                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+                                    <p className="text-sm text-red-800">{error}</p>
+                                </div>
+                            )}
 
-                        {success && (
-                            <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                                <p className="text-sm text-green-800">{success}</p>
-                            </div>
-                        )}
+                            {success && (
+                                <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                                    <p className="text-sm text-green-800">{success}</p>
+                                </div>
+                            )}
+                            <h3 className="text-lg font-semibold text-gray-900">
+                                Permis de conduire
+                            </h3>
 
-                        <form onSubmit={handleSubmit} className="space-y-6">
                             <div className="space-y-4">
-                                <h3 className="text-lg font-semibold text-gray-900">
-                                    Permis de conduire
-                                </h3>
-
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div>
                                         <label
@@ -326,12 +352,113 @@ export default function DriverLicenseVerificationPage() {
                                     </div>
                                 </div>
                             </div>
+                        </div>
+
+                        <div className="p-8 space-y-6">
+                            <h4 className="text-xl font-semibold text-[var(--white)]">
+                                Informations de la voiture
+                            </h4>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        htmlFor="licensePlate"
+                                        className="block text-sm font-medium text-[var(--white)] mb-2"
+                                    >
+                                        Numéro de plaque d&apos;immatriculation{' '}
+                                        <span className="text-pink-500">*</span>
+                                    </label>
+                                    <input
+                                        id="licensePlate"
+                                        type="text"
+                                        value={licensePlate}
+                                        onChange={(e) => setLicensePlate(e.target.value)}
+                                        placeholder="Ex: AA-000-AA"
+                                        required
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--orange)] focus:border-transparent transition-colors"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label
+                                        htmlFor="brand"
+                                        className="block text-sm font-medium text-[var(--white)] mb-2"
+                                    >
+                                        Marque de la voiture{' '}
+                                        <span className="text-pink-500">*</span>
+                                    </label>
+                                    <input
+                                        id="brand"
+                                        type="text"
+                                        value={brand}
+                                        onChange={(e) => setBrand(e.target.value)}
+                                        placeholder="Ex: Renault"
+                                        required
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--orange)] focus:border-transparent transition-colors"
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label
+                                        htmlFor="model"
+                                        className="block text-sm font-medium text-[var(--white)] mb-2"
+                                    >
+                                        Modèle de la voiture{' '}
+                                        <span className="text-pink-500">*</span>
+                                    </label>
+                                    <input
+                                        id="model"
+                                        type="text"
+                                        value={model}
+                                        onChange={(e) => setModel(e.target.value)}
+                                        placeholder="Ex: Clio"
+                                        required
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--orange)] focus:border-transparent transition-colors"
+                                    />
+                                </div>
+
+                                <div>
+                                    <label
+                                        htmlFor="color"
+                                        className="block text-sm font-medium text-[var(--white)] mb-2"
+                                    >
+                                        Couleur de la voiture{' '}
+                                        <span className="text-pink-500">*</span>
+                                    </label>
+                                    <select
+                                        id="color"
+                                        value={color}
+                                        onChange={(e) => setColor(e.target.value)}
+                                        required
+                                        className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--orange)] focus:border-transparent transition-colors"
+                                    >
+                                        <option value="" disabled>
+                                            Sélectionner une couleur
+                                        </option>
+                                        <option value="Noir">Noir</option>
+                                        <option value="Blanc">Blanc</option>
+                                        <option value="Gris">Gris</option>
+                                        <option value="Argent">Argent</option>
+                                        <option value="Bleu">Bleu</option>
+                                        <option value="Rouge">Rouge</option>
+                                        <option value="Vert">Vert</option>
+                                        <option value="Jaune">Jaune</option>
+                                        <option value="Orange">Orange</option>
+                                        <option value="Marron">Marron</option>
+                                        <option value="Beige">Beige</option>
+                                        <option value="Violet">Violet</option>
+                                        <option value="Rose">Rose</option>
+                                    </select>
+                                </div>
+                            </div>
 
                             <div className="flex justify-center">
                                 <button
                                     type="submit"
                                     disabled={uploading}
-                                    className="flex justify-center items-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[var(--pink)] opacity-90 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--pink)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
+                                    className="flex justify-center items-center py-3 px-4 mt-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[var(--pink)] opacity-90 hover:opacity-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[var(--pink)] disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 transform hover:scale-[1.02]"
                                 >
                                     {uploading ? (
                                         <div className="flex items-center">
@@ -360,26 +487,26 @@ export default function DriverLicenseVerificationPage() {
                                             </span>
                                         </div>
                                     ) : (
-                                        <span className="text-[var(--black)]">
+                                        <span className="text-base text-[var(--black)]">
                                             Envoyer les documents
                                         </span>
                                     )}
                                 </button>
                             </div>
-                        </form>
 
-                        <div className="text-center">
-                            <p className="text-sm text-gray-600">
-                                <Link
-                                    href="/auth/profile"
-                                    className="font-medium text-[var(--orange)] hover:text-[var(--pink)] transition-colors duration-200"
-                                >
-                                    Retour au profil
-                                </Link>
-                            </p>
+                            <div className="text-center">
+                                <p className="text-base text-gray-600">
+                                    <Link
+                                        href="/auth/profile"
+                                        className="font-medium text-[var(--orange)] hover:text-[var(--pink)] transition-colors duration-200"
+                                    >
+                                        Retour au profil
+                                    </Link>
+                                </p>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
         </div>
     );
