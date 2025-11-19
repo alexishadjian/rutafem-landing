@@ -16,10 +16,13 @@ import Value1 from './value-1.png';
 import Value2 from './value-2.png';
 import Value3 from './value-3.png';
 import ValueBg from './value-bg.png';
+import WomanFacingMountain from './woman-facing-mountains.png';
 
 export {
     Advantage1,
-    Advantage2, BlueMoovingCar, confirmation,
+    Advantage2,
+    BlueMoovingCar,
+    confirmation,
     Cta,
     Favicon,
     Feature1,
@@ -27,10 +30,12 @@ export {
     Feature3,
     Functioning,
     HeroBanner,
-    RideCta, TravelerPassenger, TwoWomanLaughing,
+    RideCta,
+    TravelerPassenger,
+    TwoWomanLaughing,
     Value1,
     Value2,
     Value3,
-    ValueBg
+    ValueBg,
+    WomanFacingMountain,
 };
-

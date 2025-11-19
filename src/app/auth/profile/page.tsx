@@ -221,7 +221,7 @@ export default function ProfilePage() {
                                             );
                                         }
                                     }}
-                                    className="w-full mb-4 flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-green-600 to-emerald-600 hover:from-green-700 hover:to-emerald-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all duration-200 transform hover:scale-[1.02]"
+                                    className="w-full mb-4 flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[var(--blue)] opacity-90 hover:opacity-100 hover:shadow-sm"
                                 >
                                     <Icon
                                         name="creditCard"
