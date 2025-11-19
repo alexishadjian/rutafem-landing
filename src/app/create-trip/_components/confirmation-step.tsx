@@ -121,7 +121,7 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                                             <Icon
                                                 name="calendar"
                                                 strokeColor="var(--black)"
-                                                fillColor="var(--black)"
+                                                fillColor="none"
                                                 width={16}
                                                 height={16}
                                                 strokeWidth={1}
@@ -200,12 +200,12 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                                     </span>
                                 </div>
 
-                                <div className="flex items-center justify-between py-2 sm:py-3 border-b border-gray-100 gap-3">
+                                <div className="flex items-center justify-between py-2 sm:py-3 border-gray-100 gap-3">
                                     <div className="flex items-center gap-2 flex-shrink-0">
                                         <div className="bg-[var(--yellow)] rounded-full p-2">
                                             <Icon
                                                 name="mapPoint"
-                                                strokeColor="var(--black)"
+                                                strokeColor="none"
                                                 fillColor="var(--black)"
                                                 width={16}
                                                 height={16}

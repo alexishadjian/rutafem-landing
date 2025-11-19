@@ -69,7 +69,7 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                     <div className="flex flex-col lg:flex-1">
                         <div className="text-center lg:text-left mb-6">
                             <h2 className="text-2xl md:text-5xl font-bold font-montserrat text-[var(--black)] font-staatliches mb-4">
-                                Bienvenue !
+                                Crée ton trajet !
                             </h2>
 
                             <p className="text-base md:text-md text-gray-700 leading-relaxed">

@@ -349,7 +349,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                     {/* Section Participants - Only visible for the creator */}
                     {isUserDriver && trip.participants.length > 0 && (
                         <div className="mt-8">
-                            <div className="rounded-xl p-6">
+                            <div className="p-6">
                                 <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
                                     <svg
                                         className="w-5 h-5 text-pink-600"
@@ -386,7 +386,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                                         {participants.map((participant) => (
                                             <div
                                                 key={participant.id}
-                                                className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg"
+                                                className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl"
                                             >
                                                 <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
                                                     <span className="text-sm font-medium text-pink-600">
@@ -441,7 +441,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                             </div>
                         </div>
                     )}
-                    <div className="mt-8">
+                    <div className="mt-8 p-4">
                         <ReviewsSection
                             title="Quelques avis sur ta conductrice"
                             reviews={reviews}
