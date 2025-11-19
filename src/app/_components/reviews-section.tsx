@@ -4,7 +4,9 @@ import { useRef } from 'react';
 
 import { Review } from '@/types/reviews.types';
 
+import Link from 'next/link';
 import { ReviewCard } from './reviewCard';
+import Icon from './ui/icon';
 
 type ReviewsSectionProps = {
     title: string;
@@ -23,7 +25,7 @@ export const ReviewsSection = ({ title, reviews, loading }: ReviewsSectionProps)
     };
 
     return (
-        <div className="rounded-xl shadow-sm p-6">
+        <div className="py-6">
             <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
                 <h3 className="font-semibold text-gray-900">{title}</h3>
                 <div className="flex items-center gap-2">
@@ -98,9 +100,26 @@ export const ReviewsSection = ({ title, reviews, loading }: ReviewsSectionProps)
                     ))}
                 </div>
             ) : (
-                <p className="text-sm text-gray-500">
-                    Pas encore d&rsquo;avis pour cette conductrice.
-                </p>
+                <div className="bg-[var(--light-grey)] rounded-3xl border-2 border-[var(--dark-green)] p-8 text-center">
+                    <p className="text-gray-600 mb-4 md:w-1/2 md:mx-auto text-start">
+                        Tu n&apos;as pas encore eu l&apos;occasion de laisser un avis. Rejoins un
+                        trajet et partage ton ressenti, c&apos;est grâce à toi que les voyages
+                        deviennent toujours plus sûrs.
+                    </p>
+                    <Link
+                        href="/join-trip"
+                        className="inline-flex items-center gap-2 bg-[var(--yellow)] text-[var(--black)] rounded-lg px-5 py-3 font-medium hover:opacity-90 transition-opacity"
+                    >
+                        <Icon
+                            name="plus"
+                            width={24}
+                            height={24}
+                            fillColor="none"
+                            strokeColor="var(--black)"
+                        />
+                        <span>Chercher un trajet</span>
+                    </Link>
+                </div>
             )}
         </div>
     );

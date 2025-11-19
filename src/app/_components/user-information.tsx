@@ -75,11 +75,11 @@ export default function UserInformation({
                 {resolvedSubtitle && (
                     <p className="flex items-center gap-1 text-xs text-gray-500">
                         <Icon
-                            name="check"
+                            name="starCheck"
                             width={16}
                             height={16}
-                            strokeColor="#000000"
-                            fillColor="#FACC15"
+                            strokeColor="var(--dark-green)"
+                            fillColor="var(--yellow)"
                         />
                         Conductrice vérifiée
                     </p>

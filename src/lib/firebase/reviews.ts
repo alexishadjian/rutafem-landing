@@ -123,6 +123,37 @@ export const getReviewsByUserId = async (userId: string): Promise<Review[]> => {
     }
 };
 
+export const getReviewsLeftByUserId = async (userId: string): Promise<Review[]> => {
+    try {
+        const reviewsQuery = query(
+            reviewsCollection,
+            where('reviewer_id', '==', userId),
+            orderBy('created_at', 'desc'),
+        );
+        const snapshot = await getDocs(reviewsQuery);
+
+        const reviews = await Promise.all(
+            snapshot.docs.map(async (docSnapshot) => {
+                const data = docSnapshot.data() as ReviewDoc;
+                const reviewed = await buildReviewerSummary(data.reviewed_id);
+
+                return {
+                    id: docSnapshot.id,
+                    comment: data.comment,
+                    rating: data.rating,
+                    reviewer: reviewed,
+                    createdAt: timestampToDate(data.created_at),
+                } satisfies Review;
+            }),
+        );
+
+        return reviews;
+    } catch (error) {
+        logFirebaseError('getReviewsLeftByUserId', error);
+        return [];
+    }
+};
+
 type CreateReviewParams = {
     comment: string;
     rating: number;
