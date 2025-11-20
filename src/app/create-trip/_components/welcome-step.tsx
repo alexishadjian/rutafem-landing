@@ -1,4 +1,5 @@
 import { TwoWomanLaughing } from '@/public/images';
+import { AddressAutofill } from '@mapbox/search-js-react';
 import Image from 'next/image';
 import { useState } from 'react';
 
@@ -10,6 +11,14 @@ type TripFormData = {
     seats: string;
     price: string;
     description: string;
+    departureCity: string;
+    arrivalCity: string;
+    departureAddress: string;
+    arrivalAddress: string;
+    departureLatitude: number;
+    departureLongitude: number;
+    arrivalLatitude: number;
+    arrivalLongitude: number;
 };
 
 type WelcomeStepProps = {
@@ -18,7 +27,13 @@ type WelcomeStepProps = {
     onNext: () => void;
 };
 
-// TODO : ajouter un champ departureCity, autocompletion API maps
+// Extract city name from address (removes postal code)
+const extractCity = (fullAddress: string): string => {
+    const parts = fullAddress.split(',');
+    if (parts.length < 2) return fullAddress.trim();
+    const cityPart = parts[1].trim();
+    return cityPart.replace(/^\d+\s*/, '').trim();
+};
 
 export default function WelcomeStep({ formData, updateFormData, onNext }: WelcomeStepProps) {
     const [errors, setErrors] = useState<Partial<TripFormData>>({});
@@ -30,7 +45,7 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
             newErrors.departurePlace = 'Veuillez indiquer votre lieu de départ';
         }
         if (!formData.arrival.trim()) {
-            newErrors.arrival = 'Veuillez indiquer votre ville d&apos;arrivée';
+            newErrors.arrival = 'Veuillez indiquer votre ville d&apos; arrivée';
         }
 
         setErrors(newErrors);
@@ -48,6 +63,42 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
         if (errors[field]) {
             setErrors((prev) => ({ ...prev, [field]: undefined }));
         }
+    };
+
+    const handleDepartureRetrieve = (response: {
+        features: Array<{
+            geometry: { coordinates: number[] };
+            properties: { full_address?: string; name?: string };
+        }>;
+    }) => {
+        const feature = response.features[0];
+        const [longitude, latitude] = feature.geometry.coordinates;
+        const fullAddress = feature.properties.full_address || feature.properties.name || '';
+        updateFormData({
+            departurePlace: fullAddress,
+            departureAddress: fullAddress,
+            departureCity: extractCity(fullAddress),
+            departureLatitude: latitude,
+            departureLongitude: longitude,
+        });
+    };
+
+    const handleArrivalRetrieve = (response: {
+        features: Array<{
+            geometry: { coordinates: number[] };
+            properties: { full_address?: string; name?: string };
+        }>;
+    }) => {
+        const feature = response.features[0];
+        const [longitude, latitude] = feature.geometry.coordinates;
+        const fullAddress = feature.properties.full_address || feature.properties.name || '';
+        updateFormData({
+            arrival: fullAddress,
+            arrivalAddress: fullAddress,
+            arrivalCity: extractCity(fullAddress),
+            arrivalLatitude: latitude,
+            arrivalLongitude: longitude,
+        });
     };
 
     return (
@@ -87,18 +138,30 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                 >
                                     Lieu de départ <span className="text-[--accent-color]">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    id="departure-place"
-                                    value={formData.departurePlace}
-                                    onChange={(e) =>
-                                        handleInputChange('departurePlace', e.target.value)
-                                    }
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                        errors.departurePlace ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                    placeholder="Ex: Gare de Lyon, 75000 Paris"
-                                />
+                                <AddressAutofill
+                                    accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''}
+                                    onRetrieve={handleDepartureRetrieve}
+                                    options={{
+                                        language: 'fr',
+                                        country: 'fr,be,ch,es,it,de',
+                                    }}
+                                >
+                                    <input
+                                        type="text"
+                                        id="departure-place"
+                                        autoComplete="off"
+                                        value={formData.departurePlace}
+                                        onChange={(e) =>
+                                            handleInputChange('departurePlace', e.target.value)
+                                        }
+                                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
+                                            errors.departurePlace
+                                                ? 'border-red-500'
+                                                : 'border-gray-300'
+                                        }`}
+                                        placeholder="Ex: Gare de Lyon, 75000 Paris"
+                                    />
+                                </AddressAutofill>
                                 {errors.departurePlace && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
                                         {errors.departurePlace}
@@ -114,16 +177,28 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                     Ville d&apos;arrivée{' '}
                                     <span className="text-[--accent-color]">*</span>
                                 </label>
-                                <input
-                                    type="text"
-                                    id="arrival"
-                                    value={formData.arrival}
-                                    onChange={(e) => handleInputChange('arrival', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                        errors.arrival ? 'border-red-500' : 'border-gray-300'
-                                    }`}
-                                    placeholder="Ex: Lyon"
-                                />
+                                <AddressAutofill
+                                    accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''}
+                                    onRetrieve={handleArrivalRetrieve}
+                                    options={{
+                                        language: 'fr',
+                                        country: 'fr,be,ch,es,it,de',
+                                    }}
+                                >
+                                    <input
+                                        type="text"
+                                        id="arrival"
+                                        autoComplete="off"
+                                        value={formData.arrival}
+                                        onChange={(e) =>
+                                            handleInputChange('arrival', e.target.value)
+                                        }
+                                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
+                                            errors.arrival ? 'border-red-500' : 'border-gray-300'
+                                        }`}
+                                        placeholder="Ex: Lyon"
+                                    />
+                                </AddressAutofill>
                                 {errors.arrival && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
                                         {errors.arrival}

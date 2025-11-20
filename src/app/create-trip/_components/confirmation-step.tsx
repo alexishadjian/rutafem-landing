@@ -15,6 +15,14 @@ type TripFormData = {
     seats: string;
     price: string;
     description: string;
+    departureCity: string;
+    arrivalCity: string;
+    departureAddress: string;
+    arrivalAddress: string;
+    departureLatitude: number;
+    departureLongitude: number;
+    arrivalLatitude: number;
+    arrivalLongitude: number;
 };
 
 type ConfirmationStepProps = {
@@ -49,11 +57,16 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
             const parsed = createTripSchema.parse({
                 departureTime: formData.time,
                 departureDate: formData.date,
-                departureCity: formData.departurePlace,
-                arrivalCity: formData.arrival,
+                departureCity: formData.departureCity,
+                arrivalCity: formData.arrivalCity,
+                arrivalAddress: formData.arrivalAddress,
+                departureLatitude: formData.departureLatitude,
+                departureLongitude: formData.departureLongitude,
+                arrivalLatitude: formData.arrivalLatitude,
+                arrivalLongitude: formData.arrivalLongitude,
                 totalSeats: formData.seats,
                 pricePerSeat: formData.price,
-                departureAddress: formData.departurePlace,
+                departureAddress: formData.departureAddress,
                 description: formData.description,
             }) as CreateTripData;
 

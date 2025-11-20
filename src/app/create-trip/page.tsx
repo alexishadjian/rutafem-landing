@@ -18,6 +18,14 @@ type TripFormData = {
     seats: string;
     price: string;
     description: string;
+    departureCity: string;
+    arrivalCity: string;
+    departureAddress: string;
+    arrivalAddress: string;
+    departureLatitude: number;
+    departureLongitude: number;
+    arrivalLatitude: number;
+    arrivalLongitude: number;
 };
 
 function CreateTripContent() {
@@ -35,6 +43,14 @@ function CreateTripContent() {
         seats: '1',
         price: '',
         description: '',
+        departureCity: '',
+        arrivalCity: '',
+        departureAddress: '',
+        arrivalAddress: '',
+        departureLatitude: 0,
+        departureLongitude: 0,
+        arrivalLatitude: 0,
+        arrivalLongitude: 0,
     });
 
     const updateFormData = (data: Partial<TripFormData>) => {

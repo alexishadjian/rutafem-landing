@@ -6,6 +6,11 @@ export type Trip = {
     departureDate: string; // format: "YYYY-MM-DD"
     departureCity: string;
     arrivalCity: string;
+    arrivalAddress: string;
+    departureLatitude: number;
+    departureLongitude: number;
+    arrivalLatitude: number;
+    arrivalLongitude: number;
     totalSeats: number;
     availableSeats: number;
     pricePerSeat: number;
@@ -23,6 +28,11 @@ export type CreateTripData = {
     departureDate: string;
     departureCity: string;
     arrivalCity: string;
+    arrivalAddress: string;
+    departureLatitude: number;
+    departureLongitude: number;
+    arrivalLatitude: number;
+    arrivalLongitude: number;
     totalSeats: number;
     pricePerSeat: number;
     departureAddress: string;
