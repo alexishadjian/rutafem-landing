@@ -5,7 +5,7 @@ import Icon from '@/app/_components/ui/icon';
 import Stepper from '@/components/ui/stepper';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import ConfirmationStep from './_components/confirmation-step';
 import TripFormStep from './_components/trip-form-step';
 import WelcomeStep from './_components/welcome-step';
@@ -32,7 +32,7 @@ function CreateTripContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const currentStep = parseInt(searchParams.get('step') || '1');
-    const { userProfile } = useAuth();
+    const { userProfile, loading } = useAuth();
     const [stripeOk, setStripeOk] = useState<boolean | null>(null);
 
     const [formData, setFormData] = useState<TripFormData>({
@@ -99,8 +99,10 @@ function CreateTripContent() {
     };
 
     // check Stripe Connect (payouts_enabled) and block if not connected
-    useState(() => {
+    useEffect(() => {
         const check = async () => {
+            if (loading) return;
+
             if (!userProfile?.stripeAccountId) {
                 setStripeOk(false);
                 return;
@@ -122,7 +124,7 @@ function CreateTripContent() {
             }
         };
         check();
-    });
+    }, [userProfile, loading]);
 
     return (
         <RouteGuard

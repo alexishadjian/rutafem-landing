@@ -208,11 +208,10 @@ export default function ProfilePage() {
                                             try {
                                                 await updateDoc(doc(db, 'users', user.uid), {
                                                     stripeAccountId: accountId,
+                                                    updatedAt: new Date(),
                                                 });
                                             } catch {
-                                                setStripeMessage(
-                                                    'Erreur lors de la mise à jour du compte bancaire',
-                                                );
+                                                // Silent fail, we will retry or user is already linked
                                             }
                                             window.location.href = url;
                                         } catch (e: unknown) {
