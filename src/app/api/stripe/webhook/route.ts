@@ -1,8 +1,10 @@
+import { db } from '@/lib/firebaseConfig';
+import { stripe } from '@/lib/stripe';
+import { Trip } from '@/types/trips.types';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-import { stripe } from '@/lib/stripe';
-import { db } from '@/lib/firebaseConfig';
-import { doc, getDoc, updateDoc } from 'firebase/firestore';
+import Stripe from 'stripe';
 
 export const dynamic = 'force-dynamic';
 
@@ -10,7 +12,7 @@ export async function POST(req: NextRequest) {
     const sig = (await headers()).get('stripe-signature');
     const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET as string | undefined;
 
-    let event: any;
+    let event: Stripe.Event;
 
     try {
         const rawBody = await req.text();
@@ -29,7 +31,7 @@ export async function POST(req: NextRequest) {
             case 'checkout.session.completed': {
                 console.log('-----checkout.session.completed');
 
-                const session = event.data.object as any;
+                const session = event.data.object as Stripe.Checkout.Session;
                 const paymentIntentId = session.payment_intent as string;
                 const metadata = session.metadata || {};
                 const tripId = metadata.tripId as string;
@@ -41,8 +43,12 @@ export async function POST(req: NextRequest) {
                 const tripRef = doc(db, 'trips', tripId);
                 const tripSnap = await getDoc(tripRef);
                 if (tripSnap.exists()) {
-                    const trip = tripSnap.data() as any;
-                    if (trip.isActive && trip.availableSeats >= quantity && !trip.participants.includes(buyerUid)) {
+                    const trip = tripSnap.data() as Trip;
+                    if (
+                        trip.isActive &&
+                        trip.availableSeats >= quantity &&
+                        !trip.participants.includes(buyerUid)
+                    ) {
                         const updatedParticipants = [...trip.participants, buyerUid];
                         const updatedAvailable = trip.availableSeats - quantity;
                         await updateDoc(tripRef, {
@@ -74,5 +80,3 @@ export const config = {
         bodyParser: false,
     },
 };
-
-

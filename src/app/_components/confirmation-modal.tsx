@@ -25,7 +25,7 @@ export const ConfirmationModal = ({
     type = 'danger',
     loading = false,
 }: ConfirmationModalProps) => {
-    // Fermer avec Escape
+    // Close the modal
     useEffect(() => {
         const handleEscape = (e: KeyboardEvent) => {
             if (e.key === 'Escape' && isOpen) {
@@ -35,7 +35,7 @@ export const ConfirmationModal = ({
 
         if (isOpen) {
             document.addEventListener('keydown', handleEscape);
-            // Empêcher le scroll du body
+            // Prevent the body from scrolling
             document.body.style.overflow = 'hidden';
         }
 

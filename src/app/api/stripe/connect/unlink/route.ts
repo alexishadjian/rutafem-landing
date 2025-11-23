@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
-// Aucun accès Firestore ici pour éviter les erreurs de permissions côté serveur
+import { NextRequest, NextResponse } from 'next/server';
 
 export const dynamic = 'force-dynamic';
 
@@ -11,7 +10,7 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: 'accountId requis' }, { status: 400 });
         }
 
-        // Supprimer uniquement le compte Stripe côté Connect
+        // delete only the stripe account on the connect side
         const deleted = await stripe.accounts.del(accountId);
         return NextResponse.json({ deleted: deleted.deleted === true, id: deleted.id });
     } catch (error: unknown) {

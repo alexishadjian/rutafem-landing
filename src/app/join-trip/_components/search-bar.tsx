@@ -1,4 +1,13 @@
+import Button from '@/app/_components/ui/button';
+import { useState } from 'react';
+import Datepicker, { DateValueType } from 'react-tailwindcss-datepicker';
+
 export default function SearchBar() {
+    const [startDate, setStartDate] = useState<DateValueType>({
+        startDate: null,
+        endDate: null,
+    });
+
     return (
         <div className="bg-white rounded-xl shadow-sm border p-4 sm:p-6">
             <div className="space-y-4">
@@ -21,7 +30,7 @@ export default function SearchBar() {
                     <input
                         type="text"
                         placeholder="Rechercher un trajet (ville de départ, ville d'arrivée...)"
-                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base"
+                        className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm sm:text-base"
                     />
                 </div>
 
@@ -35,7 +44,7 @@ export default function SearchBar() {
                         </label>
                         <select
                             id="price-filter"
-                            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm"
+                            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
                         >
                             <option value="">Tous les prix</option>
                             <option value="15">- 15€</option>
@@ -52,10 +61,19 @@ export default function SearchBar() {
                         >
                             Date de départ
                         </label>
-                        <input
-                            type="date"
-                            id="date-filter"
-                            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm"
+                        <Datepicker
+                            i18n="fr"
+                            startWeekOn="mon"
+                            primaryColor={'pink'}
+                            displayFormat="DD/MM/YYYY"
+                            useRange={false}
+                            asSingle
+                            value={startDate}
+                            onChange={(newValue: DateValueType) => setStartDate(newValue)}
+                            minDate={new Date()}
+                            inputClassName={
+                                'border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm w-full px-3 py-2.5'
+                            }
                         />
                     </div>
 
@@ -68,7 +86,7 @@ export default function SearchBar() {
                         </label>
                         <select
                             id="seats-filter"
-                            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm"
+                            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
                         >
                             <option value="">Toutes les places</option>
                             <option value="1">1 place</option>
@@ -76,12 +94,30 @@ export default function SearchBar() {
                             <option value="3">3+ places</option>
                         </select>
                     </div>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="flexible-dates"
+                                className="w-full px-3 py-2.5 border border-black rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
+                            />
+                            <p className="text-sm">Mes dates sont flexibles</p>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <input
+                                type="checkbox"
+                                id="flexible-dates"
+                                className="w-full px-3 py-2.5 border border-black rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
+                            />
+                            <p className="text-sm md:whitespace-nowrap">
+                                Suggérer des trajets à proximité de mon point de départ
+                            </p>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="flex justify-center">
-                    <button className="btn bg-[--accent-color] hover:bg-[--accent-color]/90 text-white px-8 py-3 rounded-lg font-medium transition-colors">
-                        Rechercher
-                    </button>
+                    <Button text="Rechercher" color="pink" fill={true} className="text-white" />
                 </div>
             </div>
         </div>
