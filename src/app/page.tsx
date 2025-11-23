@@ -112,48 +112,48 @@ export default function Home() {
                     <div className="flex items-center gap-4 p-4 animate-scroll-slow w-max">
                         {/* Première série */}
                         <span className="whitespace-nowrap">100% féminin</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Profils verifiés</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Moins de stress</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Eco-responsable</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Plus d'économies</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         {/* Deuxième série */}
                         <span className="whitespace-nowrap">100% féminin</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Profils verifiés</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Moins de stress</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Eco-responsable</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Plus d'économies</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         {/* Troisième série */}
                         <span className="whitespace-nowrap">100% féminin</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Profils verifiés</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Moins de stress</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Eco-responsable</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Plus d'économies</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         {/* Quatrième série */}
                         <span className="whitespace-nowrap">100% féminin</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Profils verifiés</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Moins de stress</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Eco-responsable</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                         <span className="whitespace-nowrap">Plus d'économies</span>
-                        <Icon className="shrink-0" name="star" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
+                        <Icon className="shrink-0" name="starIllu" width={14} height={14} strokeWidth={0} fillColor="var(--white)" />
                     </div>
                 </div>
             </section>

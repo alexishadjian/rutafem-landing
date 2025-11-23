@@ -11,7 +11,7 @@ const icons: { [key: string]: ({ className, strokeColor, strokeWidth, fillColor,
             <path d="M20 17.5C20 19.985 20 22 12 22C4 22 4 19.985 4 17.5C4 15.015 7.582 13 12 13C16.418 13 20 15.015 20 17.5Z" fill="#222639" />
         </svg>
     ),
-    star: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
+    starIllu: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
         <svg xmlns="http://www.w3.org/2000/svg" className={className} {...(width && { width })} {...(height && { height })} viewBox="0 0 24 24" strokeWidth={strokeWidth} stroke={strokeColor} fill={fillColor} strokeLinecap="round" strokeLinejoin="round">
             <path fillRule="evenodd" clipRule="evenodd" d="M14.427 7.664L11.047 0L7.667 7.664L0 11.044L7.667 14.424L11.047 22.092L14.427 14.424L22.094 11.044L14.427 7.664Z" />
         </svg>
@@ -377,10 +377,12 @@ interface SvgProps {
     fillColor?: string,
     width?: number,
     height?: number,
-    name: string
+    name: string,
+    leftFillColor?: string,
+    rightFillColor?: string,
 }
 
-export default function Icon({ className, name, strokeColor = 'var(--black)', strokeWidth = 1.75, fillColor = 'none', width, height }: SvgProps) {
+export default function Icon({ className, name, strokeColor = 'var(--black)', strokeWidth = 1.75, fillColor = 'none', width, height, leftFillColor, rightFillColor }: SvgProps) {
     const icon = icons[name] || icons.default;
-    return icon({ className, strokeColor, strokeWidth, fillColor, width, height, name });
+    return icon({ className, strokeColor, strokeWidth, fillColor, width, height, name, leftFillColor, rightFillColor });
 }
