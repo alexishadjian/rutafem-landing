@@ -141,6 +141,7 @@ export default function Header() {
                             color="pink"
                             fill={true}
                             link='/auth/profile'
+                            className="rounded-full"
                             beforeIcon={<Icon name="user" width={24} height={24} fillColor="transparent" strokeWidth={0} />}
                         />
                     ) : (
@@ -148,6 +149,7 @@ export default function Header() {
                             text="Se connecter"
                             color="pink"
                             fill={true}
+                            className="rounded-full"
                             link="/auth/login"
                         />
                     )}

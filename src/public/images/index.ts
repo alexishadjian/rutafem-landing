@@ -12,6 +12,9 @@ import Functioning from "./functioning.png";
 import Cta from "./cta.png";
 import Favicon from "./favicon.png";
 import RideCta from "./ride-cta.png";
+import CardLine from "./card-line.png";
+import StarIllu from "./star-illu.png";
+import RideIllu from "./ride-illu.png";
 
 
 export {
@@ -28,5 +31,8 @@ export {
     Functioning,
     Cta,
     Favicon,
-    RideCta
+    RideCta,
+    CardLine,
+    StarIllu,
+    RideIllu
 }

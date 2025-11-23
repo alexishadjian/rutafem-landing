@@ -21,6 +21,12 @@
     width: 90%;
 }
 
+.wrapper-padding {
+    max-width: 1240px;
+    padding-left: 5%;
+    padding-right: 5%;
+}
+
 .wrapper.small {
     max-width: 800px;
 }
@@ -81,10 +87,10 @@ body.not-home header {
         stroke: var(--black);
     } */
 
-    & nav {
+    /* & nav {
         background-color: transparent;
         color: var(--white);
-    }
+    } */
 }
 
 @media (max-width: 1023px) {
@@ -260,4 +266,36 @@ input[type='checkbox']:before {
         font-size: 16px;
         line-height: 30px;
     }
+}
+
+@keyframes scroll-left {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes scroll-right {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(50%);
+    }
+}
+
+.animate-scroll-slow {
+    animation: scroll-left 30s linear infinite;
+}
+
+.animate-scroll-fast {
+    animation: scroll-right 20s linear infinite;
+}
+
+.animate-scroll-mid {
+    animation: scroll-left 15s linear infinite;
 }
