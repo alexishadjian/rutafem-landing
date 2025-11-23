@@ -1,3 +1,5 @@
+'use client';
+
 import { TwoWomanLaughing } from '@/public/images';
 import { AddressAutofill } from '@mapbox/search-js-react';
 import Image from 'next/image';
@@ -154,11 +156,10 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                         onChange={(e) =>
                                             handleInputChange('departurePlace', e.target.value)
                                         }
-                                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                            errors.departurePlace
+                                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.departurePlace
                                                 ? 'border-red-500'
                                                 : 'border-gray-300'
-                                        }`}
+                                            }`}
                                         placeholder="Ex: Gare de Lyon, 75000 Paris"
                                     />
                                 </AddressAutofill>
@@ -193,9 +194,8 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                         onChange={(e) =>
                                             handleInputChange('arrival', e.target.value)
                                         }
-                                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                            errors.arrival ? 'border-red-500' : 'border-gray-300'
-                                        }`}
+                                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.arrival ? 'border-red-500' : 'border-gray-300'
+                                            }`}
                                         placeholder="Ex: Lyon"
                                     />
                                 </AddressAutofill>

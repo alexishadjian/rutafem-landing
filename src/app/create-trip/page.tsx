@@ -5,10 +5,13 @@ import Icon from '@/app/_components/ui/icon';
 import Stepper from '@/components/ui/stepper';
 import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
+import dynamic from 'next/dynamic';
 import { Suspense, useEffect, useState } from 'react';
-import ConfirmationStep from './_components/confirmation-step';
-import TripFormStep from './_components/trip-form-step';
-import WelcomeStep from './_components/welcome-step';
+
+// Dynamic imports with ssr: false to prevent prerendering issues with client-side libraries
+const ConfirmationStep = dynamic(() => import('./_components/confirmation-step'), { ssr: false });
+const TripFormStep = dynamic(() => import('./_components/trip-form-step'), { ssr: false });
+const WelcomeStep = dynamic(() => import('./_components/welcome-step'), { ssr: false });
 
 type TripFormData = {
     departurePlace: string;

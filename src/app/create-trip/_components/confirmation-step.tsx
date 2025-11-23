@@ -1,3 +1,5 @@
+'use client';
+
 import Icon from '@/app/_components/ui/icon';
 import { useAuth } from '@/contexts/AuthContext';
 import { createTrip } from '@/lib/firebase/trips';
@@ -294,11 +296,10 @@ export default function ConfirmationStep({ formData }: ConfirmationStepProps) {
                         <button
                             onClick={handleCreateTrip}
                             disabled={isCreating || !acceptTerms}
-                            className={`order-1 sm:order-2 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg transition-colors ${
-                                isCreating || !acceptTerms
+                            className={`order-1 sm:order-2 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base rounded-lg transition-colors ${isCreating || !acceptTerms
                                     ? 'bg-gray-400 cursor-not-allowed opacity-60'
                                     : 'bg-[var(--pink)] opacity-90 hover:opacity-100'
-                            }`}
+                                }`}
                         >
                             {isCreating ? (
                                 <>

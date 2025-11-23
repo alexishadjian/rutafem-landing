@@ -1,3 +1,5 @@
+'use client';
+
 import { useEffect, useState } from 'react';
 import Datepicker, { DateValueType } from 'react-tailwindcss-datepicker';
 
@@ -67,8 +69,8 @@ export default function TripFormStep({
                 typeof newValue.startDate === 'string'
                     ? newValue.startDate
                     : newValue.startDate instanceof Date
-                    ? newValue.startDate.toISOString().split('T')[0]
-                    : '';
+                        ? newValue.startDate.toISOString().split('T')[0]
+                        : '';
             updateFormData({ date: dateValue });
         } else {
             updateFormData({ date: '' });
@@ -164,9 +166,8 @@ export default function TripFormStep({
                                     id="time"
                                     value={formData.time}
                                     onChange={(e) => handleInputChange('time', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                        errors.time ? 'border-red-500' : 'border-gray-300'
-                                    }`}
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.time ? 'border-red-500' : 'border-gray-300'
+                                        }`}
                                 />
                                 {errors.time && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
@@ -189,9 +190,8 @@ export default function TripFormStep({
                                     id="seats"
                                     value={formData.seats}
                                     onChange={(e) => handleInputChange('seats', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                        errors.seats ? 'border-red-500' : 'border-gray-300'
-                                    }`}
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.seats ? 'border-red-500' : 'border-gray-300'
+                                        }`}
                                 >
                                     <option value="1">1 place</option>
                                     <option value="2">2 places</option>
@@ -220,9 +220,8 @@ export default function TripFormStep({
                                     step="0.50"
                                     value={formData.price}
                                     onChange={(e) => handleInputChange('price', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                        errors.price ? 'border-red-500' : 'border-gray-300'
-                                    }`}
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.price ? 'border-red-500' : 'border-gray-300'
+                                        }`}
                                     placeholder="Ex: 25.00"
                                 />
                                 {errors.price && (
