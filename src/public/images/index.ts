@@ -17,6 +17,9 @@ import Value2 from './value-2.png';
 import Value3 from './value-3.png';
 import ValueBg from './value-bg.png';
 import WomanFacingMountain from './woman-facing-mountains.png';
+import CardLine from "./card-line.png";
+import StarIllu from "./star-illu.png";
+import RideIllu from "./ride-illu.png";
 
 export {
     Advantage1,
@@ -38,4 +41,7 @@ export {
     Value3,
     ValueBg,
     WomanFacingMountain,
+    CardLine,
+    StarIllu,
+    RideIllu
 };

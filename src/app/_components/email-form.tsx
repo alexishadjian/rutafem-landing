@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 
-export default function NewsletterForm() {
+export default function EmailForm() {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
     const [isSending, setIsSending] = useState(false);

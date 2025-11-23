@@ -17,9 +17,13 @@ const buttonStyles = tv({
             pink: 'bg-[var(--pink)] border-[var(--pink)]',
             yellow: 'bg-[var(--yellow)] border-[var(--yellow)] text-[var(--yellow)]',
             orange: 'bg-[var(--orange)] border-[var(--orange)] text-[var(--orange)]',
+            white: 'bg-[var(--white)] border-[var(--white)] text-[var(--black)]',
         },
         fullWidth: {
             true: 'w-full',
+        },
+        iconOnly: {
+            true: 'p-4 rounded-full',
         },
     },
     defaultVariants: {
@@ -30,33 +34,25 @@ const buttonStyles = tv({
 });
 
 interface BaseButtonProps extends VariantProps<typeof buttonStyles> {
-    text: string;
+    text?: string;
     beforeIcon?: React.ReactNode;
     afterIcon?: React.ReactNode;
     className?: string;
     link?: string;
+    iconOnly?: boolean;
     onClick?: () => void;
 }
 
 export default function Button(props: BaseButtonProps) {
-    const {
-        text,
-        fill,
-        color,
-        fullWidth,
-        beforeIcon,
-        afterIcon,
-        className,
-        onClick,
-        ...restProps
-    } = props;
 
-    const classes = cn(buttonStyles({ fill, color, fullWidth }), className);
+    const { text, fill, color, fullWidth, beforeIcon, afterIcon, className, onClick, iconOnly, ...restProps } = props;
+
+    const classes = cn(buttonStyles({ fill, color, fullWidth, iconOnly }), className);
 
     const content = (
         <>
             {beforeIcon && beforeIcon}
-            <span>{text}</span>
+            {text && <span>{text}</span>}
             {afterIcon && afterIcon}
         </>
     );

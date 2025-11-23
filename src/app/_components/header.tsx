@@ -219,19 +219,18 @@ export default function Header() {
                             text={userProfile?.firstName || 'Profil'}
                             color="pink"
                             fill={true}
-                            link="/auth/profile"
-                            beforeIcon={
-                                <Icon
-                                    name="user"
-                                    width={24}
-                                    height={24}
-                                    fillColor="transparent"
-                                    strokeWidth={0}
-                                />
-                            }
+                            link='/auth/profile'
+                            className="rounded-full"
+                            beforeIcon={<Icon name="user" width={24} height={24} fillColor="transparent" strokeWidth={0} />}
                         />
                     ) : (
-                        <Button text="Se connecter" color="pink" fill={true} link="/auth/login" />
+                        <Button
+                            text="Se connecter"
+                            color="pink"
+                            fill={true}
+                            className="rounded-full"
+                            link="/auth/login"
+                        />
                     )}
                 </div>
 
