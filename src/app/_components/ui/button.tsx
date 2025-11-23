@@ -1,7 +1,7 @@
-import React from 'react';
-import Link from 'next/link';
-import { tv, type VariantProps } from 'tailwind-variants';
 import { cn } from '@/lib/utils';
+import Link from 'next/link';
+import React from 'react';
+import { tv, type VariantProps } from 'tailwind-variants';
 
 const buttonStyles = tv({
     base: [
@@ -59,21 +59,14 @@ export default function Button(props: BaseButtonProps) {
 
     if (props.link) {
         return (
-            <Link
-                href={props.link}
-                className={classes}
-            >
+            <Link href={props.link} className={classes}>
                 {content}
             </Link>
         );
     }
 
     return (
-        <button
-            className={classes}
-            {...restProps}
-            onClick={onClick}
-        >
+        <button className={classes} {...restProps} onClick={onClick}>
             {content}
         </button>
     );

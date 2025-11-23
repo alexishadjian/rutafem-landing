@@ -1,10 +1,11 @@
 'use client';
 
 import { RouteGuard } from '@/app/_components/route-guard';
-import { useAuth } from '@/contexts/AuthContext';
+import Icon from '@/app/_components/ui/icon';
 import Stepper from '@/components/ui/stepper';
+import { useAuth } from '@/contexts/AuthContext';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { Suspense, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import ConfirmationStep from './_components/confirmation-step';
 import TripFormStep from './_components/trip-form-step';
 import WelcomeStep from './_components/welcome-step';
@@ -17,13 +18,21 @@ type TripFormData = {
     seats: string;
     price: string;
     description: string;
+    departureCity: string;
+    arrivalCity: string;
+    departureAddress: string;
+    arrivalAddress: string;
+    departureLatitude: number;
+    departureLongitude: number;
+    arrivalLatitude: number;
+    arrivalLongitude: number;
 };
 
 function CreateTripContent() {
     const searchParams = useSearchParams();
     const router = useRouter();
     const currentStep = parseInt(searchParams.get('step') || '1');
-    const { userProfile } = useAuth();
+    const { userProfile, loading } = useAuth();
     const [stripeOk, setStripeOk] = useState<boolean | null>(null);
 
     const [formData, setFormData] = useState<TripFormData>({
@@ -34,6 +43,14 @@ function CreateTripContent() {
         seats: '1',
         price: '',
         description: '',
+        departureCity: '',
+        arrivalCity: '',
+        departureAddress: '',
+        arrivalAddress: '',
+        departureLatitude: 0,
+        departureLongitude: 0,
+        arrivalLatitude: 0,
+        arrivalLongitude: 0,
     });
 
     const updateFormData = (data: Partial<TripFormData>) => {
@@ -81,9 +98,11 @@ function CreateTripContent() {
         }
     };
 
-    // Vérifier Stripe Connect (payouts_enabled) et bloquer si non connecté
-    useState(() => {
+    // check Stripe Connect (payouts_enabled) and block if not connected
+    useEffect(() => {
         const check = async () => {
+            if (loading) return;
+
             if (!userProfile?.stripeAccountId) {
                 setStripeOk(false);
                 return;
@@ -105,7 +124,7 @@ function CreateTripContent() {
             }
         };
         check();
-    });
+    }, [userProfile, loading]);
 
     return (
         <RouteGuard
@@ -114,27 +133,66 @@ function CreateTripContent() {
             requireDriver={true}
             requireDriverVerified={true}
         >
-            <div className="create-trip">
-                <section id="welcome-message" className="wrapper">
-                    <div className="p-6">
-                        <Stepper totalSteps={3} currentStep={currentStep} />
-                    </div>
+            <div
+                id="welcome-message"
+                className="bg-[var(--dark-green)] flex-1 flex flex-col py-6 lg:p-12"
+            >
+                <div className="p-6">
+                    <Stepper totalSteps={3} currentStep={currentStep} />
+                </div>
 
-                    {stripeOk === false ? (
-                        <div className="bg-yellow-50 border border-yellow-200 rounded-xl p-6 text-yellow-800">
-                            <h3 className="font-semibold mb-2">Compte bancaire requis</h3>
-                            <p className="mb-4">Pour publier un trajet, connecte d'abord ton compte bancaire Stripe.</p>
-                            <button
-                                onClick={() => router.push('/auth/profile/banking')}
-                                className="btn"
-                            >
-                                Connecter mon compte bancaire
-                            </button>
+                {stripeOk === false ? (
+                    <div className="md:wrapper wrapper flex-1 flex items-center justify-center py-8">
+                        <div className="max-w-md w-full bg-[var(--white)] rounded-3xl p-8 text-center shadow-xl">
+                            <div className="mb-6">
+                                <div className="w-16 h-16 bg-yellow-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                                    <Icon
+                                        name="creditCard"
+                                        width={32}
+                                        height={32}
+                                        strokeColor="var(--orange)"
+                                        strokeWidth={2}
+                                        fillColor="none"
+                                    />
+                                </div>
+                                <h2 className="text-3xl md:text-4xl font-semibold text-[var(--black)] font-staatliches mb-2">
+                                    Compte bancaire requis
+                                </h2>
+                                <p className="text-[var(--black)] mt-2">
+                                    Pour publier un trajet, connecte d&apos;abord ton compte
+                                    bancaire Stripe.
+                                </p>
+                            </div>
+
+                            <div className="space-y-4">
+                                <button
+                                    onClick={() => router.push('/auth/profile/')}
+                                    className="w-full bg-[var(--orange)] hover:bg-[var(--orange)] opacity-90 hover:opacity-100 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center gap-2"
+                                >
+                                    <Icon
+                                        name="lock"
+                                        width={20}
+                                        height={20}
+                                        strokeColor="none"
+                                        fillColor="var(--white)"
+                                    />
+                                    Connecter mon compte bancaire
+                                </button>
+                            </div>
+
+                            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
+                                <p className="text-sm text-blue-800">
+                                    <strong>Pourquoi cette connexion ?</strong>
+                                    <br />
+                                    Nous utilisons Stripe pour sécuriser tes paiements et te
+                                    permettre de recevoir tes gains en toute sécurité.
+                                </p>
+                            </div>
                         </div>
-                    ) : (
-                        renderCurrentStep()
-                    )}
-                </section>
+                    </div>
+                ) : (
+                    renderCurrentStep()
+                )}
             </div>
         </RouteGuard>
     );
@@ -144,7 +202,7 @@ export default function CreateTripPage() {
     return (
         <Suspense
             fallback={
-                <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="min-h-screen flex items-center justify-center">
                     <div className="text-center">
                         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
                         <p className="text-gray-600">Chargement...</p>

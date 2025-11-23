@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import Datepicker, { DateValueType } from 'react-tailwindcss-datepicker';
 
 type TripFormData = {
     departurePlace: string;
@@ -8,6 +9,14 @@ type TripFormData = {
     seats: string;
     price: string;
     description: string;
+    departureCity: string;
+    arrivalCity: string;
+    departureAddress: string;
+    arrivalAddress: string;
+    departureLatitude: number;
+    departureLongitude: number;
+    arrivalLatitude: number;
+    arrivalLongitude: number;
 };
 
 type TripFormStepProps = {
@@ -24,11 +33,55 @@ export default function TripFormStep({
     onBack,
 }: TripFormStepProps) {
     const [errors, setErrors] = useState<Partial<TripFormData>>({});
+    const [startDate, setStartDate] = useState<DateValueType>({
+        startDate: null,
+        endDate: null,
+    });
+
+    // Sync formData.date with startDate on mount
+    useEffect(() => {
+        if (formData.date) {
+            try {
+                const dateObj = new Date(formData.date);
+                if (!isNaN(dateObj.getTime())) {
+                    setStartDate({
+                        startDate: dateObj,
+                        endDate: null,
+                    });
+                }
+            } catch {
+                // Invalid date, keep null
+            }
+        } else {
+            setStartDate({
+                startDate: null,
+                endDate: null,
+            });
+        }
+    }, [formData.date]);
+
+    const handleDateChange = (newValue: DateValueType) => {
+        setStartDate(newValue);
+        if (newValue?.startDate) {
+            const dateValue =
+                typeof newValue.startDate === 'string'
+                    ? newValue.startDate
+                    : newValue.startDate instanceof Date
+                    ? newValue.startDate.toISOString().split('T')[0]
+                    : '';
+            updateFormData({ date: dateValue });
+        } else {
+            updateFormData({ date: '' });
+        }
+        if (errors.date) {
+            setErrors((prev) => ({ ...prev, date: undefined }));
+        }
+    };
 
     const validateForm = (): boolean => {
         const newErrors: Partial<TripFormData> = {};
 
-        if (!formData.date) {
+        if (!formData.date || !formData.date.trim()) {
             newErrors.date = 'Veuillez indiquer la date de départ';
         }
         if (!formData.time) {
@@ -60,11 +113,11 @@ export default function TripFormStep({
     };
 
     return (
-        <div className="p-4 sm:p-6 mt-6 sm:mt-10">
-            <div className="bg-gray-100 rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
+        <div className="p-4 sm:p-6 mt-6 sm:mt-10 md:wrapper wrapper">
+            <div className="bg-[var(--white)] rounded-2xl sm:rounded-3xl p-4 sm:p-6 md:p-8">
                 <div className="max-w-4xl mx-auto">
-                    <h2 className="text-xl sm:text-2xl md:text-3xl font-bold font-montserrat text-[--accent-color] mb-4 sm:mb-6 text-center">
-                        Publier ton trajet
+                    <h2 className="text-xl sm:text-2xl md:text-5xl font-bold font-montserrat text-[var(--black)] font-staatliches mb-4 sm:mb-6 text-center">
+                        Informations du trajet
                     </h2>
 
                     <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-6">
@@ -77,14 +130,19 @@ export default function TripFormStep({
                                     Quand souhaite-tu partir ?{' '}
                                     <span className="text-[--accent-color]">*</span>
                                 </label>
-                                <input
-                                    type="date"
-                                    id="date"
-                                    value={formData.date}
-                                    onChange={(e) => handleInputChange('date', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                                        errors.date ? 'border-red-500' : 'border-gray-300'
-                                    }`}
+                                <Datepicker
+                                    i18n="fr"
+                                    startWeekOn="mon"
+                                    primaryColor={'pink'}
+                                    displayFormat="DD/MM/YYYY"
+                                    useRange={false}
+                                    asSingle
+                                    value={startDate}
+                                    onChange={handleDateChange}
+                                    minDate={new Date()}
+                                    inputClassName={
+                                        'border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm w-full px-3 py-2.5'
+                                    }
                                 />
                                 {errors.date && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
@@ -192,18 +250,18 @@ export default function TripFormStep({
                             />
                         </div>
 
-                        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8 pt-4 border-t border-gray-200">
+                        <div className="flex flex-col sm:flex-row justify-between gap-3 sm:gap-0 mt-6 sm:mt-8 pt-4">
                             <button
                                 type="button"
                                 onClick={onBack}
-                                className="order-2 sm:order-1 px-4 sm:px-6 py-2.5 sm:py-3 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors text-sm sm:text-base"
+                                className="order-2 sm:order-1 px-4 sm:px-6 py-2.5 sm:py-3 text-black bg-gray-300 hover:bg-gray-400 rounded-lg transition-colors text-sm sm:text-base"
                             >
                                 ← Retour
                             </button>
 
                             <button
                                 type="submit"
-                                className="order-1 sm:order-2 btn px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base"
+                                className="order-1 sm:order-2 px-6 sm:px-8 py-2.5 sm:py-3 text-sm sm:text-base bg-[var(--pink)] opacity-90 hover:opacity-100 rounded-lg"
                             >
                                 Continuer →
                             </button>

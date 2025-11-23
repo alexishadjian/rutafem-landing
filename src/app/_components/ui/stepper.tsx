@@ -16,7 +16,7 @@ export default function Stepper({ totalSteps, currentStep }: StepperProps) {
                         {/* Cercle du step */}
                         <div
                             className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm transition-colors duration-200 ${
-                                isActive ? 'bg-[--accent-color]' : 'bg-gray-300'
+                                isActive ? 'bg-[var(--orange)]' : 'bg-gray-300'
                             }`}
                         >
                             {stepNumber}
@@ -26,7 +26,7 @@ export default function Stepper({ totalSteps, currentStep }: StepperProps) {
                         {!isLast && (
                             <div
                                 className={`w-16 h-0.5 mx-2 transition-colors duration-200 ${
-                                    isActive ? 'bg-[--accent-color]' : 'bg-gray-300'
+                                    isActive ? 'bg-[var(--orange)]' : 'bg-gray-300'
                                 }`}
                             />
                         )}

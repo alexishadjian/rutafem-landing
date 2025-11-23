@@ -27,34 +27,34 @@ export const RouteGuard = ({
     useEffect(() => {
         if (loading) return;
 
-        // Vérifier si l'utilisateur doit être connecté
+        // check if the user needs to be authenticated
         if (requireAuth && !user) {
             router.push('/verification-required');
             return;
         }
 
-        // Si pas d'utilisateur et pas d'exigence d'auth, continuer
+        // if there is no user and no authentication requirement, continue
         if (!user) return;
 
-        // Vérifier si le profil utilisateur existe
+        // check if the user profile exists
         if (!userProfile) {
             router.push('/auth/login');
             return;
         }
 
-        // Vérifier la vérification utilisateur
+        // check if the user is verified
         if (requireVerified && !userProfile.isUserVerified) {
             router.push('/verification-required');
             return;
         }
 
-        // Vérifier le rôle driver
+        // check if the user is a driver
         if (requireDriver && userProfile.role !== 'driver') {
             router.push('/auth/profile/driver-license');
             return;
         }
 
-        // Vérifier la vérification driver
+        // check if the driver is verified
         if (requireDriverVerified && !userProfile.isUserDriverVerified) {
             router.push('/verification-required');
             return;
@@ -71,7 +71,7 @@ export const RouteGuard = ({
         router,
     ]);
 
-    // Afficher un loader pendant la vérification
+    // display a loader during the verification
     if (loading) {
         return (
             <div className="min-h-screen bg-gray-100 flex items-center justify-center">
@@ -83,22 +83,22 @@ export const RouteGuard = ({
         );
     }
 
-    // Si l'utilisateur doit être connecté mais ne l'est pas
+    // if the user needs to be authenticated but is not, display nothing
     if (requireAuth && !user) {
         return null;
     }
 
-    // Si l'utilisateur doit être vérifié mais ne l'est pas
+    // if the user needs to be verified but is not, display nothing
     if (requireVerified && user && userProfile && !userProfile.isUserVerified) {
         return null;
     }
 
-    // Si l'utilisateur doit être driver mais ne l'est pas
+    // if the user needs to be a driver but is not, display nothing
     if (requireDriver && user && userProfile && userProfile.role !== 'driver') {
         return null;
     }
 
-    // Si l'utilisateur doit être driver vérifié mais ne l'est pas
+    // if the user needs to be a verified driver but is not, display nothing
     if (requireDriverVerified && user && userProfile && !userProfile.isUserDriverVerified) {
         return null;
     }

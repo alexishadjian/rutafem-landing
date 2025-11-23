@@ -1,0 +1,383 @@
+# RutaFem - Conventions et Patterns du Projet
+
+## Stack Technique
+
+### Framework & Core
+
+-   **Next.js 15** avec App Router (Server Components par défaut)
+-   **React 18** avec hooks modernes
+-   **TypeScript 5** avec strict mode
+-   **Tailwind CSS 3.4** pour le styling
+-   **Firebase 12** (Firestore, Auth, Storage)
+-   **Stripe** pour les paiements
+-   **Docker** parce que c'est cool
+
+### Bibliothèques Principales
+
+-   `tailwind-variants` pour les variants de composants
+-   `tailwind-merge` + `clsx` pour la gestion des classes
+-   `zod` pour la validation
+-   `dayjs` pour les dates
+-   `@emailjs/browser` pour l'envoi d'emails
+
+## Principes de Code
+
+### DRY & KISS
+
+-   **DRY (Don't Repeat Yourself)** : Éviter la duplication de code
+-   **KISS (Keep It Simple, Stupid)** : Code simple et court, minimum de lignes
+-   Toujours privilégier la simplicité et la maintenabilité
+
+### Style de Code
+
+-   Code concis et technique avec exemples précis
+-   Programmation fonctionnelle et déclarative, éviter les classes
+-   Itération et modularisation plutôt que duplication
+-   Noms de variables descriptifs avec verbes auxiliaires (ex: `isLoading`, `hasError`)
+-   Structure de fichier : composant exporté, sous-composants, helpers, contenu statique, types
+
+## Conventions de Nommage
+
+### Fichiers et Dossiers
+
+-   **Composants** : `kebab-case` pour les fichiers (ex: `user-information.tsx`)
+-   **Dossiers** : `kebab-case` (ex: `_components/`, `join-trip/`)
+-   **Types/Interfaces** : `PascalCase` (ex: `TripWithDriver`, `UserProfile`)
+-   **Fonctions utilitaires** : `camelCase` (ex: `formatDate`, `logFirebaseError`)
+
+### Composants React
+
+-   **Syntaxe obligatoire** : `export const MyComponent = (props: Props) => {}`
+-   Préférer les exports nommés pour les composants
+-   Utiliser des composants fonctionnels avec types TypeScript
+
+### TypeScript
+
+-   Utiliser `type` plutôt que `interface` sauf nécessité spécifique
+-   Éviter les `enum`, utiliser des maps/objets à la place
+-   Éviter `any` et `undefined` types
+-   Types stricts activés
+
+## Structure du Projet
+
+### Organisation des Fichiers
+
+```
+src/
+├── app/                    # Next.js App Router
+│   ├── _components/        # Composants réutilisables globaux
+│   │   └── ui/            # Composants UI de base (Button, Icon, etc.)
+│   ├── api/               # API Routes Next.js
+│   │   └── stripe/        # Routes Stripe
+│   ├── [route]/           # Routes de l'application
+│   │   └── _components/   # Composants spécifiques à la route
+│   └── layout.tsx         # Layout principal
+├── lib/                    # Bibliothèques et configurations
+│   ├── firebase/          # Helpers Firebase (auth, trips, users, reviews, storage)
+│   ├── firebaseConfig.js  # Configuration Firebase
+│   ├── stripe.ts          # Configuration Stripe
+│   └── utils.ts           # Utilitaires généraux (cn pour classes)
+├── services/               # Services métier (trips.ts, stripe.ts)
+├── types/                  # Types TypeScript globaux
+├── utils/                  # Utilitaires (date, errors, validation)
+├── contexts/              # Contextes React (AuthContext)
+└── public/                # Assets statiques
+```
+
+### Découpage des Composants
+
+#### Composants Globaux (`app/_components/`)
+
+-   Composants réutilisables dans toute l'application
+-   Exemples : `header.tsx`, `footer.tsx`, `confirmation-modal.tsx`, `reviewCard.tsx`
+-   Sous-dossier `ui/` pour les composants UI de base
+
+#### Composants de Route (`app/[route]/_components/`)
+
+-   Composants spécifiques à une route/page
+-   Exemple : `app/trip/[id]/_components/trip-info.tsx`
+-   Permet de garder les pages légères et modulaires
+
+#### Règle de Découpage
+
+-   **Page > 300 lignes** : Extraire en composants dans `_components/`
+-   **Logique métier** : Extraire dans `services/` ou `lib/firebase/`
+-   **Composant réutilisable** : Placer dans `app/_components/`
+-   **Composant spécifique** : Placer dans `[route]/_components/`
+
+## Firebase & Backend
+
+### Structure Firebase
+
+-   **Collections** : `trips`, `users`, `reviews`, `bookings`
+-   **Helpers** : Un fichier par domaine dans `lib/firebase/`
+    -   `trips.ts` : CRUD trajets
+    -   `users.ts` : Gestion utilisateurs
+    -   `reviews.ts` : Avis et moyennes
+    -   `auth.ts` : Authentification
+    -   `storage.ts` : Upload fichiers
+
+### Conventions Firebase
+
+-   **Fonctions** : `camelCase` avec préfixe verbe (ex: `getTripById`, `createReview`)
+-   **Transactions** : Utiliser `runTransaction` pour les opérations critiques
+-   **Gestion d'erreurs** : Toujours utiliser `logFirebaseError(context, error)`
+-   **Mapping** : Créer des fonctions `mapXxxDoc` pour transformer les données Firestore
+-   **Types** : `XxxDoc` pour Firestore, `Xxx` pour l'application
+
+### Exemple de Pattern Firebase
+
+```typescript
+// lib/firebase/trips.ts
+export const getTripById = async (tripId: string): Promise<TripWithDriver | null> => {
+    try {
+        const tripDoc = await getDoc(doc(db, 'trips', tripId));
+        if (!tripDoc.exists()) return null;
+        return mapTripDoc(tripDoc.id, tripDoc.data() as TripDoc);
+    } catch (error) {
+        logFirebaseError('getTripById', error);
+        throw new Error('Erreur lors de la récupération du trajet');
+    }
+};
+```
+
+### Dénormalisation Firebase
+
+-   Stocker les données calculées (ex: `averageRating` dans `users`)
+-   Mettre à jour via transactions lors des mutations
+-   Permet meilleures performances et moins de requêtes
+
+## API Routes Next.js
+
+### Structure
+
+-   Routes dans `app/api/[service]/[endpoint]/route.ts`
+-   Exemple : `app/api/stripe/checkout/route.ts`
+
+### Conventions API
+
+-   **Méthodes** : `GET`, `POST`, etc. exportées comme fonctions nommées
+-   **Validation** : Valider les entrées avec Zod si nécessaire
+-   **Réponses** : `NextResponse.json()` avec codes de statut appropriés
+-   **Erreurs** : Retourner des messages d'erreur clairs
+-   **Dynamic** : Ajouter `export const dynamic = 'force-dynamic'` si nécessaire
+
+### Exemple API Route
+
+```typescript
+export async function POST(req: NextRequest) {
+    try {
+        const data = await req.json();
+        // Validation et traitement
+        return NextResponse.json({ success: true });
+    } catch (error) {
+        return NextResponse.json({ error: 'Message' }, { status: 500 });
+    }
+}
+```
+
+## Utilitaires (`utils/`)
+
+### Structure
+
+-   `date.ts` : Formatage de dates avec `formatDate`, `formatShortDate`, `timestampToDate`
+-   `errors.ts` : Gestion d'erreurs Firebase (`logFirebaseError`, `mapFirebaseAuthError`)
+-   `validation.ts` : Schémas Zod pour validation
+
+### Conventions Utils
+
+-   Fonctions pures et réutilisables
+-   Types explicites
+-   Gestion d'erreurs cohérente
+-   Exporter des constantes réutilisables (ex: `MAX_UPLOAD_BYTES`)
+
+## Services (`services/`)
+
+### Rôle
+
+-   Logique métier qui combine plusieurs sources (Firebase + Stripe, etc.)
+-   Exemple : `services/trips.ts` pour `startTripCheckout` qui combine trip + Stripe
+
+### Conventions
+
+-   Un fichier par domaine métier
+-   Fonctions async avec gestion d'erreurs
+-   Types de retour explicites
+
+## Composants React
+
+### Server vs Client Components
+
+-   **Par défaut** : Server Components (pas de `'use client'`)
+-   **Client Components** : Seulement si nécessaire (hooks, interactivité, Web APIs)
+-   Minimiser l'utilisation de `'use client'`
+
+### Patterns de Composants
+
+-   **Composants simples** : Props typées, pas de state si possible
+-   **Composants avec state** : Utiliser `useState`, `useEffect` avec précaution
+-   **Composants réutilisables** : Props flexibles avec valeurs par défaut
+
+### Exemple de Composant
+
+```typescript
+type ComponentProps = {
+    title: string;
+    optional?: boolean;
+};
+
+export const MyComponent = ({ title, optional = false }: ComponentProps) => (
+    <div className="...">{title}</div>
+);
+```
+
+## Styling avec Tailwind
+
+### Conventions
+
+-   Utiliser les variables CSS pour les couleurs (`var(--pink)`, `var(--yellow)`)
+-   Classes utilitaires Tailwind
+-   `cn()` de `lib/utils.ts` pour merger les classes conditionnellement
+-   Mobile-first : Commencer par mobile, puis `md:`, `lg:`
+
+### Variables CSS Disponibles
+
+-   `--dark-green`, `--white`, `--black`, `--pink`, `--yellow`, `--orange`, `--blue`, `--light-blue`
+
+### Composants UI
+
+-   Utiliser `tailwind-variants` pour les variants complexes
+-   Exemple dans `app/_components/ui/button.tsx`
+
+## Gestion d'État
+
+### Contextes
+
+-   `AuthContext` dans `contexts/AuthContext.tsx`
+-   Fournit `user`, `userProfile`, `loading`, `refreshUserProfile`
+
+### State Local
+
+-   `useState` pour le state local des composants
+-   Éviter le state global si pas nécessaire
+-   Préférer les Server Components quand possible
+
+## Images & Assets
+
+### Next.js Image
+
+-   Utiliser `next/image` avec `Image` component
+-   Props `fill` avec conteneur `relative` pour les avatars
+-   `sizes` pour l'optimisation
+-   Images dans `public/images/` avec export depuis `public/images/index.ts`
+
+## Routes & Navigation
+
+### App Router Next.js
+
+-   Routes dans `app/[route]/page.tsx`
+-   Routes dynamiques : `app/trip/[id]/page.tsx`
+-   Utiliser `Link` de `next/link` pour la navigation
+-   `useSearchParams` pour les query params (avec `Suspense`)
+
+## Validation & Sécurité
+
+### Validation
+
+-   Zod pour la validation côté client et serveur
+-   Schémas dans `utils/validation.ts`
+-   Valider les entrées API avant traitement
+
+### Sécurité Firebase
+
+-   Rules Firestore dans `firestore.rules`
+-   Vérifier l'authentification avec `request.auth != null`
+-   Vérifier les permissions avec `isOwner()` helper
+
+## Performance
+
+### Optimisations
+
+-   Minimiser `'use client'`
+-   Utiliser Server Components par défaut
+-   `Suspense` pour le chargement asynchrone
+-   Images optimisées avec Next.js Image
+-   Pagination pour les listes (ex: "Voir plus de trajets")
+
+## Commentaires & Documentation
+
+### Commentaires
+
+-   Commentaires en **anglais** uniquement
+-   Commentaires pour expliquer la logique complexe
+-   Éviter les commentaires évidents
+
+### Documentation
+
+-   Types TypeScript comme documentation
+-   Noms de fonctions/variables explicites
+-   Pas de README sauf demande explicite
+
+## Exemples de Patterns
+
+### Pattern de Page avec State
+
+```typescript
+'use client';
+
+export default function MyPage() {
+    const [data, setData] = useState<Type | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const result = await getData();
+                setData(result);
+            } catch (error) {
+                logFirebaseError('MyPage.fetchData', error);
+            } finally {
+                setLoading(false);
+            }
+        };
+        fetchData();
+    }, []);
+
+    // Render
+}
+```
+
+### Pattern de Composant Réutilisable
+
+```typescript
+type Props = {
+    title: string;
+    onClick?: () => void;
+};
+
+export const MyComponent = ({ title, onClick }: Props) => <div className="...">{title}</div>;
+```
+
+### Pattern Firebase avec Transaction
+
+```typescript
+await runTransaction(db, async (transaction) => {
+    const ref = doc(collection, id);
+    const snap = await transaction.get(ref);
+    // Logique de mise à jour
+    transaction.update(ref, { ... });
+});
+```
+
+## Règles Spécifiques au Projet
+
+1. **Pas de README** sauf demande explicite
+2. **Code DRY et KISS** : Toujours privilégier la simplicité
+3. **Composants courts** : Extraire si > 300 lignes
+4. **Types stricts** : Éviter `any` et `undefined`
+5. **Gestion d'erreurs** : Toujours logger avec contexte
+6. **Firebase** : Utiliser transactions pour cohérence
+7. **Responsive** : Mobile-first avec Tailwind
+8. **Accessibilité** : Utiliser les attributs ARIA quand nécessaire
+9. **Performance** : Minimiser les Client Components
+10. **Maintenabilité** : Code simple, lisible, bien typé
