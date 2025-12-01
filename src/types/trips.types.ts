@@ -1,5 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 
+export type TripStatus = 'pending' | 'confirmed' | 'ongoing' | 'completed';
+
 export type Trip = {
     id: string;
     departureTime: string; // format: "HH:MM"
@@ -19,6 +21,7 @@ export type Trip = {
     driverId: string; // user id of the driver
     participants: string[]; // user ids of the participants
     isActive: boolean;
+    status: TripStatus;
     createdAt: Date;
     updatedAt: Date;
 };
@@ -37,6 +40,7 @@ export type CreateTripData = {
     pricePerSeat: number;
     departureAddress: string;
     description?: string;
+    status?: TripStatus;
 };
 
 export type TripWithDriver = Trip & {

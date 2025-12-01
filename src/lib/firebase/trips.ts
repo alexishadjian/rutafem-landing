@@ -37,6 +37,7 @@ const mapTripDoc = (tripId: string, data: TripDoc): Trip => ({
     driverId: data.driverId,
     participants: data.participants,
     isActive: data.isActive,
+    status: data.status ?? 'pending',
     createdAt: timestampToDate(data.createdAt),
     updatedAt: timestampToDate(data.updatedAt),
 });
@@ -63,6 +64,7 @@ export const createTrip = async (driverId: string, tripData: CreateTripData): Pr
             participants: [],
             availableSeats: tripData.totalSeats,
             isActive: true,
+            status: tripData.status ?? 'pending',
             createdAt: new Date(),
             updatedAt: new Date(),
         });

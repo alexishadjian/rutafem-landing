@@ -1,9 +1,8 @@
 'use client';
 
 import { TwoWomanLaughing } from '@/public/images';
-import { AddressAutofill } from '@mapbox/search-js-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type TripFormData = {
     departurePlace: string;
@@ -29,12 +28,111 @@ type WelcomeStepProps = {
     onNext: () => void;
 };
 
-// Extract city name from address (removes postal code)
-const extractCity = (fullAddress: string): string => {
-    const parts = fullAddress.split(',');
-    if (parts.length < 2) return fullAddress.trim();
-    const cityPart = parts[1].trim();
-    return cityPart.replace(/^\d+\s*/, '').trim();
+type GeoSuggestion = {
+    fulltext: string;
+    city: string;
+    longitude: number; // longitude
+    latitude: number; // latitude
+};
+
+const GEOPLATEFORME_API = 'https://data.geopf.fr/geocodage/completion';
+
+const fetchSuggestions = async (text: string): Promise<GeoSuggestion[]> => {
+    if (text.length < 3) return [];
+    const url = `${GEOPLATEFORME_API}?text=${encodeURIComponent(
+        text,
+    )}&type=StreetAddress,PositionOfInterest&maximumResponses=5`;
+    const res = await fetch(url);
+    if (!res.ok) return [];
+    const data = await res.json();
+    return (data.results || []).map(
+        (r: { fulltext: string; city: string; x: number; y: number }) => ({
+            fulltext: r.fulltext,
+            city: r.city,
+            longitude: r.x,
+            latitude: r.y,
+        }),
+    );
+};
+
+type AddressAutocompleteProps = {
+    id: string;
+    value: string;
+    onChange: (value: string) => void;
+    onSelect: (suggestion: GeoSuggestion) => void;
+    placeholder: string;
+    hasError: boolean;
+};
+
+const AddressAutocomplete = ({
+    id,
+    value,
+    onChange,
+    onSelect,
+    placeholder,
+    hasError,
+}: AddressAutocompleteProps) => {
+    const [suggestions, setSuggestions] = useState<GeoSuggestion[]>([]);
+    const [isOpen, setIsOpen] = useState(false);
+    const wrapperRef = useRef<HTMLDivElement>(null);
+
+    const debouncedFetch = useCallback(async (text: string) => {
+        const results = await fetchSuggestions(text);
+        setSuggestions(results);
+        setIsOpen(results.length > 0);
+    }, []);
+
+    useEffect(() => {
+        const timer = setTimeout(() => debouncedFetch(value), 300);
+        return () => clearTimeout(timer);
+    }, [value, debouncedFetch]);
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
+                setIsOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
+
+    const handleSelect = (suggestion: GeoSuggestion) => {
+        onChange(suggestion.fulltext);
+        onSelect(suggestion);
+        setIsOpen(false);
+        setSuggestions([]);
+    };
+
+    return (
+        <div ref={wrapperRef} className="relative">
+            <input
+                type="text"
+                id={id}
+                autoComplete="off"
+                value={value}
+                onChange={(e) => onChange(e.target.value)}
+                onFocus={() => suggestions.length > 0 && setIsOpen(true)}
+                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
+                    hasError ? 'border-red-500' : 'border-gray-300'
+                }`}
+                placeholder={placeholder}
+            />
+            {isOpen && suggestions.length > 0 && (
+                <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg mt-1 shadow-lg max-h-60 overflow-auto">
+                    {suggestions.map((s, i) => (
+                        <li
+                            key={i}
+                            onClick={() => handleSelect(s)}
+                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
+                        >
+                            {s.fulltext}
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
 };
 
 export default function WelcomeStep({ formData, updateFormData, onNext }: WelcomeStepProps) {
@@ -42,65 +140,40 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
 
     const validateForm = (): boolean => {
         const newErrors: Partial<TripFormData> = {};
-
         if (!formData.departurePlace.trim()) {
             newErrors.departurePlace = 'Veuillez indiquer votre lieu de départ';
         }
         if (!formData.arrival.trim()) {
-            newErrors.arrival = 'Veuillez indiquer votre ville d&apos; arrivée';
+            newErrors.arrival = "Veuillez indiquer votre ville d'arrivée";
         }
-
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
     };
 
     const handleNext = () => {
-        if (validateForm()) {
-            onNext();
-        }
+        if (validateForm()) onNext();
     };
 
-    const handleInputChange = (field: keyof TripFormData, value: string) => {
-        updateFormData({ [field]: value });
-        if (errors[field]) {
-            setErrors((prev) => ({ ...prev, [field]: undefined }));
-        }
-    };
-
-    const handleDepartureRetrieve = (response: {
-        features: Array<{
-            geometry: { coordinates: number[] };
-            properties: { full_address?: string; name?: string };
-        }>;
-    }) => {
-        const feature = response.features[0];
-        const [longitude, latitude] = feature.geometry.coordinates;
-        const fullAddress = feature.properties.full_address || feature.properties.name || '';
+    const handleDepartureSelect = (s: GeoSuggestion) => {
         updateFormData({
-            departurePlace: fullAddress,
-            departureAddress: fullAddress,
-            departureCity: extractCity(fullAddress),
-            departureLatitude: latitude,
-            departureLongitude: longitude,
+            departurePlace: s.fulltext,
+            departureAddress: s.fulltext,
+            departureCity: s.city,
+            departureLongitude: s.longitude,
+            departureLatitude: s.latitude,
         });
+        if (errors.departurePlace) setErrors((prev) => ({ ...prev, departurePlace: undefined }));
     };
 
-    const handleArrivalRetrieve = (response: {
-        features: Array<{
-            geometry: { coordinates: number[] };
-            properties: { full_address?: string; name?: string };
-        }>;
-    }) => {
-        const feature = response.features[0];
-        const [longitude, latitude] = feature.geometry.coordinates;
-        const fullAddress = feature.properties.full_address || feature.properties.name || '';
+    const handleArrivalSelect = (s: GeoSuggestion) => {
         updateFormData({
-            arrival: fullAddress,
-            arrivalAddress: fullAddress,
-            arrivalCity: extractCity(fullAddress),
-            arrivalLatitude: latitude,
-            arrivalLongitude: longitude,
+            arrival: s.fulltext,
+            arrivalAddress: s.fulltext,
+            arrivalCity: s.city,
+            arrivalLongitude: s.longitude,
+            arrivalLatitude: s.latitude,
         });
+        if (errors.arrival) setErrors((prev) => ({ ...prev, arrival: undefined }));
     };
 
     return (
@@ -124,7 +197,6 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                             <h2 className="text-2xl md:text-5xl font-bold font-montserrat text-[var(--black)] font-staatliches mb-4">
                                 Crée ton trajet !
                             </h2>
-
                             <p className="text-base md:text-md text-gray-700 leading-relaxed">
                                 Ici, tu peux proposer ton trajet de covoiturage. Plus nous
                                 partageons, plus nous rendons les voyages accessibles, sûrs et
@@ -140,29 +212,14 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                 >
                                     Lieu de départ <span className="text-[--accent-color]">*</span>
                                 </label>
-                                <AddressAutofill
-                                    accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''}
-                                    onRetrieve={handleDepartureRetrieve}
-                                    options={{
-                                        language: 'fr',
-                                        country: 'fr,be,ch,es,it,de',
-                                    }}
-                                >
-                                    <input
-                                        type="text"
-                                        id="departure-place"
-                                        autoComplete="off"
-                                        value={formData.departurePlace}
-                                        onChange={(e) =>
-                                            handleInputChange('departurePlace', e.target.value)
-                                        }
-                                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.departurePlace
-                                                ? 'border-red-500'
-                                                : 'border-gray-300'
-                                            }`}
-                                        placeholder="Ex: Gare de Lyon, 75000 Paris"
-                                    />
-                                </AddressAutofill>
+                                <AddressAutocomplete
+                                    id="departure-place"
+                                    value={formData.departurePlace}
+                                    onChange={(v) => updateFormData({ departurePlace: v })}
+                                    onSelect={handleDepartureSelect}
+                                    placeholder="Ex: Gare de Lyon, 75000 Paris"
+                                    hasError={!!errors.departurePlace}
+                                />
                                 {errors.departurePlace && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
                                         {errors.departurePlace}
@@ -175,30 +232,17 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                     htmlFor="arrival"
                                     className="block text-sm font-medium text-gray-700 mb-2"
                                 >
-                                    Ville d&apos;arrivée{' '}
+                                    Lieu d&apos;arrivée{' '}
                                     <span className="text-[--accent-color]">*</span>
                                 </label>
-                                <AddressAutofill
-                                    accessToken={process.env.NEXT_PUBLIC_MAPBOX_TOKEN || ''}
-                                    onRetrieve={handleArrivalRetrieve}
-                                    options={{
-                                        language: 'fr',
-                                        country: 'fr,be,ch,es,it,de',
-                                    }}
-                                >
-                                    <input
-                                        type="text"
-                                        id="arrival"
-                                        autoComplete="off"
-                                        value={formData.arrival}
-                                        onChange={(e) =>
-                                            handleInputChange('arrival', e.target.value)
-                                        }
-                                        className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.arrival ? 'border-red-500' : 'border-gray-300'
-                                            }`}
-                                        placeholder="Ex: Lyon"
-                                    />
-                                </AddressAutofill>
+                                <AddressAutocomplete
+                                    id="arrival"
+                                    value={formData.arrival}
+                                    onChange={(v) => updateFormData({ arrival: v })}
+                                    onSelect={handleArrivalSelect}
+                                    placeholder="Ex: Lyon"
+                                    hasError={!!errors.arrival}
+                                />
                                 {errors.arrival && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
                                         {errors.arrival}
@@ -206,6 +250,7 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                 )}
                             </div>
                         </div>
+
                         <div className="flex justify-center lg:justify-start mt-6">
                             <button
                                 onClick={handleNext}
