@@ -1,6 +1,5 @@
 'use client';
 
-import { ConfirmationModal } from '@/app/_components/confirmation-modal';
 import { ReviewsSection } from '@/app/_components/reviews-section';
 import { RouteGuard } from '@/app/_components/route-guard';
 import { useAuth } from '@/contexts/AuthContext';
@@ -12,38 +11,37 @@ import { TripWithDriver } from '@/types/trips.types';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
 import { TripActions } from './_components/trip-actions';
+import { TripAlert } from './_components/trip-alert';
 import { TripContact } from './_components/trip-contact';
 import { TripInfo } from './_components/trip-info';
 
+type Participant = {
+    id: string;
+    firstName: string;
+    averageRating?: number;
+};
+
 type TripDetailsPageProps = {
-    params: Promise<{
-        id: string;
-    }>;
+    params: Promise<{ id: string }>;
 };
 
 export default function TripDetailsPage({ params }: TripDetailsPageProps) {
     const { user, userProfile } = useAuth();
     const resolvedParams = use(params);
+
     const [trip, setTrip] = useState<TripWithDriver | null>(null);
     const [loading, setLoading] = useState(true);
     const [joining, setJoining] = useState(false);
     const [leaving, setLeaving] = useState(false);
     const [cancelling, setCancelling] = useState(false);
-    const [participants, setParticipants] = useState<
-        {
-            id: string;
-            firstName: string;
-            lastName: string;
-            phoneNumber: string;
-        }[]
-    >([]);
+    const [participants, setParticipants] = useState<Participant[]>([]);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
-    const [showCancelModal, setShowCancelModal] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loadingReviews, setLoadingReviews] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
+    // Fetch trip data
     useEffect(() => {
         const fetchTrip = async () => {
             try {
@@ -53,56 +51,48 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                     return;
                 }
                 setTrip(tripData);
-            } catch (error) {
-                console.error('Erreur lors du chargement du trajet:', error);
+            } catch (err) {
+                console.error('Erreur lors du chargement du trajet:', err);
                 setError('Erreur lors du chargement du trajet');
             } finally {
                 setLoading(false);
             }
         };
-
         fetchTrip();
     }, [resolvedParams.id]);
 
-    // get participants information if the user is the creator
+    // Fetch participants for everyone
     useEffect(() => {
         const fetchParticipants = async () => {
-            if (!trip || !user || trip.driverId !== user.uid || trip.participants.length === 0) {
-                return;
-            }
+            if (!trip || trip.participants.length === 0) return;
 
             setLoadingParticipants(true);
             try {
                 const participantsInfo = await fetchParticipantsDetails(trip);
                 setParticipants(participantsInfo);
-            } catch (error) {
-                console.error('Erreur lors du chargement des participants:', error);
+            } catch (err) {
+                console.error('Erreur lors du chargement des participants:', err);
             } finally {
                 setLoadingParticipants(false);
             }
         };
-
         fetchParticipants();
-    }, [trip, user]);
+    }, [trip]);
 
+    // Fetch driver reviews
     useEffect(() => {
-        if (!trip?.driver.id) {
-            return;
-        }
+        if (!trip?.driver.id) return;
+
         let isMounted = true;
         const fetchReviews = async () => {
             setLoadingReviews(true);
             try {
                 const driverReviews = await getReviewsByUserId(trip.driver.id);
-                if (isMounted) {
-                    setReviews(driverReviews);
-                }
-            } catch (fetchError) {
-                console.error('Erreur lors du chargement des avis:', fetchError);
+                if (isMounted) setReviews(driverReviews);
+            } catch (err) {
+                console.error('Erreur lors du chargement des avis:', err);
             } finally {
-                if (isMounted) {
-                    setLoadingReviews(false);
-                }
+                if (isMounted) setLoadingReviews(false);
             }
         };
         fetchReviews();
@@ -111,7 +101,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         };
     }, [trip?.driver.id]);
 
-    // join a trip
+    // Join trip handler
     const handleJoinTrip = async () => {
         if (!user || !trip) return;
 
@@ -122,17 +112,15 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         try {
             const { url } = await startTripCheckout(trip, user.uid);
             window.location.href = url;
-        } catch (error) {
-            console.error('Erreur lors de la création du paiement:', error);
-            setError(
-                error instanceof Error ? error.message : 'Erreur lors de la création du paiement',
-            );
+        } catch (err) {
+            console.error('Erreur lors de la création du paiement:', err);
+            setError(err instanceof Error ? err.message : 'Erreur lors de la création du paiement');
         } finally {
             setJoining(false);
         }
     };
 
-    // leave a trip
+    // Leave trip handler
     const handleLeaveTrip = async () => {
         if (!user || !trip) return;
 
@@ -142,17 +130,14 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
 
         try {
             await leaveTrip(trip.id, user.uid);
-            setSuccess('Vous avez annulé votre participation au trajet !');
-            // reload the trip data to update the available seats
+            setSuccess('Tu as annulé ta participation au trajet !');
             const updatedTrip = await getTripById(resolvedParams.id);
-            if (updatedTrip) {
-                setTrip(updatedTrip);
-            }
-        } catch (error) {
-            console.error("Erreur lors de l'annulation de la participation:", error);
+            if (updatedTrip) setTrip(updatedTrip);
+        } catch (err) {
+            console.error("Erreur lors de l'annulation de la participation:", err);
             setError(
-                error instanceof Error
-                    ? error.message
+                err instanceof Error
+                    ? err.message
                     : "Erreur lors de l'annulation de la participation",
             );
         } finally {
@@ -160,40 +145,30 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         }
     };
 
-    // cancel a trip
-    const handleCancelTrip = () => {
-        setShowCancelModal(true);
-    };
-
-    // confirm the cancellation of a trip
-    const confirmCancelTrip = async () => {
+    // Cancel trip handler (for driver)
+    const handleCancelTrip = async () => {
         if (!user || !trip) return;
 
         setCancelling(true);
         setError('');
         setSuccess('');
-        setShowCancelModal(false);
 
         try {
             await cancelTrip(trip.id, user.uid);
             setSuccess('Trajet annulé avec succès !');
-            // reload the trip data to update the available seats
             const updatedTrip = await getTripById(resolvedParams.id);
-            if (updatedTrip) {
-                setTrip(updatedTrip);
-            }
-        } catch (error) {
-            console.error("Erreur lors de l'annulation du trajet:", error);
-            setError(
-                error instanceof Error ? error.message : "Erreur lors de l'annulation du trajet",
-            );
+            if (updatedTrip) setTrip(updatedTrip);
+        } catch (err) {
+            console.error("Erreur lors de l'annulation du trajet:", err);
+            setError(err instanceof Error ? err.message : "Erreur lors de l'annulation du trajet");
         } finally {
             setCancelling(false);
         }
     };
 
-    const isUserParticipant = Boolean(user && trip && trip.participants.includes(user.uid));
-    const isUserDriver = Boolean(user && trip && trip.driverId === user.uid);
+    // Computed values
+    const isUserParticipant = Boolean(user && trip?.participants.includes(user.uid));
+    const isUserDriver = Boolean(user && trip?.driverId === user.uid);
     const isUserVerified = Boolean(userProfile?.isUserVerified);
     const availableSeats = trip?.availableSeats ?? 0;
     const canJoinTrip =
@@ -203,39 +178,32 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         Boolean(user) &&
         !isUserDriver &&
         !isUserParticipant;
+
     const hasContactAccess = isUserDriver || isUserParticipant;
-    const showActionsSection = hasContactAccess;
-    const contactPhoneNumber = hasContactAccess
-        ? trip?.driver.phoneNumber ?? '06XXXXXXXX'
-        : '06XXXXXXXX';
+    const contactPhoneNumber = hasContactAccess ? trip?.driver.phoneNumber ?? '' : '';
     const contactMessage = hasContactAccess
         ? 'Tu peux contacter ta conductrice dès maintenant.'
         : 'Les informations de contact seront visibles une fois ta réservation confirmée.';
 
-    const calculateAverageRating = (): number | undefined => {
-        if (trip?.driver.averageRating !== undefined) {
-            return trip.driver.averageRating;
-        }
-        if (reviews.length > 0) {
-            const sum = reviews.reduce((acc, review) => acc + review.rating, 0);
-            return Math.round((sum / reviews.length) * 10) / 10;
-        }
-        return undefined;
-    };
+    const driverAverageRating =
+        trip?.driver.averageRating ??
+        (reviews.length > 0
+            ? Math.round((reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length) * 10) / 10
+            : undefined);
 
-    const driverAverageRating = calculateAverageRating();
-
+    // Loading state
     if (loading) {
         return (
             <div className="min-h-screen bg-[var(--dark-green)] flex items-center justify-center">
                 <div className="text-center">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4" />
                     <p className="text-gray-600">Chargement du trajet...</p>
                 </div>
             </div>
         );
     }
 
+    // Error state
     if (error && !trip) {
         return (
             <div className="min-h-screen bg-[var(--dark-green)] flex items-center justify-center">
@@ -301,15 +269,14 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                         </p>
                     </div>
 
-                    {/* Error/success messages */}
+                    {/* Messages */}
                     {error && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 mx-6">
                             <p className="text-red-800">{error}</p>
                         </div>
                     )}
-
                     {success && (
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 mx-6">
                             <p className="text-green-800">{success}</p>
                         </div>
                     )}
@@ -319,128 +286,38 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                         <div className="lg:col-span-2">
                             <TripInfo
                                 trip={trip}
-                                canJoinTrip={canJoinTrip}
-                                joining={joining}
-                                onJoinTrip={handleJoinTrip}
                                 driverAverageRating={driverAverageRating}
+                                participants={participants}
+                                loadingParticipants={loadingParticipants}
+                                actionButton={
+                                    <TripActions
+                                        trip={trip}
+                                        isUserDriver={isUserDriver}
+                                        isUserParticipant={isUserParticipant}
+                                        canJoinTrip={canJoinTrip}
+                                        joining={joining}
+                                        onJoinTrip={handleJoinTrip}
+                                        leaving={leaving}
+                                        onLeaveTrip={handleLeaveTrip}
+                                        cancelling={cancelling}
+                                        onCancelTrip={handleCancelTrip}
+                                    />
+                                }
                             />
                         </div>
 
-                        {/* Actions + contact information */}
+                        {/* Contact + Alert */}
                         <div className="lg:col-span-2 space-y-6">
-                            <TripActions
-                                trip={trip}
-                                isUserDriver={isUserDriver}
-                                isUserParticipant={isUserParticipant}
-                                show={showActionsSection}
-                                cancelling={cancelling}
-                                onCancelTrip={handleCancelTrip}
-                                leaving={leaving}
-                                onLeaveTrip={handleLeaveTrip}
-                            />
                             <TripContact
                                 driverName={trip.driver.firstName}
                                 phoneNumber={contactPhoneNumber}
                                 message={contactMessage}
                             />
+                            <TripAlert tripId={trip.id} />
                         </div>
                     </div>
 
-                    {/* Section Participants - Only visible for the creator */}
-                    {isUserDriver && trip.participants.length > 0 && (
-                        <div className="mt-8">
-                            <div className="p-6">
-                                <h3 className="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                                    <svg
-                                        className="w-5 h-5 text-pink-600"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"
-                                        />
-                                    </svg>
-                                    Participants ({trip.participants.length})
-                                </h3>
-
-                                {loadingParticipants ? (
-                                    <div className="space-y-3">
-                                        {[...Array(trip.participants.length)].map((_, index) => (
-                                            <div key={index} className="animate-pulse">
-                                                <div className="flex items-center gap-3 p-3">
-                                                    <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
-                                                    <div className="flex-1">
-                                                        <div className="h-4 bg-gray-200 rounded w-1/3 mb-2"></div>
-                                                        <div className="h-3 bg-gray-200 rounded w-1/4"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="space-y-3">
-                                        {participants.map((participant) => (
-                                            <div
-                                                key={participant.id}
-                                                className="flex items-center gap-3 p-3 bg-gray-50 rounded-2xl"
-                                            >
-                                                <div className="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center">
-                                                    <span className="text-sm font-medium text-pink-600">
-                                                        {participant.firstName.charAt(0)}
-                                                    </span>
-                                                </div>
-                                                <div className="flex-1">
-                                                    <p className="font-medium text-gray-900">
-                                                        {participant.firstName}{' '}
-                                                        {participant.lastName}
-                                                    </p>
-                                                    <div className="flex items-center gap-2 text-sm text-gray-600">
-                                                        <svg
-                                                            className="w-4 h-4"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            viewBox="0 0 24 24"
-                                                        >
-                                                            <path
-                                                                strokeLinecap="round"
-                                                                strokeLinejoin="round"
-                                                                strokeWidth={2}
-                                                                d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                                                            />
-                                                        </svg>
-                                                        <span>{participant.phoneNumber}</span>
-                                                    </div>
-                                                </div>
-                                                <a
-                                                    href={`tel:${participant.phoneNumber}`}
-                                                    className="p-2 text-pink-600 hover:text-pink-700 hover:bg-pink-50 rounded-lg transition-colors"
-                                                    title="Appeler"
-                                                >
-                                                    <svg
-                                                        className="w-5 h-5"
-                                                        fill="none"
-                                                        stroke="currentColor"
-                                                        viewBox="0 0 24 24"
-                                                    >
-                                                        <path
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                            strokeWidth={2}
-                                                            d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
-                                                        />
-                                                    </svg>
-                                                </a>
-                                            </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </div>
-                        </div>
-                    )}
+                    {/* Reviews section */}
                     <div className="mt-8 p-4">
                         <ReviewsSection
                             title="Quelques avis sur ta conductrice"
@@ -450,19 +327,6 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                     </div>
                 </div>
             </div>
-
-            {/* Confirmation modal for the cancellation of the trip */}
-            <ConfirmationModal
-                isOpen={showCancelModal}
-                onClose={() => setShowCancelModal(false)}
-                onConfirm={confirmCancelTrip}
-                title="Annuler le trajet"
-                message="Êtes-vous sûr de vouloir annuler ce trajet ? Cette action est irréversible et toutes les participantes seront notifiées."
-                confirmText="Oui, annuler le trajet"
-                cancelText="Non, garder le trajet"
-                type="danger"
-                loading={cancelling}
-            />
         </RouteGuard>
     );
 }

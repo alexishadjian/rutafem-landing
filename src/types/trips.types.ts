@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-export type TripStatus = 'pending' | 'confirmed' | 'ongoing' | 'completed';
+export type TripStatus = 'pending' | 'ongoing' | 'completed';
 
 export type Trip = {
     id: string;

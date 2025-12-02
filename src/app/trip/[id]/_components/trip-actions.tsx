@@ -1,144 +1,161 @@
+import { ConfirmationModal } from '@/app/_components/confirmation-modal';
 import { TripWithDriver } from '@/types/trips.types';
+import Link from 'next/link';
+import { useState } from 'react';
 
 type TripActionsProps = {
     trip: TripWithDriver;
     isUserDriver: boolean;
     isUserParticipant: boolean;
-    show: boolean;
-    cancelling: boolean;
-    onCancelTrip: () => void;
+    canJoinTrip: boolean;
+    joining: boolean;
+    onJoinTrip: () => void;
     leaving: boolean;
     onLeaveTrip: () => void;
+    cancelling: boolean;
+    onCancelTrip: () => void;
+};
+
+// Check if trip date/time has passed
+const isTripPassed = (trip: TripWithDriver): boolean => {
+    const [hours, minutes] = trip.departureTime.split(':').map(Number);
+    const tripDateTime = new Date(trip.departureDate);
+    tripDateTime.setHours(hours, minutes, 0, 0);
+    return tripDateTime < new Date();
 };
 
 export const TripActions = ({
     trip,
     isUserDriver,
     isUserParticipant,
-    show,
-    cancelling,
-    onCancelTrip,
+    canJoinTrip,
+    joining,
+    onJoinTrip,
     leaving,
     onLeaveTrip,
+    cancelling,
+    onCancelTrip,
 }: TripActionsProps) => {
-    if (!show) {
+    const [showLeaveModal, setShowLeaveModal] = useState(false);
+    const [showCancelModal, setShowCancelModal] = useState(false);
+
+    const isCompleted = trip.status === 'completed';
+    const isPending = trip.status === 'pending';
+    const isOngoing = trip.status === 'ongoing';
+    const tripPassed = isTripPassed(trip);
+
+    // Determine which button to show
+    const showReviewButton = isUserParticipant && isCompleted;
+    const showLeaveButton = isUserParticipant && isPending && !isCompleted;
+    const showCancelButton = isUserDriver && !isOngoing && !tripPassed && trip.isActive;
+    const showJoinButton = canJoinTrip && !tripPassed;
+
+    // No button to show
+    if (!showReviewButton && !showLeaveButton && !showCancelButton && !showJoinButton) {
         return null;
     }
 
-    return (
-        <div className="bg-white rounded-xl shadow-sm border p-6 top-8">
-            {isUserDriver ? (
-                <div className="space-y-4">
-                    {trip.isActive && (
-                        <div className="space-y-3">
-                            <button
-                                onClick={onCancelTrip}
-                                disabled={cancelling}
-                                className="w-full bg-[var(--pink)] opacity-90 hover:opacity-100 py-2 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                            >
-                                {cancelling ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                                        Annulation...
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg
-                                            className="w-5 h-5"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth={2}
-                                                d="M6 18L18 6M6 6l12 12"
-                                            />
-                                        </svg>
-                                        Annuler le trajet
-                                    </>
-                                )}
-                            </button>
-                        </div>
-                    )}
+    const buttonClass =
+        'w-full bg-[var(--yellow)] hover:bg-[var(--yellow)]/90 text-[var(--black)] py-3 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2';
 
-                    {!trip.isActive && (
-                        <div className="text-center py-4">
-                            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <svg
-                                    className="w-6 h-6 text-red-600"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M6 18L18 6M6 6l12 12"
-                                    />
-                                </svg>
-                            </div>
-                            <p className="text-red-800 font-medium">Trajet annulé</p>
-                        </div>
+    // Review button (completed trip)
+    if (showReviewButton) {
+        return (
+            <Link href={`/trip/${trip.id}/review`} className={buttonClass}>
+                Je donne mon avis
+            </Link>
+        );
+    }
+
+    // Leave button (participant, pending)
+    if (showLeaveButton) {
+        return (
+            <>
+                <button
+                    onClick={() => setShowLeaveModal(true)}
+                    disabled={leaving}
+                    className={buttonClass}
+                >
+                    {leaving ? (
+                        <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--black)]" />
+                            Annulation...
+                        </>
+                    ) : (
+                        'Annuler ma participation'
                     )}
-                </div>
-            ) : (
-                isUserParticipant && (
-                    <div className="space-y-4">
-                        <div className="text-center py-4">
-                            <div className="w-12 h-12 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                                <svg
-                                    className="w-6 h-6 text-green-600"
-                                    fill="none"
-                                    stroke="currentColor"
-                                    viewBox="0 0 24 24"
-                                >
-                                    <path
-                                        strokeLinecap="round"
-                                        strokeLinejoin="round"
-                                        strokeWidth={2}
-                                        d="M5 13l4 4L19 7"
-                                    />
-                                </svg>
-                            </div>
-                            <p className="text-green-800 font-medium">
-                                Vous participez à ce trajet
-                            </p>
-                        </div>
-                        <button
-                            onClick={onLeaveTrip}
-                            disabled={leaving}
-                            className="w-full bg-red-600 hover:bg-red-700 text-sm lg:text-base text-white py-2 px-4 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                        >
-                            {leaving ? (
-                                <>
-                                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white" />
-                                    Annulation...
-                                </>
-                            ) : (
-                                <>
-                                    <svg
-                                        className="w-5 h-5"
-                                        fill="none"
-                                        stroke="currentColor"
-                                        viewBox="0 0 24 24"
-                                    >
-                                        <path
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth={2}
-                                            d="M6 18L18 6M6 6l12 12"
-                                        />
-                                    </svg>
-                                    Annuler ma participation
-                                </>
-                            )}
-                        </button>
-                    </div>
-                )
-            )}
-        </div>
-    );
+                </button>
+
+                <ConfirmationModal
+                    isOpen={showLeaveModal}
+                    onClose={() => setShowLeaveModal(false)}
+                    onConfirm={() => {
+                        setShowLeaveModal(false);
+                        onLeaveTrip();
+                    }}
+                    title="Annuler ma participation"
+                    message="Es-tu sûre de vouloir annuler ta participation à ce trajet ?"
+                    confirmText="Oui, annuler"
+                    cancelText="Non, garder"
+                    type="danger"
+                    loading={leaving}
+                />
+            </>
+        );
+    }
+
+    // Cancel button (driver, not ongoing, not passed)
+    if (showCancelButton) {
+        return (
+            <>
+                <button
+                    onClick={() => setShowCancelModal(true)}
+                    disabled={cancelling}
+                    className={buttonClass}
+                >
+                    {cancelling ? (
+                        <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--black)]" />
+                            Annulation...
+                        </>
+                    ) : (
+                        'Annuler le trajet'
+                    )}
+                </button>
+
+                <ConfirmationModal
+                    isOpen={showCancelModal}
+                    onClose={() => setShowCancelModal(false)}
+                    onConfirm={() => {
+                        setShowCancelModal(false);
+                        onCancelTrip();
+                    }}
+                    title="Annuler le trajet"
+                    message="Es-tu sûre de vouloir annuler ce trajet ? Toutes les participantes seront notifiées."
+                    confirmText="Oui, annuler"
+                    cancelText="Non, garder"
+                    type="danger"
+                    loading={cancelling}
+                />
+            </>
+        );
+    }
+
+    // Join button (can join)
+    if (showJoinButton) {
+        return (
+            <button onClick={onJoinTrip} disabled={joining} className={buttonClass}>
+                {joining ? (
+                    <>
+                        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[var(--black)]" />
+                        Rejoindre...
+                    </>
+                ) : (
+                    'Rejoindre ce trajet'
+                )}
+            </button>
+        );
+    }
+
+    return null;
 };
