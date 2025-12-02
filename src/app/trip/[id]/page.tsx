@@ -5,11 +5,12 @@ import { ReviewsSection } from '@/app/_components/reviews-section';
 import { RouteGuard } from '@/app/_components/route-guard';
 import { useAuth } from '@/contexts/AuthContext';
 import { getReviewsByUserId } from '@/lib/firebase/reviews';
-import { cancelTrip, getTripById } from '@/lib/firebase/trips';
-import { cancelBooking } from '@/services/stripe';
+import { getTripById } from '@/lib/firebase/trips';
+import { db } from '@/lib/firebaseConfig';
 import { fetchParticipantsDetails, startTripCheckout } from '@/services/trips';
 import { Review } from '@/types/reviews.types';
-import { TripWithDriver } from '@/types/trips.types';
+import { BookingDoc, TripWithDriver } from '@/types/trips.types';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
 import { TripActions } from './_components/trip-actions';
@@ -133,7 +134,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         }
     };
 
-    // leave a trip (cancel booking with refund)
+    // leave a trip (cancel booking with refund) - Firestore update done client-side
     const handleLeaveTrip = async () => {
         if (!user || !trip) return;
 
@@ -151,12 +152,38 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         setSuccess('');
 
         try {
-            await cancelBooking({
-                tripId: trip.id,
-                orderId: userBooking.oderId,
-                userId: user.uid,
-                role: 'passenger',
+            // 1. Cancel PaymentIntent on Stripe
+            const res = await fetch('/api/stripe/booking/cancel-payment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ paymentIntentId: userBooking.paymentIntentId }),
             });
+            if (!res.ok) {
+                const data = await res.json();
+                throw new Error(data.error || 'Erreur annulation paiement');
+            }
+
+            // 2. Update Firestore (client-side where user is authenticated)
+            const tripRef = doc(db, 'trips', trip.id);
+            const tripSnap = await getDoc(tripRef);
+            if (!tripSnap.exists()) throw new Error('Trajet non trouvé');
+
+            const tripData = tripSnap.data();
+            const bookings = (tripData.bookings ?? []) as BookingDoc[];
+            const bookingIndex = bookings.findIndex((b) => b.oderId === userBooking.oderId);
+
+            if (bookingIndex !== -1) {
+                const now = new Date();
+                bookings[bookingIndex] = { ...bookings[bookingIndex], status: 'cancelled', cancelledAt: now };
+
+                await updateDoc(tripRef, {
+                    bookings,
+                    participants: tripData.participants.filter((p: string) => p !== user.uid),
+                    availableSeats: tripData.availableSeats + 1,
+                    updatedAt: now,
+                });
+            }
+
             setSuccess('Votre réservation a été annulée et remboursée !');
             const updatedTrip = await getTripById(resolvedParams.id);
             if (updatedTrip) setTrip(updatedTrip);
@@ -173,7 +200,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         setShowCancelModal(true);
     };
 
-    // confirm the cancellation of a trip (cancel all active bookings)
+    // confirm the cancellation of a trip (cancel all active bookings) - Firestore update done client-side
     const confirmCancelTrip = async () => {
         if (!user || !trip) return;
 
@@ -183,21 +210,48 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         setShowCancelModal(false);
 
         try {
-            // Cancel all active bookings first
             const activeBookings = trip.bookings?.filter((b) => b.status === 'authorized') ?? [];
+
+            // 1. Cancel all PaymentIntents on Stripe
             await Promise.all(
-                activeBookings.map((booking) =>
-                    cancelBooking({
-                        tripId: trip.id,
-                        orderId: booking.oderId,
-                        userId: user.uid,
-                        role: 'driver',
-                    }),
-                ),
+                activeBookings.map(async (booking) => {
+                    const res = await fetch('/api/stripe/booking/cancel-payment', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ paymentIntentId: booking.paymentIntentId }),
+                    });
+                    if (!res.ok) console.error(`Failed to cancel payment for ${booking.oderId}`);
+                }),
             );
 
-            // Then mark trip as inactive
-            await cancelTrip(trip.id, user.uid);
+            // 2. Update Firestore (client-side where user is authenticated)
+            const tripRef = doc(db, 'trips', trip.id);
+            const tripSnap = await getDoc(tripRef);
+            if (!tripSnap.exists()) throw new Error('Trajet non trouvé');
+
+            const tripData = tripSnap.data();
+            const bookings = (tripData.bookings ?? []) as BookingDoc[];
+            const now = new Date();
+
+            // Mark all active bookings as cancelled
+            const updatedBookings = bookings.map((b) =>
+                b.status === 'authorized' ? { ...b, status: 'cancelled' as const, cancelledAt: now } : b,
+            );
+
+            // Get participants from cancelled bookings to remove
+            const cancelledParticipants = activeBookings.map((b) => b.participantId);
+            const updatedParticipants = tripData.participants.filter(
+                (p: string) => !cancelledParticipants.includes(p),
+            );
+
+            await updateDoc(tripRef, {
+                bookings: updatedBookings,
+                participants: updatedParticipants,
+                availableSeats: tripData.availableSeats + activeBookings.length,
+                isActive: false,
+                updatedAt: now,
+            });
+
             setSuccess('Trajet annulé ! Toutes les réservations ont été remboursées.');
             const updatedTrip = await getTripById(resolvedParams.id);
             if (updatedTrip) setTrip(updatedTrip);
@@ -320,13 +374,13 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
 
                     {/* Error/success messages */}
                     {error && (
-                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                        <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6 mx-6">
                             <p className="text-red-800">{error}</p>
                         </div>
                     )}
 
                     {success && (
-                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6 mx-6">
                             <p className="text-green-800">{success}</p>
                         </div>
                     )}
