@@ -5,7 +5,8 @@ import { ReviewsSection } from '@/app/_components/reviews-section';
 import { RouteGuard } from '@/app/_components/route-guard';
 import { useAuth } from '@/contexts/AuthContext';
 import { getReviewsByUserId } from '@/lib/firebase/reviews';
-import { cancelTrip, getTripById, leaveTrip } from '@/lib/firebase/trips';
+import { cancelTrip, getTripById } from '@/lib/firebase/trips';
+import { cancelBooking } from '@/services/stripe';
 import { fetchParticipantsDetails, startTripCheckout } from '@/services/trips';
 import { Review } from '@/types/reviews.types';
 import { TripWithDriver } from '@/types/trips.types';
@@ -132,29 +133,36 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         }
     };
 
-    // leave a trip
+    // leave a trip (cancel booking with refund)
     const handleLeaveTrip = async () => {
         if (!user || !trip) return;
+
+        // Find user's active booking
+        const userBooking = trip.bookings?.find(
+            (b) => b.participantId === user.uid && b.status === 'authorized',
+        );
+        if (!userBooking) {
+            setError('Réservation non trouvée');
+            return;
+        }
 
         setLeaving(true);
         setError('');
         setSuccess('');
 
         try {
-            await leaveTrip(trip.id, user.uid);
-            setSuccess('Vous avez annulé votre participation au trajet !');
-            // reload the trip data to update the available seats
+            await cancelBooking({
+                tripId: trip.id,
+                orderId: userBooking.oderId,
+                userId: user.uid,
+                role: 'passenger',
+            });
+            setSuccess('Votre réservation a été annulée et remboursée !');
             const updatedTrip = await getTripById(resolvedParams.id);
-            if (updatedTrip) {
-                setTrip(updatedTrip);
-            }
+            if (updatedTrip) setTrip(updatedTrip);
         } catch (error) {
-            console.error("Erreur lors de l'annulation de la participation:", error);
-            setError(
-                error instanceof Error
-                    ? error.message
-                    : "Erreur lors de l'annulation de la participation",
-            );
+            console.error("Erreur lors de l'annulation:", error);
+            setError(error instanceof Error ? error.message : "Erreur lors de l'annulation");
         } finally {
             setLeaving(false);
         }
@@ -165,7 +173,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         setShowCancelModal(true);
     };
 
-    // confirm the cancellation of a trip
+    // confirm the cancellation of a trip (cancel all active bookings)
     const confirmCancelTrip = async () => {
         if (!user || !trip) return;
 
@@ -175,18 +183,27 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         setShowCancelModal(false);
 
         try {
+            // Cancel all active bookings first
+            const activeBookings = trip.bookings?.filter((b) => b.status === 'authorized') ?? [];
+            await Promise.all(
+                activeBookings.map((booking) =>
+                    cancelBooking({
+                        tripId: trip.id,
+                        orderId: booking.oderId,
+                        userId: user.uid,
+                        role: 'driver',
+                    }),
+                ),
+            );
+
+            // Then mark trip as inactive
             await cancelTrip(trip.id, user.uid);
-            setSuccess('Trajet annulé avec succès !');
-            // reload the trip data to update the available seats
+            setSuccess('Trajet annulé ! Toutes les réservations ont été remboursées.');
             const updatedTrip = await getTripById(resolvedParams.id);
-            if (updatedTrip) {
-                setTrip(updatedTrip);
-            }
+            if (updatedTrip) setTrip(updatedTrip);
         } catch (error) {
             console.error("Erreur lors de l'annulation du trajet:", error);
-            setError(
-                error instanceof Error ? error.message : "Erreur lors de l'annulation du trajet",
-            );
+            setError(error instanceof Error ? error.message : "Erreur lors de l'annulation");
         } finally {
             setCancelling(false);
         }
