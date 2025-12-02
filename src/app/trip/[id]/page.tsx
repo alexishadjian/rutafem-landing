@@ -318,13 +318,15 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                     </div>
 
                     {/* Reviews section */}
-                    <div className="mt-8 p-4">
-                        <ReviewsSection
-                            title="Quelques avis sur ta conductrice"
-                            reviews={reviews}
-                            loading={loadingReviews}
-                        />
-                    </div>
+                    {reviews.length > 0 && (
+                        <div className="mt-8 p-4">
+                            <ReviewsSection
+                                title="Quelques avis sur ta conductrice"
+                                reviews={reviews}
+                                loading={loadingReviews}
+                            />
+                        </div>
+                    )}
                 </div>
             </div>
         </RouteGuard>

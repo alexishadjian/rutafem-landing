@@ -30,9 +30,11 @@ const fetchSuggestions = async (
     mode: 'city' | 'address',
 ): Promise<AddressSuggestion[]> => {
     if (text.length < 2) return [];
+    // StreetAddress only for address mode, include PositionOfInterest for city mode
+    const type = mode === 'address' ? 'StreetAddress' : 'StreetAddress,PositionOfInterest';
     const url = `${GEOPLATEFORME_API}?text=${encodeURIComponent(
         text,
-    )}&type=StreetAddress,PositionOfInterest&maximumResponses=10`;
+    )}&type=${type}&maximumResponses=10`;
     const res = await fetch(url);
     if (!res.ok) return [];
     const data = await res.json();

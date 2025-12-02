@@ -34,11 +34,13 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
 
     const validateForm = (): boolean => {
         const newErrors: Partial<TripFormData> = {};
-        if (!formData.departurePlace.trim()) {
-            newErrors.departurePlace = 'Veuillez indiquer votre lieu de départ';
+        // Check departure has valid coordinates (address was selected from suggestions)
+        if (!formData.departureLatitude || !formData.departureLongitude) {
+            newErrors.departurePlace = 'Sélectionne une adresse dans la liste';
         }
-        if (!formData.arrival.trim()) {
-            newErrors.arrival = "Veuillez indiquer votre ville d'arrivée";
+        // Check arrival has valid coordinates
+        if (!formData.arrivalLatitude || !formData.arrivalLongitude) {
+            newErrors.arrival = 'Sélectionne une adresse dans la liste';
         }
         setErrors(newErrors);
         return Object.keys(newErrors).length === 0;
@@ -109,7 +111,13 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                 <AddressAutocomplete
                                     id="departure-place"
                                     value={formData.departurePlace}
-                                    onChange={(v) => updateFormData({ departurePlace: v })}
+                                    onChange={(v) =>
+                                        updateFormData({
+                                            departurePlace: v,
+                                            departureLatitude: 0,
+                                            departureLongitude: 0,
+                                        })
+                                    }
                                     onSelect={handleDepartureSelect}
                                     placeholder="Ex: Gare de Lyon, 75000 Paris"
                                     hasError={!!errors.departurePlace}
@@ -134,9 +142,15 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                 <AddressAutocomplete
                                     id="arrival"
                                     value={formData.arrival}
-                                    onChange={(v) => updateFormData({ arrival: v })}
+                                    onChange={(v) =>
+                                        updateFormData({
+                                            arrival: v,
+                                            arrivalLatitude: 0,
+                                            arrivalLongitude: 0,
+                                        })
+                                    }
                                     onSelect={handleArrivalSelect}
-                                    placeholder="Ex: Lyon"
+                                    placeholder="Ex: 10 Rue de la République, 69001 Lyon"
                                     hasError={!!errors.arrival}
                                     mode="address"
                                     className="sm:px-4 sm:py-3"
