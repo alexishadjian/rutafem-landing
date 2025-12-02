@@ -1,8 +1,9 @@
 'use client';
 
+import { AddressAutocomplete, AddressSuggestion } from '@/app/_components/ui/address-autocomplete';
 import { TwoWomanLaughing } from '@/public/images';
 import Image from 'next/image';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useState } from 'react';
 
 type TripFormData = {
     departurePlace: string;
@@ -28,113 +29,6 @@ type WelcomeStepProps = {
     onNext: () => void;
 };
 
-type GeoSuggestion = {
-    fulltext: string;
-    city: string;
-    longitude: number; // longitude
-    latitude: number; // latitude
-};
-
-const GEOPLATEFORME_API = 'https://data.geopf.fr/geocodage/completion';
-
-const fetchSuggestions = async (text: string): Promise<GeoSuggestion[]> => {
-    if (text.length < 3) return [];
-    const url = `${GEOPLATEFORME_API}?text=${encodeURIComponent(
-        text,
-    )}&type=StreetAddress,PositionOfInterest&maximumResponses=5`;
-    const res = await fetch(url);
-    if (!res.ok) return [];
-    const data = await res.json();
-    return (data.results || []).map(
-        (r: { fulltext: string; city: string; x: number; y: number }) => ({
-            fulltext: r.fulltext,
-            city: r.city,
-            longitude: r.x,
-            latitude: r.y,
-        }),
-    );
-};
-
-type AddressAutocompleteProps = {
-    id: string;
-    value: string;
-    onChange: (value: string) => void;
-    onSelect: (suggestion: GeoSuggestion) => void;
-    placeholder: string;
-    hasError: boolean;
-};
-
-const AddressAutocomplete = ({
-    id,
-    value,
-    onChange,
-    onSelect,
-    placeholder,
-    hasError,
-}: AddressAutocompleteProps) => {
-    const [suggestions, setSuggestions] = useState<GeoSuggestion[]>([]);
-    const [isOpen, setIsOpen] = useState(false);
-    const wrapperRef = useRef<HTMLDivElement>(null);
-
-    const debouncedFetch = useCallback(async (text: string) => {
-        const results = await fetchSuggestions(text);
-        setSuggestions(results);
-        setIsOpen(results.length > 0);
-    }, []);
-
-    useEffect(() => {
-        const timer = setTimeout(() => debouncedFetch(value), 300);
-        return () => clearTimeout(timer);
-    }, [value, debouncedFetch]);
-
-    useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (wrapperRef.current && !wrapperRef.current.contains(e.target as Node)) {
-                setIsOpen(false);
-            }
-        };
-        document.addEventListener('mousedown', handleClickOutside);
-        return () => document.removeEventListener('mousedown', handleClickOutside);
-    }, []);
-
-    const handleSelect = (suggestion: GeoSuggestion) => {
-        onChange(suggestion.fulltext);
-        onSelect(suggestion);
-        setIsOpen(false);
-        setSuggestions([]);
-    };
-
-    return (
-        <div ref={wrapperRef} className="relative">
-            <input
-                type="text"
-                id={id}
-                autoComplete="off"
-                value={value}
-                onChange={(e) => onChange(e.target.value)}
-                onFocus={() => suggestions.length > 0 && setIsOpen(true)}
-                className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
-                    hasError ? 'border-red-500' : 'border-gray-300'
-                }`}
-                placeholder={placeholder}
-            />
-            {isOpen && suggestions.length > 0 && (
-                <ul className="absolute z-50 w-full bg-white border border-gray-200 rounded-lg mt-1 shadow-lg max-h-60 overflow-auto">
-                    {suggestions.map((s, i) => (
-                        <li
-                            key={i}
-                            onClick={() => handleSelect(s)}
-                            className="px-4 py-2 hover:bg-gray-100 cursor-pointer text-sm"
-                        >
-                            {s.fulltext}
-                        </li>
-                    ))}
-                </ul>
-            )}
-        </div>
-    );
-};
-
 export default function WelcomeStep({ formData, updateFormData, onNext }: WelcomeStepProps) {
     const [errors, setErrors] = useState<Partial<TripFormData>>({});
 
@@ -154,7 +48,7 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
         if (validateForm()) onNext();
     };
 
-    const handleDepartureSelect = (s: GeoSuggestion) => {
+    const handleDepartureSelect = (s: AddressSuggestion) => {
         updateFormData({
             departurePlace: s.fulltext,
             departureAddress: s.fulltext,
@@ -165,7 +59,7 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
         if (errors.departurePlace) setErrors((prev) => ({ ...prev, departurePlace: undefined }));
     };
 
-    const handleArrivalSelect = (s: GeoSuggestion) => {
+    const handleArrivalSelect = (s: AddressSuggestion) => {
         updateFormData({
             arrival: s.fulltext,
             arrivalAddress: s.fulltext,
@@ -219,6 +113,8 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                     onSelect={handleDepartureSelect}
                                     placeholder="Ex: Gare de Lyon, 75000 Paris"
                                     hasError={!!errors.departurePlace}
+                                    mode="address"
+                                    className="sm:px-4 sm:py-3"
                                 />
                                 {errors.departurePlace && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
@@ -242,6 +138,8 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                                     onSelect={handleArrivalSelect}
                                     placeholder="Ex: Lyon"
                                     hasError={!!errors.arrival}
+                                    mode="address"
+                                    className="sm:px-4 sm:py-3"
                                 />
                                 {errors.arrival && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">

@@ -1,8 +1,8 @@
 'use client';
 
 import { SmartButton } from '@/app/_components/ui/smart-button';
-import { getActiveTrips } from '@/lib/firebase/trips';
-import { Trip } from '@/types/trips.types';
+import { filterPastTrips, filterTrips, getActiveTrips, sortTrips } from '@/lib/firebase/trips';
+import { Trip, TripFilters, TripSortOption } from '@/types/trips.types';
 import { useEffect, useState } from 'react';
 import Button from '../_components/ui/button';
 import SearchBar from './_components/search-bar';
@@ -11,36 +11,69 @@ import TripCard from './_components/trip-card';
 const INITIAL_DISPLAY_COUNT = 6;
 const LOAD_MORE_COUNT = 6;
 
-// TODO : filtrer, afficher seulement la ville
+const SORT_OPTIONS: { value: TripSortOption; label: string }[] = [
+    { value: 'default', label: 'Par défaut' },
+    { value: 'price_asc', label: 'Prix croissant' },
+    { value: 'price_desc', label: 'Prix décroissant' },
+    { value: 'time_asc', label: 'Départ le plus tôt' },
+    { value: 'time_desc', label: 'Départ le plus tard' },
+];
 
 export default function JoinTripPage() {
-    const [trips, setTrips] = useState<Trip[]>([]);
+    const [allTrips, setAllTrips] = useState<Trip[]>([]);
+    const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [displayedCount, setDisplayedCount] = useState(INITIAL_DISPLAY_COUNT);
+    const [sortOption, setSortOption] = useState<TripSortOption>('default');
+    const [currentFilters, setCurrentFilters] = useState<TripFilters | null>(null);
 
     useEffect(() => {
         const fetchTrips = async () => {
             try {
                 const tripsData = await getActiveTrips();
-                setTrips(tripsData);
-            } catch (error) {
-                console.error('Erreur lors du chargement des trajets:', error);
+                // Filter out past trips
+                const futureTrips = filterPastTrips(tripsData);
+                setAllTrips(futureTrips);
+                setFilteredTrips(futureTrips);
+            } catch (err) {
+                console.error('Erreur lors du chargement des trajets:', err);
                 setError('Erreur lors du chargement des trajets');
             } finally {
                 setLoading(false);
             }
         };
-
         fetchTrips();
     }, []);
 
-    const handleLoadMore = () => {
-        setDisplayedCount((prev) => prev + LOAD_MORE_COUNT);
+    const applyFiltersAndSort = (
+        trips: Trip[],
+        filters: TripFilters | null,
+        sort: TripSortOption,
+    ) => {
+        let result = trips;
+        if (filters) result = filterTrips(result, filters);
+        result = sortTrips(result, sort);
+        return result;
     };
 
-    const displayedTrips = trips.slice(0, displayedCount);
-    const hasMoreTrips = displayedCount < trips.length;
+    const handleSearch = (filters: TripFilters) => {
+        setCurrentFilters(filters);
+        const results = applyFiltersAndSort(allTrips, filters, sortOption);
+        setFilteredTrips(results);
+        setDisplayedCount(INITIAL_DISPLAY_COUNT);
+    };
+
+    const handleSortChange = (newSort: TripSortOption) => {
+        setSortOption(newSort);
+        const results = applyFiltersAndSort(allTrips, currentFilters, newSort);
+        setFilteredTrips(results);
+    };
+
+    const handleLoadMore = () => setDisplayedCount((prev) => prev + LOAD_MORE_COUNT);
+
+    const displayedTrips = filteredTrips.slice(0, displayedCount);
+    const hasMoreTrips = displayedCount < filteredTrips.length;
 
     return (
         <div className="min-h-screen bg-[var(--dark-green)] py-6 lg:p-12">
@@ -55,7 +88,6 @@ export default function JoinTripPage() {
                                 Rejoins des trajets de covoiturage entre femmes
                             </p>
                         </div>
-
                         <SmartButton
                             href="/create-trip"
                             requireAuth={true}
@@ -71,24 +103,50 @@ export default function JoinTripPage() {
                 </div>
 
                 <div className="px-4 sm:px-6 lg:px-8 py-6">
-                    <SearchBar />
+                    <SearchBar onSearch={handleSearch} />
                 </div>
-                <div className="flex flex-col sm:flex-row items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-6">
+
+                <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 px-4 sm:px-6 lg:px-8 py-6">
                     <div className="text-center sm:text-left">
                         <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 font-staatliches">
-                            Les trajets de la communauté
+                            {filteredTrips.length === allTrips.length
+                                ? 'Les trajets de la communauté'
+                                : `${filteredTrips.length} trajet${
+                                      filteredTrips.length > 1 ? 's' : ''
+                                  } trouvé${filteredTrips.length > 1 ? 's' : ''}`}
                         </h3>
                         <p className="text-gray-600 mt-2">
-                            Retrouve ici tous les trajets publiés par nos conductrices. Chaque
-                            profil est vérifié pour t’assurer des voyages fiables et bienveillants.
+                            {filteredTrips.length === allTrips.length
+                                ? 'Retrouve ici tous les trajets publiés par nos conductrices.'
+                                : 'Résultats correspondant à ta recherche.'}
                         </p>
                     </div>
+
+                    {/* Sort dropdown */}
+                    <div className="flex items-center gap-2">
+                        <label htmlFor="sort" className="text-sm text-gray-600 whitespace-nowrap">
+                            Trier par :
+                        </label>
+                        <select
+                            id="sort"
+                            value={sortOption}
+                            onChange={(e) => handleSortChange(e.target.value as TripSortOption)}
+                            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
+                        >
+                            {SORT_OPTIONS.map((opt) => (
+                                <option key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
                 </div>
+
                 <div className="px-4 sm:px-6 lg:px-8 pb-12">
                     {loading ? (
                         <div className="flex items-center justify-center py-12">
                             <div className="text-center">
-                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4"></div>
+                                <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto mb-4" />
                                 <p className="text-gray-600">Chargement des trajets...</p>
                             </div>
                         </div>
@@ -115,7 +173,7 @@ export default function JoinTripPage() {
                                 Réessayer
                             </button>
                         </div>
-                    ) : trips.length === 0 ? (
+                    ) : filteredTrips.length === 0 ? (
                         <div className="text-center py-12">
                             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                                 <svg
@@ -139,22 +197,27 @@ export default function JoinTripPage() {
                                 </svg>
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">
-                                Aucun trajet disponible
+                                {allTrips.length === 0
+                                    ? 'Aucun trajet disponible'
+                                    : 'Aucun trajet trouvé'}
                             </h3>
                             <p className="text-gray-600 mb-4">
-                                Il n&apos;y a actuellement aucun trajet disponible. Soyez la
-                                première à en créer un !
+                                {allTrips.length === 0
+                                    ? "Il n'y a actuellement aucun trajet disponible. Soyez la première à en créer un !"
+                                    : 'Aucun trajet ne correspond à tes critères. Essaie de modifier tes filtres.'}
                             </p>
-                            <SmartButton
-                                href="/create-trip"
-                                requireAuth={true}
-                                requireVerified={true}
-                                requireDriver={true}
-                                requireDriverVerified={true}
-                                className="btn"
-                            >
-                                Publier un trajet
-                            </SmartButton>
+                            {allTrips.length === 0 && (
+                                <SmartButton
+                                    href="/create-trip"
+                                    requireAuth={true}
+                                    requireVerified={true}
+                                    requireDriver={true}
+                                    requireDriverVerified={true}
+                                    className="btn"
+                                >
+                                    Publier un trajet
+                                </SmartButton>
+                            )}
                         </div>
                     ) : (
                         <>

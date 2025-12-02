@@ -60,3 +60,13 @@ export type TripDoc = Omit<Trip, 'id' | 'createdAt' | 'updatedAt'> & {
     createdAt: Timestamp | Date;
     updatedAt: Timestamp | Date;
 };
+
+export type TripFilters = {
+    departureCity: string;
+    arrivalCity: string;
+    maxPrice: number | null;
+    date: string | null;
+    minSeats: number | null;
+};
+
+export type TripSortOption = 'price_asc' | 'price_desc' | 'time_asc' | 'time_desc' | 'default';
