@@ -8,8 +8,8 @@ export type UserDoc = {
     role?: 'passenger' | 'driver';
     isUserVerified?: boolean;
     isUserDriverVerified?: boolean;
-    verificationStatus?: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
-    driverLicenseVerificationStatus?: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
+    verificationStatus?: 'To verify' | 'Pending' | 'Verified' | 'Rejected';
+    driverLicenseVerificationStatus?: 'To verify' | 'Pending' | 'Verified' | 'Rejected';
     stripeAccountId?: string;
     averageRating?: number;
     totalReviews?: number;
@@ -30,8 +30,8 @@ export type UserProfile = {
     role: 'passenger' | 'driver';
     isUserVerified: boolean;
     isUserDriverVerified: boolean;
-    verificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
-    driverLicenseVerificationStatus: 'A vérifier' | 'En cours' | 'Vérifié' | 'Rejeté';
+    verificationStatus: 'To verify' | 'Pending' | 'Verified' | 'Rejected';
+    driverLicenseVerificationStatus: 'To verify' | 'Pending' | 'Verified' | 'Rejected';
     stripeAccountId: string;
     averageRating?: number;
     totalReviews?: number;
@@ -53,5 +53,5 @@ export type CreateUserProfileParams = {
 
 export type VerificationUpdate = {
     isUserVerified: boolean;
-    driverStatus?: 'Vérifié' | 'Rejeté';
+    driverStatus?: 'Verified' | 'Rejected';
 };

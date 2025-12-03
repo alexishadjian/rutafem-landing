@@ -248,7 +248,7 @@ export default function TripFormStep({
                                 />
                                 {suggestedPrice > 0 && (
                                     <p className="text-gray-400 text-xs sm:text-sm mt-1">
-                                        💡 Prix conseillé : {suggestedPrice}€ (~{distance} km)
+                                        Prix conseillé : {suggestedPrice}€ (~{distance} km)
                                     </p>
                                 )}
                                 {errors.price && (
