@@ -1,5 +1,6 @@
 import Icon from '@/app/_components/ui/icon';
 import { UserProfile } from '@/types/users.types';
+import Link from 'next/link';
 
 type UserInformationsProps = {
     userProfile: UserProfile;
@@ -70,12 +71,27 @@ export const UserInformations = ({
                             })}
                         </div>
                     )}
-                    <div>
+                    <div className="flex flex-wrap items-center gap-2">
                         <span
                             className={`inline-block py-2 px-3 rounded-full text-sm border border-[var(--black)] font-medium text-[var(--black)] ${roleBgColor}`}
                         >
                             {roleLabel}
                         </span>
+                        {userProfile.role === 'passenger' && (
+                            <Link
+                                href="/auth/profile/driver-license"
+                                className="inline-flex items-center gap-1 py-2 px-3 rounded-full text-xs md:text-sm border border-[var(--dark-green)] font-medium text-white bg-[var(--dark-green)] hover:opacity-90 transition-opacity"
+                            >
+                                <Icon
+                                    name="plus"
+                                    width={16}
+                                    height={16}
+                                    strokeColor="white"
+                                    fillColor="none"
+                                />
+                                Devenir conductrice
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>
