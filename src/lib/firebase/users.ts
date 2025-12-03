@@ -22,10 +22,10 @@ const mapUserProfile = (uid: string, data: UserDoc): UserProfile => ({
     isUserVerified: Boolean(data.isUserVerified),
     isUserDriverVerified: Boolean(data.isUserDriverVerified),
     verificationStatus:
-        (data.verificationStatus as UserProfile['verificationStatus']) ?? 'A vérifier',
+        (data.verificationStatus as UserProfile['verificationStatus']) ?? 'To verify',
     driverLicenseVerificationStatus:
         (data.driverLicenseVerificationStatus as UserProfile['driverLicenseVerificationStatus']) ??
-        'A vérifier',
+        'To verify',
     stripeAccountId: (data.stripeAccountId as string) ?? '',
     averageRating: data.averageRating,
     totalReviews: data.totalReviews,
@@ -54,7 +54,7 @@ export const createUserProfile = async ({
             isUserVerified: false,
             isUserDriverVerified: false,
             createdAt: new Date(),
-            verificationStatus: 'A vérifier',
+            verificationStatus: 'To verify',
         });
     } catch (error) {
         logFirebaseError('createUserProfile', error);
@@ -106,14 +106,14 @@ export const uploadVerificationDocuments = async (
         const updateData: {
             idCardFront: string;
             idCardBack: string;
-            verificationStatus: 'En cours';
+            verificationStatus: 'Pending';
             driverLicense?: string;
             role?: 'driver';
-            driverVerificationStatus?: 'En cours';
+            driverVerificationStatus?: 'Pending';
         } = {
             idCardFront: frontUrl,
             idCardBack: backUrl,
-            verificationStatus: 'En cours',
+            verificationStatus: 'Pending',
         };
 
         if (parsed.driverLicense) {
@@ -123,7 +123,7 @@ export const uploadVerificationDocuments = async (
             ]);
             updateData.driverLicense = await uploadFile(licensePath, parsed.driverLicense);
             updateData.role = 'driver';
-            updateData.driverVerificationStatus = 'En cours';
+            updateData.driverVerificationStatus = 'Pending';
         }
 
         await updateDoc(doc(db, 'users', uid), {
@@ -165,7 +165,7 @@ export const uploadDriverLicenseDocuments = async (
         await updateDoc(doc(db, 'users', uid), {
             driverLicenseFront: frontUrl,
             driverLicenseBack: backUrl,
-            driverLicenseVerificationStatus: 'En cours',
+            driverLicenseVerificationStatus: 'Pending',
             role: 'driver',
             isUserDriverVerified: false,
             updatedAt: new Date(),
@@ -186,13 +186,13 @@ export const updateUserVerification = async (
     try {
         const updateData: {
             isUserVerified: boolean;
-            verificationStatus: 'Vérifié' | 'Rejeté';
+            verificationStatus: 'Verified' | 'Rejected';
             verifiedAt: Date;
-            driverVerificationStatus?: 'Vérifié' | 'Rejeté';
+            driverVerificationStatus?: 'Verified' | 'Rejected';
             driverVerifiedAt?: Date;
         } = {
             isUserVerified,
-            verificationStatus: isUserVerified ? 'Vérifié' : 'Rejeté',
+            verificationStatus: isUserVerified ? 'Verified' : 'Rejected',
             verifiedAt: new Date(),
         };
 
