@@ -157,7 +157,7 @@ export const approveVerification = async (uid: string, type: VerificationType): 
         if (!userDoc.exists()) throw new Error('Utilisateur non trouvé');
 
         const userData = userDoc.data() as UserDoc;
-        const updateData: Record<string, unknown> = { updatedAt: new Date() };
+        const updateData: Record<string, Date | boolean | string | null> = { updatedAt: new Date() };
 
         if (type === 'identity') {
             updateData.isUserVerified = true;
@@ -200,7 +200,7 @@ export const rejectVerification = async (uid: string, type: VerificationType): P
         if (!userDoc.exists()) throw new Error('Utilisateur non trouvé');
 
         const userData = userDoc.data() as UserDoc;
-        const updateData: Record<string, unknown> = { updatedAt: new Date() };
+        const updateData: Record<string, Date | boolean | string | null> = { updatedAt: new Date() };
 
         if (type === 'identity') {
             updateData.isUserVerified = false;
