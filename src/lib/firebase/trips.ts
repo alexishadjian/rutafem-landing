@@ -1,4 +1,6 @@
 import {
+    Booking,
+    BookingDoc,
     CreateTripData,
     Trip,
     TripDoc,
@@ -25,6 +27,25 @@ import { db } from '../firebaseConfig';
 
 const tripsCollection = collection(db, 'trips');
 
+const mapBookingDoc = (data: BookingDoc): Booking => ({
+    oderId: data.oderId,
+    participantId: data.participantId,
+    participantEmail: data.participantEmail,
+    participantName: data.participantName,
+    driverEmail: data.driverEmail,
+    driverName: data.driverName,
+    paymentIntentId: data.paymentIntentId,
+    status: data.status,
+    amountCents: data.amountCents,
+    driverConfirmedAt: data.driverConfirmedAt ? timestampToDate(data.driverConfirmedAt) : undefined,
+    passengerConfirmedAt: data.passengerConfirmedAt ? timestampToDate(data.passengerConfirmedAt) : undefined,
+    disputedAt: data.disputedAt ? timestampToDate(data.disputedAt) : undefined,
+    disputedBy: data.disputedBy,
+    capturedAt: data.capturedAt ? timestampToDate(data.capturedAt) : undefined,
+    cancelledAt: data.cancelledAt ? timestampToDate(data.cancelledAt) : undefined,
+    createdAt: timestampToDate(data.createdAt),
+});
+
 const mapTripDoc = (tripId: string, data: TripDoc): Trip => ({
     id: tripId,
     departureTime: data.departureTime,
@@ -43,6 +64,7 @@ const mapTripDoc = (tripId: string, data: TripDoc): Trip => ({
     description: data.description,
     driverId: data.driverId,
     participants: data.participants,
+    bookings: (data.bookings ?? []).map(mapBookingDoc),
     isActive: data.isActive,
     status: data.status ?? 'pending',
     createdAt: timestampToDate(data.createdAt),
@@ -69,6 +91,7 @@ export const createTrip = async (driverId: string, tripData: CreateTripData): Pr
             ...tripData,
             driverId,
             participants: [],
+            bookings: [],
             availableSeats: tripData.totalSeats,
             isActive: true,
             status: tripData.status ?? 'pending',
@@ -240,6 +263,7 @@ export const getParticipantsInfo = async (
         firstName: string;
         lastName: string;
         phoneNumber: string;
+        email: string;
     }[]
 > => {
     try {
@@ -255,6 +279,7 @@ export const getParticipantsInfo = async (
                     firstName: (data.firstName as string) ?? '',
                     lastName: (data.lastName as string) ?? '',
                     phoneNumber: (data.phoneNumber as string) ?? '',
+                    email: (data.email as string) ?? '',
                 };
             }),
         );
@@ -267,6 +292,7 @@ export const getParticipantsInfo = async (
                 firstName: string;
                 lastName: string;
                 phoneNumber: string;
+                email: string;
             } => participant !== null,
         );
     } catch (error) {

@@ -12,7 +12,7 @@ import {
 import { deleteObject, ref } from 'firebase/storage';
 
 import { AdminStats, AdminUser, PendingVerification, VerificationType } from '@/types/admin.types';
-import { Trip, TripDoc } from '@/types/trips.types';
+import { Booking, Trip, TripDoc } from '@/types/trips.types';
 import { UserDoc } from '@/types/users.types';
 import { timestampToDate } from '@/utils/date';
 import { logFirebaseError } from '@/utils/errors';
@@ -157,7 +157,7 @@ export const approveVerification = async (uid: string, type: VerificationType): 
         if (!userDoc.exists()) throw new Error('Utilisateur non trouvé');
 
         const userData = userDoc.data() as UserDoc;
-        const updateData: Record<string, unknown> = { updatedAt: new Date() };
+        const updateData: Record<string, Date | boolean | string | null> = { updatedAt: new Date() };
 
         if (type === 'identity') {
             updateData.isUserVerified = true;
@@ -200,7 +200,7 @@ export const rejectVerification = async (uid: string, type: VerificationType): P
         if (!userDoc.exists()) throw new Error('Utilisateur non trouvé');
 
         const userData = userDoc.data() as UserDoc;
-        const updateData: Record<string, unknown> = { updatedAt: new Date() };
+        const updateData: Record<string, Date | boolean | string | null> = { updatedAt: new Date() };
 
         if (type === 'identity') {
             updateData.isUserVerified = false;
@@ -255,6 +255,7 @@ const mapTripDoc = (tripId: string, data: TripDoc): Trip => ({
     description: data.description,
     driverId: data.driverId,
     participants: data.participants,
+    bookings: (data.bookings ?? []) as Booking[],
     isActive: data.isActive,
     status: data.status ?? 'pending',
     createdAt: timestampToDate(data.createdAt),
