@@ -12,7 +12,7 @@ import {
 import { deleteObject, ref } from 'firebase/storage';
 
 import { AdminStats, AdminUser, PendingVerification, VerificationType } from '@/types/admin.types';
-import { Trip, TripDoc } from '@/types/trips.types';
+import { Booking, Trip, TripDoc } from '@/types/trips.types';
 import { UserDoc } from '@/types/users.types';
 import { timestampToDate } from '@/utils/date';
 import { logFirebaseError } from '@/utils/errors';
@@ -255,6 +255,7 @@ const mapTripDoc = (tripId: string, data: TripDoc): Trip => ({
     description: data.description,
     driverId: data.driverId,
     participants: data.participants,
+    bookings: (data.bookings ?? []) as Booking[],
     isActive: data.isActive,
     status: data.status ?? 'pending',
     createdAt: timestampToDate(data.createdAt),
