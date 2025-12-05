@@ -73,6 +73,10 @@ export async function POST(req: NextRequest) {
                 const newBooking: BookingDoc = {
                     oderId: orderId,
                     participantId: buyerUid,
+                    participantEmail: '',
+                    participantName: '',
+                    driverEmail: '',
+                    driverName: '',
                     paymentIntentId,
                     status: 'authorized',
                     amountCents: Number(amountCents),
