@@ -30,6 +30,10 @@ const tripsCollection = collection(db, 'trips');
 const mapBookingDoc = (data: BookingDoc): Booking => ({
     oderId: data.oderId,
     participantId: data.participantId,
+    participantEmail: data.participantEmail,
+    participantName: data.participantName,
+    driverEmail: data.driverEmail,
+    driverName: data.driverName,
     paymentIntentId: data.paymentIntentId,
     status: data.status,
     amountCents: data.amountCents,

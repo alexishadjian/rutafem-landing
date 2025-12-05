@@ -17,12 +17,6 @@ import { TripAlert } from './_components/trip-alert';
 import { TripContact } from './_components/trip-contact';
 import { TripInfo } from './_components/trip-info';
 
-type Participant = {
-    id: string;
-    firstName: string;
-    averageRating?: number;
-};
-
 type TripDetailsPageProps = {
     params: Promise<{ id: string }>;
 };
@@ -215,7 +209,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
 
     // cancel a trip
     const handleCancelTrip = () => {
-        setShowCancelModal(true);
+        confirmCancelTrip();
     };
 
     // confirm the cancellation of a trip (cancel all active bookings) - Firestore update done client-side
