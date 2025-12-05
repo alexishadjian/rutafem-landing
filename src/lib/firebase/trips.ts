@@ -1,4 +1,13 @@
-import { Booking, BookingDoc, CreateTripData, Trip, TripDoc, TripWithDriver } from '@/types/trips.types';
+import {
+    Booking,
+    BookingDoc,
+    CreateTripData,
+    Trip,
+    TripDoc,
+    TripFilters,
+    TripSortOption,
+    TripWithDriver,
+} from '@/types/trips.types';
 import { timestampToDate } from '@/utils/date';
 import {
     collection,
@@ -312,5 +321,64 @@ export const getUserTrips = async (
     } catch (error) {
         logFirebaseError('getUserTrips', error);
         throw new Error('Erreur lors de la récupération des trajets utilisateur');
+    }
+};
+
+// Filter out past trips (date < today)
+export const filterPastTrips = (trips: Trip[]): Trip[] => {
+    const today = new Date().toISOString().split('T')[0];
+    return trips.filter((trip) => trip.departureDate >= today);
+};
+
+// TODO Client-side filtering (will be replaced by backend query with Prisma)
+export const filterTrips = (trips: Trip[], filters: TripFilters): Trip[] => {
+    return trips.filter((trip) => {
+        if (
+            filters.departureCity &&
+            !trip.departureCity.toLowerCase().includes(filters.departureCity.toLowerCase())
+        ) {
+            return false;
+        }
+        if (
+            filters.arrivalCity &&
+            !trip.arrivalCity.toLowerCase().includes(filters.arrivalCity.toLowerCase())
+        ) {
+            return false;
+        }
+        if (filters.maxPrice && trip.pricePerSeat > filters.maxPrice) {
+            return false;
+        }
+        if (filters.date && trip.departureDate !== filters.date) {
+            return false;
+        }
+        if (filters.minSeats && trip.availableSeats < filters.minSeats) {
+            return false;
+        }
+        return true;
+    });
+};
+
+// Sort trips by option
+export const sortTrips = (trips: Trip[], sortOption: TripSortOption): Trip[] => {
+    const sorted = [...trips];
+    switch (sortOption) {
+        case 'price_asc':
+            return sorted.sort((a, b) => a.pricePerSeat - b.pricePerSeat);
+        case 'price_desc':
+            return sorted.sort((a, b) => b.pricePerSeat - a.pricePerSeat);
+        case 'time_asc':
+            return sorted.sort((a, b) => {
+                const dateA = new Date(`${a.departureDate}T${a.departureTime}`);
+                const dateB = new Date(`${b.departureDate}T${b.departureTime}`);
+                return dateA.getTime() - dateB.getTime();
+            });
+        case 'time_desc':
+            return sorted.sort((a, b) => {
+                const dateA = new Date(`${a.departureDate}T${a.departureTime}`);
+                const dateB = new Date(`${b.departureDate}T${b.departureTime}`);
+                return dateB.getTime() - dateA.getTime();
+            });
+        default:
+            return sorted;
     }
 };

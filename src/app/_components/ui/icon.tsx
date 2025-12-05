@@ -1,23 +1,86 @@
-const icons: { [key: string]: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => JSX.Element } = {
+const icons: {
+    [key: string]: ({
+        className,
+        strokeColor,
+        strokeWidth,
+        fillColor,
+        width,
+        height,
+    }: SvgProps) => JSX.Element;
+} = {
     search: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
-        <svg xmlns="http://www.w3.org/2000/svg" className={className} {...(width && { width })} {...(height && { height })} viewBox="0 0 24 24" strokeWidth={strokeWidth} stroke={strokeColor} fill={fillColor} strokeLinecap="round" strokeLinejoin="round">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            {...(width && { width })}
+            {...(height && { height })}
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke={strokeColor}
+            fill={fillColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
             <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0" />
             <path d="M21 21l-6 -6" />
         </svg>
     ),
     user: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
-        <svg xmlns="http://www.w3.org/2000/svg" className={className} {...(width && { width })} {...(height && { height })} viewBox="0 0 24 24" strokeWidth={strokeWidth} stroke={strokeColor} fill={fillColor} strokeLinecap="round" strokeLinejoin="round">
-            <path d="M12 10C14.2091 10 16 8.20914 16 6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6C8 8.20914 9.79086 10 12 10Z" fill="#222639" />
-            <path d="M20 17.5C20 19.985 20 22 12 22C4 22 4 19.985 4 17.5C4 15.015 7.582 13 12 13C16.418 13 20 15.015 20 17.5Z" fill="#222639" />
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            {...(width && { width })}
+            {...(height && { height })}
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke={strokeColor}
+            fill={fillColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path
+                d="M12 10C14.2091 10 16 8.20914 16 6C16 3.79086 14.2091 2 12 2C9.79086 2 8 3.79086 8 6C8 8.20914 9.79086 10 12 10Z"
+                fill="#222639"
+            />
+            <path
+                d="M20 17.5C20 19.985 20 22 12 22C4 22 4 19.985 4 17.5C4 15.015 7.582 13 12 13C16.418 13 20 15.015 20 17.5Z"
+                fill="#222639"
+            />
         </svg>
     ),
     starIllu: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
-        <svg xmlns="http://www.w3.org/2000/svg" className={className} {...(width && { width })} {...(height && { height })} viewBox="0 0 24 24" strokeWidth={strokeWidth} stroke={strokeColor} fill={fillColor} strokeLinecap="round" strokeLinejoin="round">
-            <path fillRule="evenodd" clipRule="evenodd" d="M14.427 7.664L11.047 0L7.667 7.664L0 11.044L7.667 14.424L11.047 22.092L14.427 14.424L22.094 11.044L14.427 7.664Z" />
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            {...(width && { width })}
+            {...(height && { height })}
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke={strokeColor}
+            fill={fillColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M14.427 7.664L11.047 0L7.667 7.664L0 11.044L7.667 14.424L11.047 22.092L14.427 14.424L22.094 11.044L14.427 7.664Z"
+            />
         </svg>
     ),
     chevronDown: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
-        <svg xmlns="http://www.w3.org/2000/svg" className={className} {...(width && { width })} {...(height && { height })} viewBox="0 0 24 24" strokeWidth={strokeWidth} stroke={strokeColor} fill={fillColor} strokeLinecap="round" strokeLinejoin="round">
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            {...(width && { width })}
+            {...(height && { height })}
+            viewBox="0 0 24 24"
+            strokeWidth={strokeWidth}
+            stroke={strokeColor}
+            fill={fillColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
             <path d="M6 9l6 6l6 -6" />
         </svg>
     ),
@@ -307,6 +370,62 @@ const icons: { [key: string]: ({ className, strokeColor, strokeWidth, fillColor,
         </svg>
     ),
 
+    message: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            viewBox="0 0 122.88 108.31"
+            {...(width && { width })}
+            {...(height && { height })}
+            strokeWidth={strokeWidth}
+            stroke={strokeColor}
+            fill={fillColor || 'currentColor'}
+        >
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M51.46,93.86c12.9,12.44,31.14,16.2,49.38,8.43l15.31,6-5.07-12.06c17-13.63,14-32.35,1.44-45.11A44.05,44.05,0,0,1,107.65,65,51.25,51.25,0,0,1,93.58,81,62.69,62.69,0,0,1,73.92,91a70.44,70.44,0,0,1-22.46,2.9ZM31.58,54.07a3.11,3.11,0,0,1,0-6.21H61.51a3.11,3.11,0,0,1,0,6.21Zm0-17.22a3.11,3.11,0,0,1,0-6.21H74.34a3.11,3.11,0,0,1,0,6.21ZM54.28,0h0C68.81.47,81.8,5.62,91.09,13.59c9.49,8.13,15.17,19.2,14.82,31.27v0C105.54,57,99.19,67.71,89.22,75.28,79.44,82.7,66.15,87.07,51.66,86.65A63.91,63.91,0,0,1,40,85.24a60.48,60.48,0,0,1-9.87-3L6.69,91.44l7.83-18.63A44,44,0,0,1,4,59.5,36.67,36.67,0,0,1,0,41.79C.38,29.7,6.73,19,16.7,11.4,26.48,4,39.78-.4,54.26,0Zm-.15,6.18h-.05C41,5.83,29.14,9.72,20.44,16.32,11.92,22.78,6.5,31.84,6.2,42A30.49,30.49,0,0,0,9.55,56.71,38.76,38.76,0,0,0,20.17,69.47L22,70.93,18.08,80.3l12.08-4.75,1.17.5a55.08,55.08,0,0,0,9.91,3.13,58.52,58.52,0,0,0,10.59,1.29c13,.38,25-3.51,33.66-10.12C94,63.89,99.42,54.84,99.73,44.72v0c.29-10.11-4.56-19.45-12.66-26.4C78.79,11.19,67.16,6.61,54.15,6.21Z"
+            />
+        </svg>
+    ),
+
+    tree: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            viewBox="0 0 360.188 360.188"
+            {...(width && { width })}
+            {...(height && { height })}
+            strokeWidth={strokeWidth}
+            stroke={strokeColor}
+            fill={fillColor || 'currentColor'}
+        >
+            <rect
+                x="162.966"
+                y="171.714"
+                width="34.255"
+                height="152.033"
+                fill={fillColor || '#9FCBA5'}
+            />
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M244.601,93.784c2.941-7.674,4.569-15.999,4.569-24.707 C249.169,30.927,218.243,0,180.093,0s-69.076,30.927-69.076,69.077c0,8.709,1.627,17.033,4.569,24.707 c-35.551,2.831-63.524,32.556-63.524,68.835c0,38.15,30.927,69.077,69.076,69.077c24.956,0,46.817-13.237,58.956-33.07 c12.139,19.833,34,33.07,58.956,33.07c38.15,0,69.076-30.927,69.076-69.077C308.125,126.34,280.152,96.614,244.601,93.784z"
+                fill={fillColor || '#49B86E'}
+            />
+            <circle cx="180.093" cy="63.38" r="20" fill={fillColor || '#2B7B57'} />
+            <circle cx="180.093" cy="135.848" r="20" fill={fillColor || '#2B7B57'} />
+            <circle cx="110.089" cy="165.849" r="20" fill={fillColor || '#2B7B57'} />
+            <circle cx="250.097" cy="165.849" r="20" fill={fillColor || '#2B7B57'} />
+            <path
+                fillRule="evenodd"
+                clipRule="evenodd"
+                d="M237.837,305.932c-2.807,0-5.607,0.218-8.379,0.653 c-10.9-10.023-24.644-16.5-39.245-18.563c-3.336-0.472-6.716-0.714-10.121-0.714v0.003c-3.403,0-6.783,0.24-10.121,0.712 c-14.599,2.063-28.343,8.54-39.242,18.563c-2.77-0.435-5.572-0.653-8.379-0.653c-22.147,0-41.236,13.337-49.658,32.402 c-4.544,10.286,2.979,21.853,14.224,21.853h93.177h93.179c11.245,0,18.768-11.566,14.224-21.853 C279.073,319.269,259.984,305.932,237.837,305.932z"
+                fill={fillColor || '#2B7B57'}
+            />
+        </svg>
+    ),
+
     starCheck: ({
         strokeColor,
         strokeWidth,
@@ -371,18 +490,38 @@ const icons: { [key: string]: ({ className, strokeColor, strokeWidth, fillColor,
 };
 
 interface SvgProps {
-    className?: string,
-    strokeColor?: string,
-    strokeWidth?: number,
-    fillColor?: string,
-    width?: number,
-    height?: number,
-    name: string,
-    leftFillColor?: string,
-    rightFillColor?: string,
+    className?: string;
+    strokeColor?: string;
+    strokeWidth?: number;
+    fillColor?: string;
+    width?: number;
+    height?: number;
+    name: string;
+    leftFillColor?: string;
+    rightFillColor?: string;
 }
 
-export default function Icon({ className, name, strokeColor = 'var(--black)', strokeWidth = 1.75, fillColor = 'none', width, height, leftFillColor, rightFillColor }: SvgProps) {
+export default function Icon({
+    className,
+    name,
+    strokeColor = 'var(--black)',
+    strokeWidth = 1.75,
+    fillColor = 'none',
+    width,
+    height,
+    leftFillColor,
+    rightFillColor,
+}: SvgProps) {
     const icon = icons[name] || icons.default;
-    return icon({ className, strokeColor, strokeWidth, fillColor, width, height, name, leftFillColor, rightFillColor });
+    return icon({
+        className,
+        strokeColor,
+        strokeWidth,
+        fillColor,
+        width,
+        height,
+        name,
+        leftFillColor,
+        rightFillColor,
+    });
 }

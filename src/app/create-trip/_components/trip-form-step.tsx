@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { calculateDistance, getSuggestedPrice } from '@/utils/trip';
+import { useEffect, useMemo, useState } from 'react';
 import Datepicker, { DateValueType } from 'react-tailwindcss-datepicker';
 
 type TripFormData = {
@@ -40,6 +41,22 @@ export default function TripFormStep({
         endDate: null,
     });
 
+    // Calculate distance and suggested price from GPS coordinates
+    const { distance, suggestedPrice } = useMemo(() => {
+        const dist = calculateDistance(
+            formData.departureLatitude,
+            formData.departureLongitude,
+            formData.arrivalLatitude,
+            formData.arrivalLongitude,
+        );
+        return { distance: Math.round(dist), suggestedPrice: getSuggestedPrice(dist) };
+    }, [
+        formData.departureLatitude,
+        formData.departureLongitude,
+        formData.arrivalLatitude,
+        formData.arrivalLongitude,
+    ]);
+
     // Sync formData.date with startDate on mount
     useEffect(() => {
         if (formData.date) {
@@ -69,8 +86,8 @@ export default function TripFormStep({
                 typeof newValue.startDate === 'string'
                     ? newValue.startDate
                     : newValue.startDate instanceof Date
-                        ? newValue.startDate.toISOString().split('T')[0]
-                        : '';
+                    ? newValue.startDate.toISOString().split('T')[0]
+                    : '';
             updateFormData({ date: dateValue });
         } else {
             updateFormData({ date: '' });
@@ -166,8 +183,9 @@ export default function TripFormStep({
                                     id="time"
                                     value={formData.time}
                                     onChange={(e) => handleInputChange('time', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.time ? 'border-red-500' : 'border-gray-300'
-                                        }`}
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
+                                        errors.time ? 'border-red-500' : 'border-gray-300'
+                                    }`}
                                 />
                                 {errors.time && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
@@ -190,8 +208,9 @@ export default function TripFormStep({
                                     id="seats"
                                     value={formData.seats}
                                     onChange={(e) => handleInputChange('seats', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.seats ? 'border-red-500' : 'border-gray-300'
-                                        }`}
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
+                                        errors.seats ? 'border-red-500' : 'border-gray-300'
+                                    }`}
                                 >
                                     <option value="1">1 place</option>
                                     <option value="2">2 places</option>
@@ -220,10 +239,18 @@ export default function TripFormStep({
                                     step="0.50"
                                     value={formData.price}
                                     onChange={(e) => handleInputChange('price', e.target.value)}
-                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${errors.price ? 'border-red-500' : 'border-gray-300'
-                                        }`}
-                                    placeholder="Ex: 25.00"
+                                    className={`w-full px-3 sm:px-4 py-2.5 sm:py-3 border rounded-lg focus:ring-2 focus:ring-[--accent-color] focus:border-transparent text-sm sm:text-base ${
+                                        errors.price ? 'border-red-500' : 'border-gray-300'
+                                    }`}
+                                    placeholder={
+                                        suggestedPrice ? `Ex: ${suggestedPrice}.00` : 'Ex: 25.00'
+                                    }
                                 />
+                                {suggestedPrice > 0 && (
+                                    <p className="text-gray-400 text-xs sm:text-sm mt-1">
+                                        Prix conseillé : {suggestedPrice}€ (~{distance} km)
+                                    </p>
+                                )}
                                 {errors.price && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
                                         {errors.price}

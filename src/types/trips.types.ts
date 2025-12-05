@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-export type TripStatus = 'pending' | 'confirmed' | 'ongoing' | 'completed';
+export type TripStatus = 'pending' | 'ongoing' | 'completed';
 
 /**
  * Booking Status Flow:
@@ -124,3 +124,13 @@ export type TripDoc = Omit<Trip, 'id' | 'createdAt' | 'updatedAt' | 'bookings'> 
     updatedAt: Timestamp | Date;
     bookings?: BookingDoc[];
 };
+
+export type TripFilters = {
+    departureCity: string;
+    arrivalCity: string;
+    maxPrice: number | null;
+    date: string | null;
+    minSeats: number | null;
+};
+
+export type TripSortOption = 'price_asc' | 'price_desc' | 'time_asc' | 'time_desc' | 'default';
