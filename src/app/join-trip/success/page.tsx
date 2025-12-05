@@ -108,10 +108,19 @@ const SuccessContent = () => {
                     return;
                 }
 
-                // Create booking
+                // Get full trip data with driver info
+                const tripFullData = await getTripById(tripId);
+                const driverEmail = tripFullData?.driver?.email || '';
+                const driverName = tripFullData?.driver?.firstName || 'Conductrice';
+
+                // Create booking with all contact info for CRON emails
                 const newBooking = {
                     oderId: orderId,
                     participantId: buyerUid,
+                    participantEmail: session.customer_details?.email || '',
+                    participantName: session.customer_details?.name || 'Voyageuse',
+                    driverEmail,
+                    driverName,
                     paymentIntentId,
                     status: 'authorized',
                     amountCents: Number(amountCents),
@@ -127,6 +136,30 @@ const SuccessContent = () => {
                 });
 
                 console.log('[DEBUG] ✅ Booking created successfully!');
+
+                // Send booking confirmation emails
+                if (tripFullData?.driver) {
+                    fetch('/api/email/booking-created', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            passengerEmail: session.customer_details?.email || '',
+                            passengerName: session.customer_details?.name || 'Voyageuse',
+                            driverEmail,
+                            driverName,
+                            tripId,
+                            orderId,
+                            departureCity: tripFullData.departureCity,
+                            arrivalCity: tripFullData.arrivalCity,
+                            departureDate: tripFullData.departureDate,
+                            departureTime: tripFullData.departureTime,
+                            departureAddress: tripFullData.departureAddress,
+                            arrivalAddress: tripFullData.arrivalAddress,
+                            pricePerSeat: tripFullData.pricePerSeat,
+                        }),
+                    }).catch((e) => console.error('[EMAIL] Failed:', e));
+                }
+
                 setSynced(true);
             } catch (err) {
                 console.error('[DEBUG] Sync error:', err);

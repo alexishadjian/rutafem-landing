@@ -88,7 +88,7 @@ export async function POST(req: NextRequest) {
 
         await updateDoc(tripRef, { bookings: updatedBookings, updatedAt: now });
 
-        // TODO: Send email notification to admin for manual review
+        // Note: Dispute emails are sent from the confirm page (client-side)
         console.log(`[DISPUTE] Trip ${tripId}, Order ${orderId}, by ${role} (${userId})`);
 
         return NextResponse.json({ success: true, booking: updatedBooking });

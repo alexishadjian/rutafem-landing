@@ -24,6 +24,10 @@ export type BookingStatus = 'authorized' | 'confirmed' | 'captured' | 'cancelled
 export type Booking = {
     oderId: string; // Unique ID for this booking (generated at checkout)
     participantId: string; // User ID of the passenger
+    participantEmail: string; // Passenger email (for CRON emails)
+    participantName: string; // Passenger name (for CRON emails)
+    driverEmail: string; // Driver email (for CRON emails)
+    driverName: string; // Driver name (for CRON emails)
     paymentIntentId: string; // Stripe PaymentIntent ID for refund/capture
     status: BookingStatus;
     amountCents: number; // Total amount in cents

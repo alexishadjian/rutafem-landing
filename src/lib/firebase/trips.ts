@@ -250,6 +250,7 @@ export const getParticipantsInfo = async (
         firstName: string;
         lastName: string;
         phoneNumber: string;
+        email: string;
     }[]
 > => {
     try {
@@ -265,6 +266,7 @@ export const getParticipantsInfo = async (
                     firstName: (data.firstName as string) ?? '',
                     lastName: (data.lastName as string) ?? '',
                     phoneNumber: (data.phoneNumber as string) ?? '',
+                    email: (data.email as string) ?? '',
                 };
             }),
         );
@@ -277,6 +279,7 @@ export const getParticipantsInfo = async (
                 firstName: string;
                 lastName: string;
                 phoneNumber: string;
+                email: string;
             } => participant !== null,
         );
     } catch (error) {

@@ -37,6 +37,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
             firstName: string;
             lastName: string;
             phoneNumber: string;
+            email: string;
         }[]
     >([]);
     const [loadingParticipants, setLoadingParticipants] = useState(false);
@@ -184,6 +185,28 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                 });
             }
 
+            // Send cancellation email to driver
+            if (trip.driver?.email) {
+                fetch('/api/email/cancellation', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        recipientEmail: trip.driver.email,
+                        recipientName: trip.driver.firstName,
+                        cancellerName: userProfile?.firstName || 'Une passagère',
+                        cancellerRole: 'passenger',
+                        tripId: trip.id,
+                        departureCity: trip.departureCity,
+                        arrivalCity: trip.arrivalCity,
+                        departureDate: trip.departureDate,
+                        departureTime: trip.departureTime,
+                        departureAddress: trip.departureAddress,
+                        arrivalAddress: trip.arrivalAddress,
+                        pricePerSeat: trip.pricePerSeat,
+                    }),
+                }).catch((e) => console.error('[EMAIL] Failed:', e));
+            }
+
             setSuccess('Votre réservation a été annulée et remboursée !');
             const updatedTrip = await getTripById(resolvedParams.id);
             if (updatedTrip) setTrip(updatedTrip);
@@ -250,6 +273,31 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                 availableSeats: tripData.availableSeats + activeBookings.length,
                 isActive: false,
                 updatedAt: now,
+            });
+
+            // Send cancellation emails to all passengers
+            const driverName = userProfile?.firstName || 'La conductrice';
+            participants.forEach((participant) => {
+                if (cancelledParticipants.includes(participant.id) && participant.email) {
+                    fetch('/api/email/cancellation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            recipientEmail: participant.email,
+                            recipientName: participant.firstName,
+                            cancellerName: driverName,
+                            cancellerRole: 'driver',
+                            tripId: trip.id,
+                            departureCity: trip.departureCity,
+                            arrivalCity: trip.arrivalCity,
+                            departureDate: trip.departureDate,
+                            departureTime: trip.departureTime,
+                            departureAddress: trip.departureAddress,
+                            arrivalAddress: trip.arrivalAddress,
+                            pricePerSeat: trip.pricePerSeat,
+                        }),
+                    }).catch((e) => console.error('[EMAIL] Failed:', e));
+                }
             });
 
             setSuccess('Trajet annulé ! Toutes les réservations ont été remboursées.');

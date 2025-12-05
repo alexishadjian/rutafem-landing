@@ -87,7 +87,8 @@ export async function POST(req: NextRequest) {
                     updatedAt: new Date(),
                 });
 
-                // TODO: Send confirmation email with link to /trip/[tripId]/confirm?orderId=xxx
+                // Note: Booking emails are sent from the success page (client-side)
+                // Confirmation reminder emails are sent via daily cron job
                 console.log(`[BOOKING] New booking created - Trip: ${tripId}, Order: ${orderId}`);
                 break;
             }

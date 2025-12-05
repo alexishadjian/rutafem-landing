@@ -161,8 +161,19 @@ const ConfirmContent = ({ tripId }: { tripId: string }) => {
 
             await updateDoc(tripRef, { bookings: updatedBookings, updatedAt: now });
 
-            // TODO: Send email notification to admin
-            console.log(`[DISPUTE] Trip ${tripId}, Order ${orderId}, by ${role}`);
+            // Send dispute notification to admin
+            const disputerName = isDriver ? trip.driver?.firstName : user.displayName || 'Utilisatrice';
+            fetch('/api/email/dispute', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    tripId,
+                    orderId,
+                    disputedBy: role,
+                    disputerName,
+                    tripInfo: `${trip.departureCity} → ${trip.arrivalCity} (${trip.departureDate})`,
+                }),
+            }).catch((e) => console.error('[EMAIL] Failed:', e));
 
             setBooking(updatedBooking as Booking);
             setState('disputed');
@@ -295,46 +306,46 @@ const ConfirmContent = ({ tripId }: { tripId: string }) => {
                                     : 'Confirmez que votre trajet s\'est bien passé.'}
                             </p>
 
-                            <button
-                                onClick={handleConfirm}
-                                disabled={state === 'confirming'}
-                                className="w-full bg-[var(--dark-green)] text-white py-3 px-6 rounded-xl font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
-                            >
-                                {state === 'confirming' ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
-                                        Confirmation...
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-                                        </svg>
-                                        Tout s&apos;est bien passé
-                                    </>
-                                )}
-                            </button>
-
-                            <button
-                                onClick={handleDispute}
-                                disabled={state === 'disputing'}
-                                className="w-full bg-white border-2 border-red-400 text-red-600 py-3 px-6 rounded-xl font-medium hover:bg-red-50 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
-                            >
-                                {state === 'disputing' ? (
-                                    <>
-                                        <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600" />
-                                        Envoi...
-                                    </>
-                                ) : (
-                                    <>
-                                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-                                        </svg>
-                                        Signaler un problème
-                                    </>
-                                )}
-                            </button>
-
+                            <div className="flex gap-3">
+                                <button
+                                    onClick={handleDispute}
+                                    disabled={state === 'disputing'}
+                                    className="w-full bg-white border-2 border-red-400 text-red-600 py-3 px-6 rounded-xl font-medium hover:bg-red-50 transition-colors disabled:opacity-50 flex items-center justify-center gap-2"
+                                >
+                                    {state === 'disputing' ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-red-600" />
+                                            Envoi...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                                            </svg>
+                                            Signaler un problème
+                                        </>
+                                    )}
+                                </button>
+                                <button
+                                    onClick={handleConfirm}
+                                    disabled={state === 'confirming'}
+                                    className="w-full bg-[var(--dark-green)] text-white py-3 px-6 rounded-xl font-medium hover:opacity-90 transition-opacity disabled:opacity-50 flex items-center justify-center gap-2"
+                                >
+                                    {state === 'confirming' ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white" />
+                                            Confirmation...
+                                        </>
+                                    ) : (
+                                        <>
+                                            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                                            </svg>
+                                            Tout s&apos;est bien passé
+                                        </>
+                                    )}
+                                </button>
+                            </div>
                             <p className="text-xs text-gray-500 text-center mt-4">
                                 Sans action de votre part, le paiement sera automatiquement validé 24h après le trajet.
                             </p>
