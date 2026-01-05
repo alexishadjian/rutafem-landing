@@ -155,7 +155,7 @@ export default function ProfilePage() {
                         Mon Profil
                     </h1>
 
-                    {/* Bento Layout */}
+                    {/* Bentoo Layout */}
                     <div className="grid md:grid-cols-4 gap-4 mb-6">
                         <div className="md:col-span-2 md:row-span-2">
                             <UserInformations userProfile={userProfile} />
