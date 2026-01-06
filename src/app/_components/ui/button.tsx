@@ -10,14 +10,15 @@ const buttonStyles = tv({
     ],
     variants: {
         fill: {
-            true: 'bg-[var(--accent-color)] !border-none !text-[var(--black)] hover:opacity-90',
+            true: 'bg-[var(--accent-color)] !text-[var(--black)] hover:opacity-90',
             false: '!bg-transparent border-2 border-[var(--accent-color)] hover:opacity-70',
         },
         color: {
             pink: 'bg-[var(--pink)] border-[var(--pink)]',
             yellow: 'bg-[var(--yellow)] border-[var(--yellow)] text-[var(--yellow)]',
             orange: 'bg-[var(--orange)] border-[var(--orange)] text-[var(--orange)]',
-            white: 'bg-[var(--white)] border-[var(--white)] text-[var(--black)]',
+            white: 'bg-[var(--white)] border-2 border-[var(--black)] text-[var(--black)]',
+            transparent: 'bg-transparent text-[var(--accent-color)]',
         },
         fullWidth: {
             true: 'w-full',

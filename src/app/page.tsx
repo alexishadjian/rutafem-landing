@@ -62,7 +62,7 @@ export default function Home() {
                             ,<br /> simple et safe.
                         </h1>
                         <p className="mb-8 text-[20px]">
-                            Partagez vos trajets entre femmes, en toute confiance, comme entre
+                            Partage tes trajets entre femmes, en toute confiance, comme entre
                             copines. Simple et en sécurité.
                         </p>
                         <div className="flex gap-4 flex-wrap items-start">
@@ -403,6 +403,8 @@ export default function Home() {
                         ]}
                         bgColor="var(--orange)"
                         textColor="var(--white)"
+                        buttonLink="/create-trip"
+                        buttonText="Ajouter un nouveau trajet"
                     />
                     <WinnerCard
                         type="voyageuse"
@@ -415,6 +417,8 @@ export default function Home() {
                         ]}
                         bgColor="var(--pink)"
                         textColor="var(--dark-green)"
+                        buttonLink="/join-trip"
+                        buttonText="Rejoindre un trajet"
                     />
                 </div>
             </section>

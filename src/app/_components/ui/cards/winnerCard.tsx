@@ -7,6 +7,8 @@ interface WinnerCardProps {
     description: string[];
     bgColor: string;
     textColor: string;
+    buttonLink: string;
+    buttonText: string;
 }
 
 export default function WinnerCard({
@@ -16,6 +18,8 @@ export default function WinnerCard({
     description,
     bgColor,
     textColor,
+    buttonLink,
+    buttonText,
 }: WinnerCardProps) {
     return (
         <div
@@ -69,7 +73,7 @@ export default function WinnerCard({
             </div>
 
             <div className="relative z-10">
-                <Button text="Ajouter un nouveau trajet" color="white" fill={true} />
+                <Button text={buttonText} link={buttonLink} color="white" fill={true} />
             </div>
         </div>
     );

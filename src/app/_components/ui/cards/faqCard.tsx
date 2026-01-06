@@ -54,7 +54,7 @@ export default function FaqCard({
                             />
                         }
                         iconOnly
-                        color={isOpen ? 'pink' : 'white'}
+                        color="transparent"
                     />
                 </div>
             </div>
