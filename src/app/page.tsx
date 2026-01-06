@@ -87,7 +87,9 @@ export default function Home() {
                         <div className="w-full md:w-2/3" id="nous-connaitre">
                             <h2 className="uppercase text-[var(--dark-green)] font-staatliches text-[50px] md:text-[60px] lg:text-[70px]">
                                 Notre rêve est de créer une mobilité{' '}
-                                <span className="text-[var(--orange)]">sûre et solidaire</span>,
+                                <span className="bg-[var(--orange)] text-[var(--white)]">
+                                    sûre et solidaire, {/* */}
+                                </span>
                                 pensée par et pour les femmes.
                             </h2>
                         </div>
