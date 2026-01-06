@@ -1,6 +1,7 @@
 import Footer from '@/components/footer';
 import GoogleAnalytics from '@/components/google-analytics';
 import Header from '@/components/header';
+import MicrosoftClarity from '@/components/microsoft-clarity';
 import ScrollState from '@/components/ScrollState';
 import { AuthProvider } from '@/contexts/AuthContext';
 import { Favicon } from '@/images';
@@ -69,6 +70,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <html lang="fr">
             <head>
                 <GoogleAnalytics />
+                <MicrosoftClarity />
             </head>
             <ScrollState />
             <body
