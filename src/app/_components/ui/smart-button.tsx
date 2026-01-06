@@ -33,7 +33,6 @@ export const SmartButton = ({
     const handleClick = () => {
         if (disabled) return;
 
-        // Si pas d'exigences, exécuter l'action normalement
         if (!requireAuth && !requireVerified && !requireDriver && !requireDriverVerified) {
             if (href) {
                 router.push(href);
@@ -43,7 +42,7 @@ export const SmartButton = ({
             return;
         }
 
-        // Vérifier l'authentification
+        // check auth
         if (requireAuth && !user) {
             router.push('/verification-required');
             return;
@@ -51,31 +50,31 @@ export const SmartButton = ({
 
         if (!user) return;
 
-        // Vérifier le profil utilisateur
+        // check user profile
         if (!userProfile) {
             router.push('/auth/login');
             return;
         }
 
-        // Vérifier la vérification utilisateur
+        // check user verification
         if (requireVerified && !userProfile.isUserVerified) {
             router.push('/verification-required');
             return;
         }
 
-        // Vérifier le rôle driver
+        // check driver role
         if (requireDriver && userProfile.role !== 'driver') {
             router.push('/auth/profile/driver-license');
             return;
         }
 
-        // Vérifier la vérification driver
+        // check driver verification
         if (requireDriverVerified && !userProfile.isUserDriverVerified) {
             router.push('/verification-required');
             return;
         }
 
-        // Toutes les vérifications passées, exécuter l'action
+        // all checks passed, execute action
         if (href) {
             router.push(href);
         } else if (onClick) {

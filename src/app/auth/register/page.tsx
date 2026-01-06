@@ -325,7 +325,7 @@ export default function RegisterPage() {
                                         )}
                                     </button>
                                 </div>
-                                <p className="mt-1 text-xs text-gray-500">Minimum 6 caractères</p>
+                                <p className="mt-1 text-xs text-gray-300">Minimum 6 caractères</p>
                             </div>
 
                             <div>

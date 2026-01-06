@@ -68,7 +68,7 @@ export default function FaqCard({
                 <div className="overflow-hidden flex column gap-xs">
                     <div className="faq-card__answer-item mt-4 pl-20 text-[20px]">
                         {answer.map((item, index) => (
-                            <p key={index} className="text-[20px]">
+                            <p key={index} className="text-[20px] leading-relaxed">
                                 {item}
                             </p>
                         ))}

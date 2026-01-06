@@ -1,4 +1,4 @@
-import Button from "@/components/ui/button";
+import Button from '@/components/ui/button';
 
 interface WinnerCardProps {
     type: 'conductrice' | 'voyageuse';
@@ -9,7 +9,14 @@ interface WinnerCardProps {
     textColor: string;
 }
 
-export default function WinnerCard({ type, title, subtitle, description, bgColor, textColor }: WinnerCardProps) {
+export default function WinnerCard({
+    type,
+    title,
+    subtitle,
+    description,
+    bgColor,
+    textColor,
+}: WinnerCardProps) {
     return (
         <div
             className="relative w-full md:w-1/2 rounded-[40px] p-12 overflow-hidden min-h-[600px] flex flex-col justify-between"
@@ -45,7 +52,6 @@ export default function WinnerCard({ type, title, subtitle, description, bgColor
                             strokeLinecap="round"
                         />
                     </svg>
-
                 )}
             </div>
 
@@ -63,13 +69,8 @@ export default function WinnerCard({ type, title, subtitle, description, bgColor
             </div>
 
             <div className="relative z-10">
-                <Button
-                    text="Ajouter un nouveau trajet"
-                    color="white"
-                    fill={true}
-                />
+                <Button text="Ajouter un nouveau trajet" color="white" fill={true} />
             </div>
         </div>
     );
 }
-

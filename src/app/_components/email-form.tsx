@@ -42,9 +42,9 @@ export default function EmailForm() {
                     <button
                         type="submit"
                         disabled={isSending}
-                        className="py-4 px-10 bg-white font-semibold text-[--accent-color] rounded-xl hover:bg-[--accent-color] hover:text-white transition-all duration-300"
+                        className="py-4 px-10 bg-white font-semibold text-[var(--black)] rounded-xl hover:bg-[var(--pink)] hover:text-white transition-all duration-300"
                     >
-                        {isSending ? 'Envoi en cours...' : 'Envoyer'}
+                        {isSending ? 'Envoi en cours...' : "M'avertir"}
                     </button>
                     {message && <p>{message}</p>}
                 </div>

@@ -147,7 +147,7 @@ export default function Header() {
                         requireDriver={true}
                         requireDriverVerified={true}
                         onClick={() => setIsMenuOpen(false)}
-                        className={`hover:text-[--accent-color] text-left transition-all duration-300 ${
+                        className={`hover:text-[var(--orange)] text-left transition-all duration-300 ${
                             isActive('/create-trip') ? 'text-[--pink]' : ''
                         }`}
                     >
@@ -156,7 +156,7 @@ export default function Header() {
 
                     <Link
                         href="/join-trip"
-                        className={`hover:text-[--accent-color] transition-all duration-300 ${
+                        className={`hover:text-[var(--orange)] transition-all duration-300 ${
                             isActive('/join-trip') ? 'text-[--pink]' : ''
                         }`}
                         onClick={() => setIsMenuOpen(false)}
@@ -166,7 +166,7 @@ export default function Header() {
 
                     <Link
                         href="/#nous-connaitre"
-                        className="hover:text-[--accent-color] transition-all duration-300"
+                        className="hover:text-[var(--orange)] transition-all duration-300"
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Nous connaitre
@@ -174,7 +174,7 @@ export default function Header() {
 
                     <Link
                         href="/#securite"
-                        className="hover:text-[--accent-color] transition-all duration-300"
+                        className="hover:text-[var(--orange)] transition-all duration-300"
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Sécurité et confiance

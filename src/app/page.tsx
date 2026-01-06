@@ -119,7 +119,7 @@ export default function Home() {
                     </div>
 
                     <div className="flex justify-center">
-                        <Button text="Rejoindre un trajet" color="yellow" fill />
+                        <Button text="Je rejoins mon premier trajet" color="yellow" fill />
                     </div>
                 </div>
             </section>
@@ -136,7 +136,7 @@ export default function Home() {
                                     Partout en France
                                 </span>
                             </div>
-                            <h2 className="font-staatliches text-[70px]">
+                            <h2 className="font-staatliches text-[70px] mt-12 leading-tight">
                                 Propose ton trajet dès maintenant !
                             </h2>
                         </div>
@@ -145,7 +145,7 @@ export default function Home() {
                             sécurité. Aide d&apos;autres femmes à voyager sereinement tout en
                             partageant les frais.
                         </p>
-                        <Button text="Ajouter un trajet" color="white" fill />
+                        <Button text="Ajouter un nouveau trajet" color="white" fill />
                     </div>
                     <div className="w-4/6 lg:w-1/2 h-full lg:self-end self-center">
                         <Image

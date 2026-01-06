@@ -164,14 +164,15 @@ p {
 .btn {
     color: white;
     padding: 15px 20px;
-    background-color: var(--accent-color);
+    background-color: var(--pink);
     border-radius: 12px;
     font-size: 18px;
     display: inline-flex;
     transition: 0.3s;
 
     &:hover {
-        background-color: var(--accent-color);
+        box-shadow: 0 4px 12px rgba(253, 167, 193, 0.4);
+        filter: brightness(0.95);
     }
 
     &.small {

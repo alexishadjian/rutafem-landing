@@ -223,7 +223,7 @@ export default function UserTrips({ userId }: UserTripsProps) {
                 )}
             </div>
 
-            {/* Trajets auxquels je participe */}
+            {/* trips I'm participating in */}
             <div>
                 <div className="flex items-center justify-between mb-4">
                     <h3 className="text-lg font-semibold text-gray-900 flex items-center gap-2">
