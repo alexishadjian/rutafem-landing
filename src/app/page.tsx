@@ -84,7 +84,7 @@ export default function Home() {
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <div className="w-full md:w-2/3">
+                        <div className="w-full md:w-2/3" id="nous-connaitre">
                             <h2 className="uppercase text-[var(--dark-green)] font-staatliches text-[50px] md:text-[60px] lg:text-[70px]">
                                 Notre rêve est de créer une mobilité{' '}
                                 <span className="text-[var(--orange)]">sûre et solidaire</span>,
@@ -140,8 +140,8 @@ export default function Home() {
                         </div>
                         <p>
                             Rejoins notre communauté de voyageuses et partage tes trajets en toute
-                            sécurité. Aide d'autres femmes à voyager sereinement tout en partageant
-                            les frais.
+                            sécurité. Aide d&apos;autres femmes à voyager sereinement tout en
+                            partageant les frais.
                         </p>
                         <Button text="Ajouter un trajet" color="white" fill />
                     </div>
@@ -192,7 +192,7 @@ export default function Home() {
                             strokeWidth={0}
                             fillColor="var(--white)"
                         />
-                        <span className="whitespace-nowrap">Plus d'économies</span>
+                        <span className="whitespace-nowrap">Plus d&apos;économies</span>
                         <Icon
                             className="shrink-0"
                             name="starIllu"
@@ -238,7 +238,7 @@ export default function Home() {
                             strokeWidth={0}
                             fillColor="var(--white)"
                         />
-                        <span className="whitespace-nowrap">Plus d'économies</span>
+                        <span className="whitespace-nowrap">Plus d&apos;économies</span>
                         <Icon
                             className="shrink-0"
                             name="starIllu"
@@ -284,7 +284,7 @@ export default function Home() {
                             strokeWidth={0}
                             fillColor="var(--white)"
                         />
-                        <span className="whitespace-nowrap">Plus d'économies</span>
+                        <span className="whitespace-nowrap">Plus d&apos;économies</span>
                         <Icon
                             className="shrink-0"
                             name="starIllu"
@@ -330,7 +330,7 @@ export default function Home() {
                             strokeWidth={0}
                             fillColor="var(--white)"
                         />
-                        <span className="whitespace-nowrap">Plus d'économies</span>
+                        <span className="whitespace-nowrap">Plus d&apos;économies</span>
                         <Icon
                             className="shrink-0"
                             name="starIllu"
@@ -344,7 +344,7 @@ export default function Home() {
             </section>
 
             <section className="section-margin">
-                <div className="wrapper">
+                <div className="wrapper" id="securite">
                     <h2 className="font-staatliches text-[40px] md:text-[50px] lg:text-[60px] mb-10">
                         Comment
                         <br />{' '}

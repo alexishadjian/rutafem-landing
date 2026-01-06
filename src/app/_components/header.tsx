@@ -5,11 +5,14 @@ import Button from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { useAuth } from '@/contexts/AuthContext';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { useState } from 'react';
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
     const { user, userProfile, loading } = useAuth();
+    const pathname = usePathname();
+    const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
     return (
         <header
@@ -144,21 +147,25 @@ export default function Header() {
                         requireDriver={true}
                         requireDriverVerified={true}
                         onClick={() => setIsMenuOpen(false)}
-                        className="hover:text-[--accent-color] text-left transition-all duration-300"
+                        className={`hover:text-[--accent-color] text-left transition-all duration-300 ${
+                            isActive('/create-trip') ? 'text-[--pink]' : ''
+                        }`}
                     >
                         Publier un trajet
                     </SmartButton>
 
                     <Link
                         href="/join-trip"
-                        className="hover:text-[--accent-color] transition-all duration-300"
+                        className={`hover:text-[--accent-color] transition-all duration-300 ${
+                            isActive('/join-trip') ? 'text-[--pink]' : ''
+                        }`}
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Voir les trajets
                     </Link>
 
                     <Link
-                        href="/#"
+                        href="/#nous-connaitre"
                         className="hover:text-[--accent-color] transition-all duration-300"
                         onClick={() => setIsMenuOpen(false)}
                     >
@@ -166,7 +173,7 @@ export default function Header() {
                     </Link>
 
                     <Link
-                        href="/#"
+                        href="/#securite"
                         className="hover:text-[--accent-color] transition-all duration-300"
                         onClick={() => setIsMenuOpen(false)}
                     >
@@ -219,9 +226,17 @@ export default function Header() {
                             text={userProfile?.firstName || 'Profil'}
                             color="pink"
                             fill={true}
-                            link='/auth/profile'
+                            link="/auth/profile"
                             className="rounded-full"
-                            beforeIcon={<Icon name="user" width={24} height={24} fillColor="transparent" strokeWidth={0} />}
+                            beforeIcon={
+                                <Icon
+                                    name="user"
+                                    width={24}
+                                    height={24}
+                                    fillColor="transparent"
+                                    strokeWidth={0}
+                                />
+                            }
                         />
                     ) : (
                         <Button
