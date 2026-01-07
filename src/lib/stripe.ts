@@ -1,9 +1,9 @@
 import Stripe from 'stripe';
 
-const stripeSecretKey = process.env.STRIPE_SECRET_KEY_TEST as string;
+const stripeSecretKey = process.env.STRIPE_SECRET_KEY as string;
 
 if (!stripeSecretKey) {
-    throw new Error('STRIPE_SECRET_KEY_TEST manquant dans les variables d\'environnement');
+    throw new Error('STRIPE_SECRET_KEY manquant dans les variables d\'environnement');
 }
 
 export const stripe = new Stripe(stripeSecretKey, {
