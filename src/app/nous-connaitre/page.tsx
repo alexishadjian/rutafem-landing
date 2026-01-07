@@ -6,13 +6,41 @@ import { ThreeWomanBack, WomanFacingMountain } from '@/images';
 import Image from 'next/image';
 
 const teamMembers = [
-    { name: 'Melina Lázaro', role: 'Fondatrice / UX designer', linkedinUrl: '#' },
-    { name: 'Mathis Laversin', role: 'Co-fondateur / Développeur', linkedinUrl: '#' },
-    { name: 'Alexis Hadjian', role: 'Co-fondateur / Développeur', linkedinUrl: '#' },
-    { name: 'Margot Godard', role: 'Co-fondatrice / DA', linkedinUrl: '#' },
-    { name: 'Widad Majjad', role: 'Co-fondatrice / Marketing', linkedinUrl: '#' },
-    { name: 'Yasmine Achour', role: 'Co-fondatrice / Entreprenariat', linkedinUrl: '#' },
-    { name: 'Khaoula Chihab', role: 'Co-fondatrice / Big Data', linkedinUrl: '#' },
+    {
+        name: 'Melina Lázaro',
+        role: 'Fondatrice / UX designer',
+        linkedinUrl: 'https://www.linkedin.com/in/melina-celeste-lazaro-/',
+    },
+    {
+        name: 'Mathis Laversin',
+        role: 'Co-fondateur / Développeur',
+        linkedinUrl: 'https://www.linkedin.com/in/mathis-laversin/',
+    },
+    {
+        name: 'Alexis Hadjian',
+        role: 'Co-fondateur / Développeur',
+        linkedinUrl: 'https://www.linkedin.com/in/alexis-hadjian/',
+    },
+    {
+        name: 'Margot Godard',
+        role: 'Co-fondatrice / DA',
+        linkedinUrl: 'https://www.linkedin.com/in/margot-godard-5794a9214/',
+    },
+    {
+        name: 'Widad Majjad',
+        role: 'Co-fondatrice / Marketing',
+        linkedinUrl: 'https://www.linkedin.com/in/widad-majjad-160bb91aa/',
+    },
+    {
+        name: 'Yasmine Achour',
+        role: 'Co-fondatrice / Entreprenariat',
+        linkedinUrl: 'https://www.linkedin.com/in/yasmine-achour-a4a342225/',
+    },
+    {
+        name: 'Khaoula Chihab',
+        role: 'Co-fondatrice / Big Data',
+        linkedinUrl: 'https://www.linkedin.com/in/khaoula-chihab-b324a1210/',
+    },
 ];
 
 export default function NousConnaitrePage() {
