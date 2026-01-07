@@ -27,6 +27,7 @@ export default function JoinTripPage() {
     const [displayedCount, setDisplayedCount] = useState(INITIAL_DISPLAY_COUNT);
     const [sortOption, setSortOption] = useState<TripSortOption>('default');
     const [currentFilters, setCurrentFilters] = useState<TripFilters | null>(null);
+    const [maxPriceFilter, setMaxPriceFilter] = useState<number | null>(null);
 
     useEffect(() => {
         const fetchTrips = async () => {
@@ -50,24 +51,52 @@ export default function JoinTripPage() {
         trips: Trip[],
         filters: TripFilters | null,
         sort: TripSortOption,
+        maxPrice: number | null,
     ) => {
         let result = trips;
-        if (filters) result = filterTrips(result, filters);
+        if (filters || maxPrice !== null) {
+            const filtersWithPrice: TripFilters = filters
+                ? { ...filters, maxPrice }
+                : {
+                      departureCity: '',
+                      arrivalCity: '',
+                      maxPrice,
+                      date: null,
+                      minSeats: null,
+                  };
+            result = filterTrips(result, filtersWithPrice);
+        }
         result = sortTrips(result, sort);
         return result;
     };
 
     const handleSearch = (filters: TripFilters) => {
-        setCurrentFilters(filters);
-        const results = applyFiltersAndSort(allTrips, filters, sortOption);
-        setFilteredTrips(results);
+        const isReset =
+            !filters.departureCity && !filters.arrivalCity && !filters.date && !filters.minSeats;
+        if (isReset) {
+            setCurrentFilters(null);
+            setMaxPriceFilter(null);
+            setFilteredTrips(allTrips);
+        } else {
+            setCurrentFilters(filters);
+            const results = applyFiltersAndSort(allTrips, filters, sortOption, maxPriceFilter);
+            setFilteredTrips(results);
+        }
         setDisplayedCount(INITIAL_DISPLAY_COUNT);
     };
 
     const handleSortChange = (newSort: TripSortOption) => {
         setSortOption(newSort);
-        const results = applyFiltersAndSort(allTrips, currentFilters, newSort);
+        const results = applyFiltersAndSort(allTrips, currentFilters, newSort, maxPriceFilter);
         setFilteredTrips(results);
+    };
+
+    const handlePriceFilterChange = (value: string) => {
+        const newMaxPrice = value ? Number(value) : null;
+        setMaxPriceFilter(newMaxPrice);
+        const results = applyFiltersAndSort(allTrips, currentFilters, sortOption, newMaxPrice);
+        setFilteredTrips(results);
+        setDisplayedCount(INITIAL_DISPLAY_COUNT);
     };
 
     const handleLoadMore = () => setDisplayedCount((prev) => prev + LOAD_MORE_COUNT);
@@ -122,23 +151,48 @@ export default function JoinTripPage() {
                         </p>
                     </div>
 
-                    {/* Sort dropdown */}
-                    <div className="flex items-center gap-2">
-                        <label htmlFor="sort" className="text-sm text-gray-600 whitespace-nowrap">
-                            Trier par :
-                        </label>
-                        <select
-                            id="sort"
-                            value={sortOption}
-                            onChange={(e) => handleSortChange(e.target.value as TripSortOption)}
-                            className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
-                        >
-                            {SORT_OPTIONS.map((opt) => (
-                                <option key={opt.value} value={opt.value}>
-                                    {opt.label}
-                                </option>
-                            ))}
-                        </select>
+                    {/* Sort and Price filters */}
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+                        <div className="flex items-center gap-2">
+                            <label
+                                htmlFor="price-filter"
+                                className="text-sm text-gray-600 whitespace-nowrap"
+                            >
+                                Prix maximum :
+                            </label>
+                            <select
+                                id="price-filter"
+                                value={maxPriceFilter ?? ''}
+                                onChange={(e) => handlePriceFilterChange(e.target.value)}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
+                            >
+                                <option value="">Tous les prix</option>
+                                <option value="15">Jusqu&apos;à 15€</option>
+                                <option value="25">Jusqu&apos;à 25€</option>
+                                <option value="35">Jusqu&apos;à 35€</option>
+                                <option value="50">Jusqu&apos;à 50€</option>
+                            </select>
+                        </div>
+                        <div className="flex items-center gap-2">
+                            <label
+                                htmlFor="sort"
+                                className="text-sm text-gray-600 whitespace-nowrap"
+                            >
+                                Trier par :
+                            </label>
+                            <select
+                                id="sort"
+                                value={sortOption}
+                                onChange={(e) => handleSortChange(e.target.value as TripSortOption)}
+                                className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
+                            >
+                                {SORT_OPTIONS.map((opt) => (
+                                    <option key={opt.value} value={opt.value}>
+                                        {opt.label}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
                     </div>
                 </div>
 

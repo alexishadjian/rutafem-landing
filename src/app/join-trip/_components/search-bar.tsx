@@ -46,10 +46,6 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
         }
     };
 
-    const handlePriceChange = (value: string) => {
-        updateFilter('maxPrice', value ? Number(value) : null);
-    };
-
     const handleSeatsChange = (value: string) => {
         updateFilter('minSeats', value ? Number(value) : null);
     };
@@ -96,28 +92,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                 </div>
 
                 {/* Filters */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                        <label
-                            htmlFor="price-filter"
-                            className="block text-sm font-medium text-gray-700 mb-2"
-                        >
-                            Prix maximum
-                        </label>
-                        <select
-                            id="price-filter"
-                            value={filters.maxPrice ?? ''}
-                            onChange={(e) => handlePriceChange(e.target.value)}
-                            className="w-full px-3 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[var(--pink)] focus:border-transparent text-sm"
-                        >
-                            <option value="">Tous les prix</option>
-                            <option value="15">Jusqu&apos;à 15€</option>
-                            <option value="25">Jusqu&apos;à 25€</option>
-                            <option value="35">Jusqu&apos;à 35€</option>
-                            <option value="50">Jusqu&apos;à 50€</option>
-                        </select>
-                    </div>
-
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
                             Date de départ
@@ -155,7 +130,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                             <option value="3">3+ places</option>
                         </select>
                     </div>
-                    <div className="flex flex-col gap-2 sm:col-span-3">
+                    <div className="flex flex-col gap-2 sm:col-span-2">
                         <label className="flex items-center gap-2 cursor-pointer">
                             <input
                                 type="checkbox"
