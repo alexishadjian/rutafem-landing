@@ -148,7 +148,7 @@ export default function Header() {
                         requireDriverVerified={true}
                         onClick={() => setIsMenuOpen(false)}
                         className={`hover:text-[var(--orange)] text-left transition-all duration-300 ${
-                            isActive('/create-trip') ? 'text-[--pink]' : ''
+                            isActive('/create-trip') ? 'text-[var(--orange)]' : ''
                         }`}
                     >
                         Publier un trajet
@@ -157,7 +157,7 @@ export default function Header() {
                     <Link
                         href="/join-trip"
                         className={`hover:text-[var(--orange)] transition-all duration-300 ${
-                            isActive('/join-trip') ? 'text-[--pink]' : ''
+                            isActive('/join-trip') ? 'text-[var(--orange)]' : ''
                         }`}
                         onClick={() => setIsMenuOpen(false)}
                     >
@@ -165,16 +165,20 @@ export default function Header() {
                     </Link>
 
                     <Link
-                        href="/#nous-connaitre"
-                        className="hover:text-[var(--orange)] transition-all duration-300"
+                        href="/nous-connaitre"
+                        className={`hover:text-[var(--orange)] transition-all duration-300 ${
+                            isActive('/nous-connaitre') ? 'text-[var(--orange)]' : ''
+                        }`}
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Nous connaitre
                     </Link>
 
                     <Link
-                        href="/#securite"
-                        className="hover:text-[var(--orange)] transition-all duration-300"
+                        href="/confiance-et-securite"
+                        className={`hover:text-[var(--orange)] transition-all duration-300 ${
+                            isActive('/confiance-et-securite') ? 'text-[var(--orange)]' : ''
+                        }`}
                         onClick={() => setIsMenuOpen(false)}
                     >
                         Sécurité et confiance

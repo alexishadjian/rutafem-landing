@@ -389,6 +389,65 @@ const icons: {
         </svg>
     ),
 
+    messageOutline: ({
+        className,
+        strokeColor,
+        strokeWidth,
+        fillColor,
+        width,
+        height,
+    }: SvgProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            viewBox="0 0 42 40"
+            {...(width && { width })}
+            {...(height && { height })}
+            strokeWidth={strokeWidth || 3.75}
+            stroke={strokeColor}
+            fill={fillColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M39.375 28.125C39.375 29.1196 38.9799 30.0734 38.2766 30.7766C37.5734 31.4799 36.6196 31.875 35.625 31.875H10.9275C9.93302 31.8752 8.97935 32.2704 8.27625 32.9738L4.1475 37.1025C3.96132 37.2886 3.72413 37.4154 3.46592 37.4668C3.2077 37.5181 2.94006 37.4917 2.69683 37.391C2.45359 37.2903 2.24569 37.1197 2.09941 36.9008C1.95313 36.6819 1.87503 36.4245 1.875 36.1612V5.625C1.875 4.63044 2.27009 3.67661 2.97335 2.97335C3.67661 2.27009 4.63044 1.875 5.625 1.875H35.625C36.6196 1.875 37.5734 2.27009 38.2766 2.97335C38.9799 3.67661 39.375 4.63044 39.375 5.625V28.125Z" />
+        </svg>
+    ),
+
+    shield: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            viewBox="0 0 30 37"
+            {...(width && { width })}
+            {...(height && { height })}
+            strokeWidth={strokeWidth || 3.33333}
+            stroke={strokeColor}
+            fill={fillColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M28.3337 20.0006C28.3337 28.3339 22.5003 32.5006 15.567 34.9173C15.2039 35.0403 14.8096 35.0344 14.4503 34.9006C7.50033 32.5006 1.66699 28.3339 1.66699 20.0006V8.33392C1.66699 7.89189 1.84259 7.46797 2.15515 7.15541C2.46771 6.84285 2.89163 6.66725 3.33366 6.66725C6.66699 6.66725 10.8337 4.66725 13.7337 2.13392C14.0867 1.83225 14.5359 1.6665 15.0003 1.6665C15.4647 1.6665 15.9139 1.83225 16.267 2.13392C19.1837 4.68392 23.3337 6.66725 26.667 6.66725C27.109 6.66725 27.5329 6.84285 27.8455 7.15541C28.1581 7.46797 28.3337 7.89189 28.3337 8.33392V20.0006Z" />
+        </svg>
+    ),
+
+    outlineSvg: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            viewBox="0 0 42 42"
+            {...(width && { width })}
+            {...(height && { height })}
+            strokeWidth={strokeWidth || 3.75}
+            stroke={strokeColor}
+            fill={fillColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M20.625 39.375C30.9803 39.375 39.375 30.9803 39.375 20.625C39.375 10.2697 30.9803 1.875 20.625 1.875C10.2697 1.875 1.875 10.2697 1.875 20.625C1.875 30.9803 10.2697 39.375 20.625 39.375Z" />
+            <path d="M15 20.625L18.75 24.375L26.25 16.875" />
+        </svg>
+    ),
+
     tree: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
         <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -423,6 +482,23 @@ const icons: {
                 d="M237.837,305.932c-2.807,0-5.607,0.218-8.379,0.653 c-10.9-10.023-24.644-16.5-39.245-18.563c-3.336-0.472-6.716-0.714-10.121-0.714v0.003c-3.403,0-6.783,0.24-10.121,0.712 c-14.599,2.063-28.343,8.54-39.242,18.563c-2.77-0.435-5.572-0.653-8.379-0.653c-22.147,0-41.236,13.337-49.658,32.402 c-4.544,10.286,2.979,21.853,14.224,21.853h93.177h93.179c11.245,0,18.768-11.566,14.224-21.853 C279.073,319.269,259.984,305.932,237.837,305.932z"
                 fill={fillColor || '#2B7B57'}
             />
+        </svg>
+    ),
+
+    heart: ({ className, strokeColor, strokeWidth, fillColor, width, height }: SvgProps) => (
+        <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className={className}
+            viewBox="0 0 24 24"
+            {...(width && { width })}
+            {...(height && { height })}
+            strokeWidth={strokeWidth || 2}
+            stroke={strokeColor}
+            fill={fillColor}
+            strokeLinecap="round"
+            strokeLinejoin="round"
+        >
+            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
         </svg>
     ),
 
