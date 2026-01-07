@@ -215,7 +215,7 @@ export default function NousConnaitrePage() {
                         </div>
 
                         {/* CTA Button */}
-                        <Button text="Rejoins la communauté" color="yellow" link="/auth/register" />
+                        <Button text="Rejoins la communauté" color="yellow" link="/auth/profile" />
                     </div>
                 </div>
             </section>

@@ -115,7 +115,7 @@ export default function ConfianceEtSecuritePage() {
                                 text="Rejoins la communauté"
                                 color="yellow"
                                 fill
-                                link="/join-trip"
+                                link="/auth/profile"
                             />
                         </div>
                     </div>
