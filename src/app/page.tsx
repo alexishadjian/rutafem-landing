@@ -51,7 +51,7 @@ export default function Home() {
 
                 <div className="bg-gradient-to-r from-[var(--dark-green)] from-0% via-[var(--dark-green)] via-50% to-transparent to-100% absolute inset-0 z-[0]"></div>
 
-                <div className="flex-col flex lg:items-start items-center justify-center min-h-[90vh] text-[var(--white)] relative wrapper">
+                <div className="flex-col flex lg:items-start items-center justify-center min-h-[90vh] text-[var(--white)] relative wrapper pt-24 md:pt-32">
                     <div className="w-full lg:w-1/2 relative z-[1]">
                         <h1 className="font-montserrat text-[50px] lg:text-[60px] xl:text-[70px] font-bold">
                             Le covoiturage
@@ -65,7 +65,7 @@ export default function Home() {
                             Partage tes trajets entre femmes, en toute confiance, comme entre
                             copines. Simple et en sécurité.
                         </p>
-                        <div className="flex gap-4 flex-wrap items-start">
+                        <div className="flex gap-4 flex-wrap items-start pb-4">
                             <Button text="Rejoindre un trajet" color="pink" link="/trips" fill />
                             <Button text="Publier un trajet" color="pink" fill />
                         </div>

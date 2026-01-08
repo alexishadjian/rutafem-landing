@@ -45,8 +45,18 @@ interface BaseButtonProps extends VariantProps<typeof buttonStyles> {
 }
 
 export default function Button(props: BaseButtonProps) {
-
-    const { text, fill, color, fullWidth, beforeIcon, afterIcon, className, onClick, iconOnly, ...restProps } = props;
+    const {
+        text,
+        fill,
+        color,
+        fullWidth,
+        beforeIcon,
+        afterIcon,
+        className,
+        onClick,
+        iconOnly,
+        ...restProps
+    } = props;
 
     const classes = cn(buttonStyles({ fill, color, fullWidth, iconOnly }), className);
 
@@ -60,7 +70,7 @@ export default function Button(props: BaseButtonProps) {
 
     if (props.link) {
         return (
-            <Link href={props.link} className={classes}>
+            <Link href={props.link} className={classes} onClick={onClick}>
                 {content}
             </Link>
         );
