@@ -102,3 +102,20 @@ export const vehicleSchema = z.object({
         .min(2, 'Le modèle doit contenir au moins 2 caractères'),
     color: z.string().min(1, 'La couleur est requise'),
 });
+
+export const updateProfileSchema = z.object({
+    firstName: z.string().min(1, 'Prénom requis'),
+    email: z.email("Format d'email invalide"),
+    phoneNumber: z.string().min(6, 'Numéro de téléphone requis'),
+});
+
+export const updatePasswordSchema = z
+    .object({
+        currentPassword: z.string().min(1, 'Mot de passe actuel requis'),
+        newPassword: z.string().min(6, 'Le mot de passe doit contenir au moins 6 caractères'),
+        confirmPassword: z.string(),
+    })
+    .refine((data) => data.newPassword === data.confirmPassword, {
+        message: 'Les mots de passe ne correspondent pas',
+        path: ['confirmPassword'],
+    });

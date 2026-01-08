@@ -148,15 +148,15 @@ export default function ProfilePage() {
     const isVerified = userProfile.isUserVerified;
 
     return (
-        <div className="min-h-screen bg-[var(--dark-green)] py-8 px-4">
-            <div className="md:wrapper wrapper">
-                <div className="bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 p-6 mt-4">
-                    <h1 className="text-3xl md:text-4xl font-semibold text-[var(--black)] font-staatliches mb-6">
+        <div className="min-h-screen bg-[var(--dark-green)] py-4 md:py-8 px-2 md:px-4">
+            <div className="md:wrapper wrapper max-w-full">
+                <div className="bg-[var(--white)] rounded-xl shadow-sm border border-gray-200 p-3 md:p-6 mt-2 md:mt-4">
+                    <h1 className="text-2xl md:text-3xl lg:text-4xl font-semibold text-[var(--black)] font-staatliches mb-4 md:mb-6">
                         Mon Profil
                     </h1>
 
                     {/* Bentoo Layout */}
-                    <div className="grid md:grid-cols-4 gap-4 mb-6">
+                    <div className="grid md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6">
                         <div className="md:col-span-2 md:row-span-2">
                             <UserInformations userProfile={userProfile} />
                         </div>
@@ -166,7 +166,7 @@ export default function ProfilePage() {
                         <div className="md:col-span-2">
                             <button
                                 onClick={handleLogout}
-                                className="w-full h-full flex justify-center items-center gap-2 py-3 px-4 border border-gray-300 rounded-2xl shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors duration-200"
+                                className="w-full h-full flex justify-center items-center gap-2 py-2 md:py-3 px-3 md:px-4 border border-gray-300 rounded-xl md:rounded-2xl shadow-sm text-xs md:text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-pink-500 transition-colors duration-200 min-h-[48px]"
                             >
                                 <svg
                                     className="w-5 h-5 text-gray-500"

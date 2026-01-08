@@ -210,3 +210,18 @@ export const updateUserVerification = async (
         throw new Error('Erreur lors de la mise à jour de la vérification');
     }
 };
+
+export const updateUserProfile = async (
+    uid: string,
+    data: Partial<Pick<UserProfile, 'firstName' | 'lastName' | 'phoneNumber' | 'email'>>,
+) => {
+    try {
+        await updateDoc(doc(db, 'users', uid), {
+            ...data,
+            updatedAt: new Date(),
+        });
+    } catch (error) {
+        logFirebaseError('updateUserProfile', error);
+        throw new Error('Erreur lors de la mise à jour du profil');
+    }
+};
