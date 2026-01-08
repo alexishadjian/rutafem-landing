@@ -4,7 +4,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { useRouter } from 'next/navigation';
 import { ReactNode, useEffect, useState } from 'react';
 
-const ADMIN_EMAILS = ['admin@rutafem.com', 'team@rutafem.com'];
+const ADMIN_EMAILS = ['admin@rutafem.com'];
 
 type AdminGuardProps = { children: ReactNode };
 
