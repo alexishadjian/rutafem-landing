@@ -3,25 +3,6 @@ import Link from 'next/link';
 export default function Socials() {
     return (
         <div className="flex gap-x-5 items-center socials">
-            {/* Icône de profil */}
-            <Link href="/auth/login">
-                <svg
-                    width="21"
-                    height="21"
-                    viewBox="0 0 21 21"
-                    fill="none"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                        d="M10.5 10.5C13.5376 10.5 16 8.03757 16 5C16 1.96243 13.5376 -0.5 10.5 -0.5C7.46243 -0.5 5 1.96243 5 5C5 8.03757 7.46243 10.5 10.5 10.5Z"
-                        fill="#FCFBFC"
-                    />
-                    <path
-                        d="M10.5 12.5C5.63401 12.5 1.5 15.634 1.5 19.5C1.5 20.0523 1.94772 20.5 2.5 20.5H18.5C19.0523 20.5 19.5 20.0523 19.5 19.5C19.5 15.634 15.366 12.5 10.5 12.5Z"
-                        fill="#FCFBFC"
-                    />
-                </svg>
-            </Link>
             <Link href="https://www.instagram.com/rutafem_" target="_blank">
                 <svg
                     width="21"
@@ -49,6 +30,9 @@ export default function Socials() {
                         fill="#FCFBFC"
                     />
                 </svg>
+            </Link>
+            <Link href="mailto:contact@rutafem.com">
+                <p className="text-sm md:text-base text-white">contact@rutafem.com</p>
             </Link>
             {/* <Link href="/#">
                 <svg width="22" height="20" viewBox="0 0 22 20" fill="none" xmlns="http://www.w3.org/2000/svg">
