@@ -34,16 +34,16 @@ export const SmartButton = ({
         if (disabled) return;
 
         if (!requireAuth && !requireVerified && !requireDriver && !requireDriverVerified) {
+            onClick?.();
             if (href) {
                 router.push(href);
-            } else if (onClick) {
-                onClick();
             }
             return;
         }
 
         // check auth
         if (requireAuth && !user) {
+            onClick?.();
             router.push('/verification-required');
             return;
         }
@@ -52,33 +52,36 @@ export const SmartButton = ({
 
         // check user profile
         if (!userProfile) {
+            onClick?.();
             router.push('/auth/login');
             return;
         }
 
         // check user verification
         if (requireVerified && !userProfile.isUserVerified) {
+            onClick?.();
             router.push('/verification-required');
             return;
         }
 
         // check driver role
         if (requireDriver && userProfile.role !== 'driver') {
+            onClick?.();
             router.push('/auth/profile/driver-license');
             return;
         }
 
         // check driver verification
         if (requireDriverVerified && !userProfile.isUserDriverVerified) {
+            onClick?.();
             router.push('/verification-required');
             return;
         }
 
         // all checks passed, execute action
+        onClick?.();
         if (href) {
             router.push(href);
-        } else if (onClick) {
-            onClick();
         }
     };
 
