@@ -122,19 +122,55 @@ export const VerificationModal = ({ user, onClose, onAction }: VerificationModal
     );
 };
 
+// check if file is a pdf based on url
+const isPdfUrl = (url: string): boolean => {
+    const lowerUrl = url.toLowerCase();
+    return lowerUrl.includes('.pdf') || lowerUrl.includes('application%2fpdf');
+};
+
 // Use native img to avoid Next.js Image Optimizer (server can't auth with Firebase)
-const DocumentImage = ({ label, url }: { label: string; url?: string }) => (
-    <div className="space-y-2">
-        <p className="text-[var(--white)] text-sm">{label}</p>
-        {url ? (
-            <div className="relative aspect-[3/2] rounded-xl overflow-hidden bg-[var(--black)]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={url} alt={label} className="w-full h-full object-contain" />
+const DocumentImage = ({ label, url }: { label: string; url?: string }) => {
+    const isPdf = url ? isPdfUrl(url) : false;
+
+    return (
+        <div className="space-y-2">
+            <div className="flex items-center justify-between">
+                <p className="text-[var(--white)] text-sm">{label}</p>
+                {url && (
+                    <a
+                        href={url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-[var(--pink)] text-xs hover:underline"
+                    >
+                        Ouvrir dans un nouvel onglet ↗
+                    </a>
+                )}
             </div>
-        ) : (
-            <div className="aspect-[3/2] rounded-xl bg-[var(--black)] flex items-center justify-center">
-                <p className="text-[var(--white)]/40">Non fourni</p>
-            </div>
-        )}
-    </div>
-);
+            {url ? (
+                isPdf ? (
+                    <div className="relative aspect-[3/2] rounded-xl overflow-hidden bg-[var(--black)]">
+                        <iframe
+                            src={url}
+                            title={label}
+                            className="w-full h-full"
+                            style={{ minHeight: '400px' }}
+                        />
+                        <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
+                            <p className="text-white text-xs text-center">📄 Document PDF</p>
+                        </div>
+                    </div>
+                ) : (
+                    <div className="relative aspect-[3/2] rounded-xl overflow-hidden bg-[var(--black)]">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={url} alt={label} className="w-full h-full object-contain" />
+                    </div>
+                )
+            ) : (
+                <div className="aspect-[3/2] rounded-xl bg-[var(--black)] flex items-center justify-center">
+                    <p className="text-[var(--white)]/40">Non fourni</p>
+                </div>
+            )}
+        </div>
+    );
+};

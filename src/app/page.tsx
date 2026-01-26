@@ -66,8 +66,18 @@ export default function Home() {
                             copines. Simple et en sécurité.
                         </p>
                         <div className="flex gap-4 flex-wrap items-start pb-4">
-                            <Button text="Rejoindre un trajet" color="pink" link="/trips" fill />
-                            <Button text="Publier un trajet" color="pink" fill />
+                            <Button
+                                text="Rejoindre un trajet"
+                                color="pink"
+                                link="/join-trip"
+                                fill
+                            />
+                            <Button
+                                text="Publier un trajet"
+                                color="pink"
+                                link="/create-trip"
+                                fill
+                            />
                         </div>
                     </div>
                     <div className="w-1/2"></div>
@@ -119,7 +129,12 @@ export default function Home() {
                     </div>
 
                     <div className="flex justify-center">
-                        <Button text="Je rejoins mon premier trajet" color="yellow" fill />
+                        <Button
+                            text="Je rejoins mon premier trajet"
+                            color="yellow"
+                            link="/join-trip"
+                            fill
+                        />
                     </div>
                 </div>
             </section>
@@ -145,7 +160,12 @@ export default function Home() {
                             sécurité. Aide d&apos;autres femmes à voyager sereinement tout en
                             partageant les frais.
                         </p>
-                        <Button text="Ajouter un nouveau trajet" color="white" fill />
+                        <Button
+                            text="Ajouter un nouveau trajet"
+                            color="white"
+                            link="/create-trip"
+                            fill
+                        />
                     </div>
                     <div className="w-4/6 lg:w-1/2 h-full lg:self-end self-center">
                         <Image
