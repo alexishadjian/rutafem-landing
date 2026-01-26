@@ -164,7 +164,11 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
 
             if (bookingIndex !== -1) {
                 const now = new Date();
-                bookings[bookingIndex] = { ...bookings[bookingIndex], status: 'cancelled', cancelledAt: now };
+                bookings[bookingIndex] = {
+                    ...bookings[bookingIndex],
+                    status: 'cancelled',
+                    cancelledAt: now,
+                };
 
                 await updateDoc(tripRef, {
                     bookings,
@@ -246,7 +250,9 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
 
             // Mark all active bookings as cancelled
             const updatedBookings = bookings.map((b) =>
-                b.status === 'authorized' ? { ...b, status: 'cancelled' as const, cancelledAt: now } : b,
+                b.status === 'authorized'
+                    ? { ...b, status: 'cancelled' as const, cancelledAt: now }
+                    : b,
             );
 
             // Get participants from cancelled bookings to remove
@@ -313,7 +319,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         !isUserParticipant;
 
     const hasContactAccess = isUserDriver || isUserParticipant;
-    const contactPhoneNumber = hasContactAccess ? trip?.driver.phoneNumber ?? '' : '';
+    const contactPhoneNumber = hasContactAccess ? (trip?.driver.phoneNumber ?? '') : '';
     const contactMessage = hasContactAccess
         ? 'Tu peux contacter ta conductrice dès maintenant.'
         : 'Les informations de contact seront visibles une fois ta réservation confirmée.';
@@ -446,7 +452,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                                 phoneNumber={contactPhoneNumber}
                                 message={contactMessage}
                             />
-                            <TripAlert tripId={trip.id} />
+                            {hasContactAccess && <TripAlert tripId={trip.id} />}
                         </div>
                     </div>
 

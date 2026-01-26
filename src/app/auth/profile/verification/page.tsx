@@ -242,7 +242,8 @@ export default function VerificationPage() {
                                                                 <input
                                                                     id="idCardFront"
                                                                     type="file"
-                                                                    accept="image/*"
+                                                                    accept="image/*,.pdf,application/pdf"
+                                                                    capture="environment"
                                                                     onChange={(e) =>
                                                                         handleFileChange(e, 'front')
                                                                     }
@@ -252,7 +253,7 @@ export default function VerificationPage() {
                                                             </label>
                                                         </div>
                                                         <p className="text-xs text-gray-500">
-                                                            PNG, JPG jusqu&apos;à 5MB
+                                                            PNG, JPG, PDF jusqu&apos;à 5MB
                                                         </p>
                                                     </>
                                                 )}
@@ -322,7 +323,8 @@ export default function VerificationPage() {
                                                                 <input
                                                                     id="idCardBack"
                                                                     type="file"
-                                                                    accept="image/*"
+                                                                    accept="image/*,.pdf,application/pdf"
+                                                                    capture="environment"
                                                                     onChange={(e) =>
                                                                         handleFileChange(e, 'back')
                                                                     }
@@ -332,7 +334,7 @@ export default function VerificationPage() {
                                                             </label>
                                                         </div>
                                                         <p className="text-xs text-gray-500">
-                                                            PNG, JPG jusqu&apos;à 5MB
+                                                            PNG, JPG, PDF jusqu&apos;à 5MB
                                                         </p>
                                                     </>
                                                 )}
