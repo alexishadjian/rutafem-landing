@@ -40,6 +40,8 @@ export const getStripeStatus = async (accountId: string) =>
 export const createOrLinkStripeAccount = async (input: {
     uid: string;
     email: string | null;
+    firstName?: string | null;
+    lastName?: string | null;
     existingAccountId?: string | null;
 }) =>
     handleResponse<{ accountId: string }>(
@@ -49,6 +51,8 @@ export const createOrLinkStripeAccount = async (input: {
             body: JSON.stringify({
                 uid: input.uid,
                 email: input.email,
+                firstName: input.firstName,
+                lastName: input.lastName,
                 existingAccountId: input.existingAccountId,
             }),
         }),

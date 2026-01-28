@@ -201,6 +201,8 @@ export default function ProfilePage() {
                                                 uid: user.uid,
                                                 existingAccountId: userProfile?.stripeAccountId,
                                                 email: user.email,
+                                                firstName: userProfile?.firstName,
+                                                lastName: userProfile?.lastName,
                                             });
                                             const returnUrl = `${window.location.origin}/auth/profile`;
                                             const { url } = await createStripeAccountLink(
