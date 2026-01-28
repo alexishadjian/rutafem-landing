@@ -14,14 +14,12 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ accountId: existingAccountId as string });
         }
 
-        // Pour du covoiturage (partage de frais entre particuliers),
-        // on n'a besoin que de "transfers" pour recevoir l'argent.
-        // Retirer "card_payments" simplifie grandement l'onboarding.
         const account = await stripe.accounts.create({
             type: 'express',
             country: 'FR',
             email: (email as string) || undefined,
             capabilities: {
+                card_payments: { requested: true },
                 transfers: { requested: true },
             },
             business_type: 'individual',
