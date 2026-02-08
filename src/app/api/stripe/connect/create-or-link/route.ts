@@ -5,7 +5,7 @@ export const dynamic = 'force-dynamic';
 
 export async function POST(req: NextRequest) {
     try {
-        const { uid, existingAccountId, email } = await req.json();
+        const { uid, existingAccountId, email, firstName, lastName } = await req.json();
         if (!uid) {
             return NextResponse.json({ error: 'uid requis' }, { status: 400 });
         }
@@ -23,11 +23,24 @@ export async function POST(req: NextRequest) {
                 transfers: { requested: true },
             },
             business_type: 'individual',
+            individual: {
+                first_name: (firstName as string) || undefined,
+                last_name: (lastName as string) || undefined,
+                email: (email as string) || undefined,
+            },
             default_currency: 'eur',
             business_profile: {
                 url: 'https://rutafem.com',
                 mcc: '4789',
-                product_description: 'Covoiturage entre femmes via RutaFem (partage de frais)',
+                product_description:
+                    'Covoiturage entre femmes via RutaFem (partage de frais entre particuliers)',
+            },
+            settings: {
+                payouts: {
+                    schedule: {
+                        interval: 'daily',
+                    },
+                },
             },
         });
 

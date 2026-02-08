@@ -319,9 +319,32 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         !isUserParticipant;
 
     const hasContactAccess = isUserDriver || isUserParticipant;
-    const contactPhoneNumber = hasContactAccess ? (trip?.driver.phoneNumber ?? '') : '';
+
+    // Contacts logic: driver sees passengers, passengers see driver
+    const contacts = hasContactAccess
+        ? isUserDriver
+            ? // Driver sees all passengers
+              participants.map((p) => ({
+                  name: `${p.firstName} ${p.lastName}`,
+                  phoneNumber: p.phoneNumber || '',
+                  email: p.email || '',
+              }))
+            : // Passenger sees driver
+              [
+                  {
+                      name: trip?.driver.firstName || '',
+                      phoneNumber: trip?.driver.phoneNumber || '',
+                  },
+              ]
+        : [];
+
+    const contactTitle = isUserDriver ? 'Mes passagères' : 'Contact';
     const contactMessage = hasContactAccess
-        ? 'Tu peux contacter ta conductrice dès maintenant.'
+        ? isUserDriver
+            ? participants.length > 0
+                ? 'Voici les coordonnées de tes passagères pour ce trajet.'
+                : 'Aucune passagère inscrite pour le moment.'
+            : 'Tu peux contacter ta conductrice dès maintenant.'
         : 'Les informations de contact seront visibles une fois ta réservation confirmée.';
 
     const driverAverageRating =
@@ -448,9 +471,9 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                         {/* Contact + Alert */}
                         <div className="lg:col-span-2 space-y-6">
                             <TripContact
-                                driverName={trip.driver.firstName}
-                                phoneNumber={contactPhoneNumber}
+                                contacts={contacts}
                                 message={contactMessage}
+                                title={contactTitle}
                             />
                             {hasContactAccess && <TripAlert tripId={trip.id} />}
                         </div>

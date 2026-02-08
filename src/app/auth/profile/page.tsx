@@ -35,6 +35,7 @@ export default function ProfilePage() {
     } | null>(null);
     const [unlinkOpen, setUnlinkOpen] = useState(false);
     const [unlinkLoading, setUnlinkLoading] = useState(false);
+    const [stripeLinkLoading, setStripeLinkLoading] = useState(false);
     const [stripeMessage, setStripeMessage] = useState<string>('');
     const [trips, setTrips] = useState<{ upcoming: Trip[]; completed: Trip[] }>({
         upcoming: [],
@@ -194,11 +195,14 @@ export default function ProfilePage() {
                                     onClick={async () => {
                                         if (!user) return;
                                         try {
+                                            setStripeLinkLoading(true);
                                             setStripeMessage('');
                                             const { accountId } = await createOrLinkStripeAccount({
                                                 uid: user.uid,
                                                 existingAccountId: userProfile?.stripeAccountId,
                                                 email: user.email,
+                                                firstName: userProfile?.firstName,
+                                                lastName: userProfile?.lastName,
                                             });
                                             const returnUrl = `${window.location.origin}/auth/profile`;
                                             const { url } = await createStripeAccountLink(
@@ -215,21 +219,32 @@ export default function ProfilePage() {
                                             }
                                             window.location.href = url;
                                         } catch (e: unknown) {
+                                            setStripeLinkLoading(false);
                                             setStripeMessage(
                                                 e instanceof Error ? e.message : 'Erreur',
                                             );
                                         }
                                     }}
-                                    className="w-full mb-4 flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[var(--blue)] opacity-90 hover:opacity-100 hover:shadow-sm"
+                                    disabled={stripeLinkLoading}
+                                    className="w-full mb-4 flex justify-center items-center gap-2 py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-[var(--blue)] opacity-90 hover:opacity-100 hover:shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                                 >
-                                    <Icon
-                                        name="creditCard"
-                                        width={24}
-                                        height={24}
-                                        fillColor="none"
-                                        strokeColor="var(--white)"
-                                    />
-                                    <span>Connecter mon compte bancaire</span>
+                                    {stripeLinkLoading ? (
+                                        <>
+                                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                                            <span>Connexion en cours...</span>
+                                        </>
+                                    ) : (
+                                        <>
+                                            <Icon
+                                                name="creditCard"
+                                                width={24}
+                                                height={24}
+                                                fillColor="none"
+                                                strokeColor="var(--white)"
+                                            />
+                                            <span>Connecter mon compte bancaire</span>
+                                        </>
+                                    )}
                                 </button>
                             ) : (
                                 <div className="flex flex-col md:flex-row gap-3 mb-4">
@@ -270,17 +285,14 @@ export default function ProfilePage() {
                     )}
 
                     {/* Verification Cards */}
-                    {(!userProfile.idCardFront ||
-                        !userProfile.idCardBack ||
-                        (userProfile.role === 'driver' &&
-                            (!userProfile.driverLicenseFront ||
-                                !userProfile.driverLicenseBack))) && (
+                    {(!userProfile.isUserVerified ||
+                        (userProfile.role === 'driver' && !userProfile.isUserDriverVerified)) && (
                         <div className="mb-6 space-y-4">
                             <h3 className="text-xl font-semibold text-[var(--black)] font-staatliches">
                                 Vérifications requises
                             </h3>
                             <div className="grid md:grid-cols-2 gap-4">
-                                {(!userProfile.idCardFront || !userProfile.idCardBack) && (
+                                {!userProfile.isUserVerified && (
                                     <Link
                                         href="/auth/profile/verification"
                                         className="inline-flex items-center gap-2 py-2 px-4 bg-[var(--orange)] text-[var(--white)] hover:opacity-100 hover:shadow-sm opacity-90 rounded-lg font-medium transition-colors"
@@ -302,8 +314,7 @@ export default function ProfilePage() {
                                 )}
 
                                 {userProfile.role === 'driver' &&
-                                    (!userProfile.driverLicenseFront ||
-                                        !userProfile.driverLicenseBack) && (
+                                    !userProfile.isUserDriverVerified && (
                                         <Link
                                             href="/auth/profile/driver-license"
                                             className="inline-flex items-center gap-2 py-2 px-4 bg-[var(--pink)] text-[var(--white)] hover:opacity-100 hover:shadow-sm opacity-90 rounded-lg font-medium transition-colors"

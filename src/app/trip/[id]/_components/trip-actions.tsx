@@ -46,7 +46,7 @@ export const TripActions = ({
 
     // Determine which button to show
     const showReviewButton = isUserParticipant && isCompleted;
-    const showLeaveButton = isUserParticipant && isPending && !isCompleted;
+    const showLeaveButton = isUserParticipant && isPending && !isCompleted && !tripPassed;
     const showCancelButton = isUserDriver && !isOngoing && !tripPassed && trip.isActive;
     const showJoinButton = canJoinTrip && !tripPassed;
 

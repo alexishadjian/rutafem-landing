@@ -306,3 +306,20 @@ input[type='checkbox']:before {
 .animate-scroll-mid {
     animation: scroll-left 15s linear infinite;
 }
+
+/* Fix time input overflow on mobile */
+input[type='time'].time-input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    min-width: 0;
+    max-width: 100%;
+    box-sizing: border-box;
+    min-height: 44px;
+}
+
+@media (min-width: 640px) {
+    input[type='time'].time-input {
+        min-height: 48px;
+    }
+}
