@@ -49,6 +49,12 @@ type ConfirmationReminderParams = {
     confirmUrl: string;
 };
 
+type VerificationApprovedParams = {
+    email: string;
+    firstName: string;
+    type: 'identity' | 'driver';
+};
+
 // ============================================================================
 // BOOKING CREATED EMAILS
 // ============================================================================
@@ -230,6 +236,52 @@ export const sendDisputeNotificationToAdmin = async (params: DisputeEmailParams)
         console.log(`[EMAIL] Dispute notification sent to admin`);
     } catch (error) {
         console.error('[EMAIL] Failed to send dispute notification to admin:', error);
+    }
+};
+
+// ============================================================================
+// VERIFICATION APPROVED EMAIL
+// ============================================================================
+
+/** Send email to user when their account verification is approved by admin */
+export const sendVerificationApprovedEmail = async (params: VerificationApprovedParams) => {
+    const { email, firstName, type } = params;
+
+    const typeLabel = type === 'identity' ? 'identité' : 'permis de conduire';
+    const nextStep =
+        type === 'identity'
+            ? 'Tu peux maintenant réserver des trajets sur RutaFem !'
+            : 'Tu peux maintenant proposer des trajets en tant que conductrice sur RutaFem !';
+
+    try {
+        await resend.emails.send({
+            from: EMAIL_FROM,
+            to: email,
+            subject: `✅ Ton ${typeLabel} a été vérifié !`,
+            html: `
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto;">
+                    <h1 style="color: #2d5a4a;">Félicitations ${firstName} ! 🎉</h1>
+                    
+                    <p>Bonne nouvelle ! La vérification de ton <strong>${typeLabel}</strong> a été validée par notre équipe.</p>
+                    
+                    <div style="background: #d4edda; padding: 20px; border-radius: 10px; margin: 20px 0; border-left: 4px solid #28a745;">
+                        <p style="margin: 0; color: #155724;"><strong>✅ ${type === 'identity' ? 'Pièce d\'identité' : 'Permis de conduire'} vérifié</strong></p>
+                    </div>
+                    
+                    <p>${nextStep}</p>
+                    
+                    <a href="${BASE_URL}/join-trip" style="display: inline-block; background: #e91e63; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin-top: 10px;">
+                        Découvrir les trajets
+                    </a>
+                    
+                    <hr style="margin: 30px 0; border: none; border-top: 1px solid #eee;">
+                    <p style="color: #999; font-size: 12px;">RutaFem - Le covoiturage entre femmes</p>
+                </div>
+            `,
+        });
+        console.log(`[EMAIL] Verification approved sent to: ${email}`);
+    } catch (error) {
+        console.error('[EMAIL] Failed to send verification approved email:', error);
     }
 };
 
