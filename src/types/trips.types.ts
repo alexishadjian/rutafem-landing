@@ -1,6 +1,6 @@
 import { Timestamp } from 'firebase/firestore';
 
-export type TripStatus = 'pending' | 'ongoing' | 'completed';
+export type TripStatus = 'pending' | 'ongoing' | 'completed' | 'finished';
 
 /**
  * Booking Status Flow:
@@ -43,7 +43,15 @@ export type Booking = {
 /**
  * Firestore version of Booking (Timestamps instead of Dates)
  */
-export type BookingDoc = Omit<Booking, 'createdAt' | 'driverConfirmedAt' | 'passengerConfirmedAt' | 'disputedAt' | 'capturedAt' | 'cancelledAt'> & {
+export type BookingDoc = Omit<
+    Booking,
+    | 'createdAt'
+    | 'driverConfirmedAt'
+    | 'passengerConfirmedAt'
+    | 'disputedAt'
+    | 'capturedAt'
+    | 'cancelledAt'
+> & {
     createdAt: Timestamp | Date;
     driverConfirmedAt?: Timestamp | Date;
     passengerConfirmedAt?: Timestamp | Date;

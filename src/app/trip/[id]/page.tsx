@@ -3,13 +3,13 @@
 import { ReviewsSection } from '@/app/_components/reviews-section';
 import { RouteGuard } from '@/app/_components/route-guard';
 import { useAuth } from '@/contexts/AuthContext';
-import { getReviewsByUserId } from '@/lib/firebase/reviews';
+import { getReviewedIdsForTripByUser, getReviewsByUserId } from '@/lib/firebase/reviews';
 import { getTripById } from '@/lib/firebase/trips';
 import { db } from '@/lib/firebaseConfig';
-import { isTripPastOrNow } from '@/utils/date';
 import { fetchParticipantsDetails, startTripCheckout } from '@/services/trips';
 import { Review } from '@/types/reviews.types';
 import { BookingDoc, TripWithDriver } from '@/types/trips.types';
+import { isTripPastOrNow } from '@/utils/date';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
@@ -43,6 +43,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
     const [loadingParticipants, setLoadingParticipants] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loadingReviews, setLoadingReviews] = useState(false);
+    const [hasReviewedTrip, setHasReviewedTrip] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
@@ -105,6 +106,30 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
             isMounted = false;
         };
     }, [trip?.driver.id]);
+
+    // Check if user has already reviewed for this trip
+    useEffect(() => {
+        const checkReviewed = async () => {
+            if (!user?.uid || !trip) return;
+            const tripPastOrNow = isTripPastOrNow(trip.departureDate, trip.departureTime);
+            const canReview = (trip.driverId === user.uid || trip.participants.includes(user.uid)) && tripPastOrNow;
+            if (!canReview) return;
+            try {
+                const reviewedIds = await getReviewedIdsForTripByUser(user.uid, trip.id);
+                if (trip.driverId === user.uid) {
+                    setHasReviewedTrip(
+                        trip.participants.length === 0 ||
+                            trip.participants.every((p) => reviewedIds.includes(p)),
+                    );
+                } else {
+                    setHasReviewedTrip(reviewedIds.includes(trip.driverId));
+                }
+            } catch {
+                setHasReviewedTrip(false);
+            }
+        };
+        checkReviewed();
+    }, [user?.uid, trip]);
 
     // Join trip handler
     const handleJoinTrip = async () => {
@@ -488,6 +513,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                                         onLeaveTrip={handleLeaveTrip}
                                         cancelling={cancelling}
                                         onCancelTrip={handleCancelTrip}
+                                        hasReviewedTrip={hasReviewedTrip}
                                     />
                                 }
                             />
@@ -500,7 +526,9 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                                 message={contactMessage}
                                 title={contactTitle}
                             />
-                            {hasContactAccess && <TripAlert tripId={trip.id} />}
+                            {hasContactAccess && trip.status !== 'finished' && (
+                                <TripAlert tripId={trip.id} />
+                            )}
                         </div>
                     </div>
 

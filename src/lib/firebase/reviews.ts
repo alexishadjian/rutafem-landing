@@ -159,6 +159,24 @@ type CreateReviewParams = {
     rating: number;
     reviewedId: string;
     reviewerId: string;
+    tripId: string;
+};
+
+export const getReviewedIdsForTripByUser = async (
+    reviewerId: string,
+    tripId: string,
+): Promise<string[]> => {
+    try {
+        const q = query(
+            reviewsCollection,
+            where('reviewer_id', '==', reviewerId),
+            where('trip_id', '==', tripId),
+        );
+        const snapshot = await getDocs(q);
+        return snapshot.docs.map((d) => (d.data() as ReviewDoc).reviewed_id);
+    } catch {
+        return [];
+    }
 };
 
 export const createReview = async ({
@@ -166,6 +184,7 @@ export const createReview = async ({
     rating,
     reviewedId,
     reviewerId,
+    tripId,
 }: CreateReviewParams) => {
     try {
         if (!comment.trim()) {
@@ -183,6 +202,7 @@ export const createReview = async ({
             rating,
             reviewed_id: reviewedId,
             reviewer_id: reviewerId,
+            trip_id: tripId,
             created_at: new Date(),
             updated_at: new Date(),
         });
