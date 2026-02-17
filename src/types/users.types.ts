@@ -1,6 +1,7 @@
 import { Timestamp } from 'firebase/firestore';
 
 export type UserDoc = {
+    avatarUrl?: string;
     email?: string;
     firstName?: string;
     lastName?: string;
@@ -23,6 +24,7 @@ export type UserDoc = {
 
 export type UserProfile = {
     uid: string;
+    avatarUrl?: string;
     email: string;
     firstName: string;
     lastName: string;

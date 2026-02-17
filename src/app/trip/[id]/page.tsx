@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { getReviewsByUserId } from '@/lib/firebase/reviews';
 import { getTripById } from '@/lib/firebase/trips';
 import { db } from '@/lib/firebaseConfig';
+import { isTripPastOrNow } from '@/utils/date';
 import { fetchParticipantsDetails, startTripCheckout } from '@/services/trips';
 import { Review } from '@/types/reviews.types';
 import { BookingDoc, TripWithDriver } from '@/types/trips.types';
@@ -319,6 +320,18 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         !isUserParticipant;
 
     const hasContactAccess = isUserDriver || isUserParticipant;
+    const tripPastOrNow = Boolean(trip && isTripPastOrNow(trip.departureDate, trip.departureTime));
+    const confirmUrl = (() => {
+        if (!trip || !user) return null;
+        const authorized = trip.bookings?.filter((b) => b.status === 'authorized') ?? [];
+        const passengerBooking = authorized.find((b) => b.participantId === user.uid);
+        if (passengerBooking) return `/trip/${trip.id}/confirm?orderId=${passengerBooking.oderId}`;
+        const driverPending = authorized.find((b) => !b.driverConfirmedAt);
+        if (isUserDriver && (driverPending ?? authorized[0]))
+            return `/trip/${trip.id}/confirm?orderId=${(driverPending ?? authorized[0]).oderId}`;
+        return null;
+    })();
+    const showFinishButton = tripPastOrNow && Boolean(confirmUrl);
 
     // Contacts logic: driver sees passengers, passengers see driver
     const contacts = hasContactAccess
@@ -422,13 +435,25 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                             </svg>
                             Retour aux trajets
                         </Link>
-                        <h1 className="text-3xl font-bold text-gray-900 font-staatliches">
-                            Détails du trajet
-                        </h1>
-                        <p className="text-gray-600 text-base mt-2">
-                            Découvre toutes les infos de ce trajet : itinéraire, horaires,
-                            conductrice et conditions.
-                        </p>
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between md:gap-4">
+                            <div>
+                                <h1 className="text-3xl font-bold text-gray-900 font-staatliches">
+                                    Détails du trajet
+                                </h1>
+                                <p className="text-gray-600 text-base mt-2">
+                                    Découvre toutes les infos de ce trajet : itinéraire, horaires,
+                                    conductrice et conditions.
+                                </p>
+                            </div>
+                            {showFinishButton && confirmUrl && (
+                                <Link
+                                    href={confirmUrl}
+                                    className="mt-4 md:mt-0 w-full md:w-auto shrink-0 bg-[var(--yellow)] text-[var(--black)] font-medium py-3 px-6 rounded-xl hover:opacity-90 transition-opacity text-center"
+                                >
+                                    Terminer mon trajet
+                                </Link>
+                            )}
+                        </div>
                     </div>
 
                     {/* Messages */}

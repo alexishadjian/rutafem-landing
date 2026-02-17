@@ -159,7 +159,11 @@ export default function ProfilePage() {
                     {/* Bentoo Layout */}
                     <div className="grid md:grid-cols-4 gap-2 md:gap-4 mb-4 md:mb-6">
                         <div className="md:col-span-2 md:row-span-2">
-                            <UserInformations userProfile={userProfile} />
+                            <UserInformations
+                                userProfile={userProfile}
+                                completedTripsCount={trips.completed.length}
+                                onPhotoUpdated={refreshUserProfile}
+                            />
                         </div>
                         <div className="md:col-span-2">
                             <UserContact userProfile={userProfile} />

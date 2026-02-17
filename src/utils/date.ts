@@ -38,3 +38,11 @@ export const formatTime = (
 
 export const timestampToDate = (value?: Timestamp | Date): Date =>
     value instanceof Timestamp ? value.toDate() : value ?? new Date();
+
+/** Returns true if departure date+time is in the past or now */
+export const isTripPastOrNow = (departureDate: string, departureTime: string): boolean => {
+    const [year, month, day] = departureDate.split('-').map(Number);
+    const [hours, minutes] = departureTime.split(':').map(Number);
+    const departure = new Date(year, month - 1, day, hours, minutes);
+    return departure <= new Date();
+};

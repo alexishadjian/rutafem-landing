@@ -14,6 +14,7 @@ import { buildStoragePath, timestampedFileName, uploadFile } from './storage';
 
 const mapUserProfile = (uid: string, data: UserDoc): UserProfile => ({
     uid,
+    avatarUrl: data.avatarUrl,
     email: (data.email as string) ?? '',
     firstName: (data.firstName as string) ?? '',
     lastName: (data.lastName as string) ?? '',
@@ -209,6 +210,23 @@ export const updateUserVerification = async (
         logFirebaseError('updateUserVerification', error);
         throw new Error('Erreur lors de la mise à jour de la vérification');
     }
+};
+
+const PROFILE_PHOTO_TYPES: readonly string[] = [
+    'image/jpeg',
+    'image/jpg',
+    'image/png',
+    'image/webp',
+];
+
+export const uploadProfilePhoto = async (uid: string, file: File): Promise<string> => {
+    if (file.size > 5 * 1024 * 1024) throw new Error('La photo doit faire moins de 5 Mo');
+    if (!PROFILE_PHOTO_TYPES.includes(file.type))
+        throw new Error('Format invalide. Utilisez JPG, PNG ou WebP.');
+    const path = buildStoragePath(['profile-images', uid, timestampedFileName('avatar', file.name)]);
+    const url = await uploadFile(path, file);
+    await updateDoc(doc(db, 'users', uid), { avatarUrl: url, updatedAt: new Date() });
+    return url;
 };
 
 export const updateUserProfile = async (
