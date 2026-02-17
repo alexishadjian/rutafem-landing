@@ -5,6 +5,7 @@ export type ReviewDoc = {
     rating: number;
     reviewed_id: string;
     reviewer_id: string;
+    trip_id: string;
     created_at: Timestamp | Date;
     updated_at?: Timestamp | Date;
 };

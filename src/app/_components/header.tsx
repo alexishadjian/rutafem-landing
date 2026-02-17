@@ -4,13 +4,30 @@ import { SmartButton } from '@/app/_components/ui/smart-button';
 import Button from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { useAuth } from '@/contexts/AuthContext';
+import { logoutUser } from '@/lib/firebase/auth';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+
+const handleLogout = () => {
+    logoutUser().catch(console.error);
+};
 
 export default function Header() {
     const [isMenuOpen, setIsMenuOpen] = useState(false);
+    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+    const dropdownRef = useRef<HTMLDivElement>(null);
     const { user, userProfile, loading } = useAuth();
+
+    useEffect(() => {
+        const handleClickOutside = (e: MouseEvent) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+                setIsDropdownOpen(false);
+            }
+        };
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => document.removeEventListener('mousedown', handleClickOutside);
+    }, []);
     const pathname = usePathname();
     const isActive = (href: string) => pathname === href || pathname.startsWith(href + '/');
 
@@ -333,23 +350,34 @@ export default function Header() {
                             <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-[var(--pink)]"></div>
                         </div>
                     ) : user ? (
-                        <Button
-                            text={userProfile?.firstName || 'Profil'}
-                            color="pink"
-                            fill={true}
-                            link="/auth/profile"
-                            className="lg:hidden rounded-full"
-                            onClick={() => setIsMenuOpen(false)}
-                            beforeIcon={
-                                <Icon
-                                    name="user"
-                                    width={20}
-                                    height={20}
-                                    fillColor="transparent"
-                                    strokeWidth={0}
-                                />
-                            }
-                        />
+                        <div className="lg:hidden flex flex-col gap-2">
+                            <Button
+                                text={userProfile?.firstName || 'Profil'}
+                                color="pink"
+                                fill={true}
+                                link="/auth/profile"
+                                className="rounded-full"
+                                onClick={() => setIsMenuOpen(false)}
+                                beforeIcon={
+                                    <Icon
+                                        name="user"
+                                        width={20}
+                                        height={20}
+                                        fillColor="transparent"
+                                        strokeWidth={0}
+                                    />
+                                }
+                            />
+                            <button
+                                onClick={() => {
+                                    handleLogout();
+                                    setIsMenuOpen(false);
+                                }}
+                                className="text-[var(--black)] hover:underline text-center mt-2"
+                            >
+                                Se déconnecter
+                            </button>
+                        </div>
                     ) : (
                         <Button
                             text="Se connecter"
@@ -368,22 +396,56 @@ export default function Header() {
                             <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-[var(--pink)]"></div>
                         </div>
                     ) : user ? (
-                        <Button
-                            text={userProfile?.firstName || 'Profil'}
-                            color="pink"
-                            fill={true}
-                            link="/auth/profile"
-                            className="rounded-full"
-                            beforeIcon={
-                                <Icon
-                                    name="user"
-                                    width={24}
-                                    height={24}
-                                    fillColor="transparent"
-                                    strokeWidth={0}
-                                />
-                            }
-                        />
+                        <div ref={dropdownRef} className="relative">
+                            <Button
+                                text={userProfile?.firstName || 'Profil'}
+                                color="pink"
+                                fill={true}
+                                className="rounded-full"
+                                onClick={() => setIsDropdownOpen((o) => !o)}
+                                beforeIcon={
+                                    <Icon
+                                        name="user"
+                                        width={24}
+                                        height={24}
+                                        fillColor="transparent"
+                                        strokeWidth={0}
+                                    />
+                                }
+                                afterIcon={
+                                    <Icon
+                                        name="chevronDown"
+                                        width={16}
+                                        height={16}
+                                        strokeColor="var(--black)"
+                                        strokeWidth={2}
+                                        fillColor="none"
+                                    />
+                                }
+                            />
+                            {isDropdownOpen && (
+                                <div className="absolute top-full right-0 mt-1 pt-1 z-50">
+                                    <div className="bg-white rounded-xl shadow-lg border border-gray-200 py-2 min-w-[180px]">
+                                        <Link
+                                            href="/auth/profile"
+                                            className="block px-4 py-2 text-gray-800 hover:bg-gray-50 rounded-t-xl"
+                                            onClick={() => setIsDropdownOpen(false)}
+                                        >
+                                            Accéder à mon profil
+                                        </Link>
+                                        <button
+                                            onClick={() => {
+                                                handleLogout();
+                                                setIsDropdownOpen(false);
+                                            }}
+                                            className="block w-full text-left px-4 py-2 text-gray-800 hover:bg-gray-50 rounded-b-xl"
+                                        >
+                                            Se déconnecter
+                                        </button>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
                     ) : (
                         <Button
                             text="Se connecter"

@@ -3,12 +3,13 @@
 import { ReviewsSection } from '@/app/_components/reviews-section';
 import { RouteGuard } from '@/app/_components/route-guard';
 import { useAuth } from '@/contexts/AuthContext';
-import { getReviewsByUserId } from '@/lib/firebase/reviews';
+import { getReviewedIdsForTripByUser, getReviewsByUserId } from '@/lib/firebase/reviews';
 import { getTripById } from '@/lib/firebase/trips';
 import { db } from '@/lib/firebaseConfig';
 import { fetchParticipantsDetails, startTripCheckout } from '@/services/trips';
 import { Review } from '@/types/reviews.types';
 import { BookingDoc, TripWithDriver } from '@/types/trips.types';
+import { isTripPastOrNow } from '@/utils/date';
 import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import Link from 'next/link';
 import { use, useEffect, useState } from 'react';
@@ -42,6 +43,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
     const [loadingParticipants, setLoadingParticipants] = useState(false);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [loadingReviews, setLoadingReviews] = useState(false);
+    const [hasReviewedTrip, setHasReviewedTrip] = useState(false);
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
 
@@ -104,6 +106,30 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
             isMounted = false;
         };
     }, [trip?.driver.id]);
+
+    // Check if user has already reviewed for this trip
+    useEffect(() => {
+        const checkReviewed = async () => {
+            if (!user?.uid || !trip) return;
+            const tripPastOrNow = isTripPastOrNow(trip.departureDate, trip.departureTime);
+            const canReview = (trip.driverId === user.uid || trip.participants.includes(user.uid)) && tripPastOrNow;
+            if (!canReview) return;
+            try {
+                const reviewedIds = await getReviewedIdsForTripByUser(user.uid, trip.id);
+                if (trip.driverId === user.uid) {
+                    setHasReviewedTrip(
+                        trip.participants.length === 0 ||
+                            trip.participants.every((p) => reviewedIds.includes(p)),
+                    );
+                } else {
+                    setHasReviewedTrip(reviewedIds.includes(trip.driverId));
+                }
+            } catch {
+                setHasReviewedTrip(false);
+            }
+        };
+        checkReviewed();
+    }, [user?.uid, trip]);
 
     // Join trip handler
     const handleJoinTrip = async () => {
@@ -319,6 +345,18 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
         !isUserParticipant;
 
     const hasContactAccess = isUserDriver || isUserParticipant;
+    const tripPastOrNow = Boolean(trip && isTripPastOrNow(trip.departureDate, trip.departureTime));
+    const confirmUrl = (() => {
+        if (!trip || !user) return null;
+        const authorized = trip.bookings?.filter((b) => b.status === 'authorized') ?? [];
+        const passengerBooking = authorized.find((b) => b.participantId === user.uid);
+        if (passengerBooking) return `/trip/${trip.id}/confirm?orderId=${passengerBooking.oderId}`;
+        const driverPending = authorized.find((b) => !b.driverConfirmedAt);
+        if (isUserDriver && (driverPending ?? authorized[0]))
+            return `/trip/${trip.id}/confirm?orderId=${(driverPending ?? authorized[0]).oderId}`;
+        return null;
+    })();
+    const showFinishButton = tripPastOrNow && Boolean(confirmUrl);
 
     // Contacts logic: driver sees passengers, passengers see driver
     const contacts = hasContactAccess
@@ -422,13 +460,25 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                             </svg>
                             Retour aux trajets
                         </Link>
-                        <h1 className="text-3xl font-bold text-gray-900 font-staatliches">
-                            Détails du trajet
-                        </h1>
-                        <p className="text-gray-600 text-base mt-2">
-                            Découvre toutes les infos de ce trajet : itinéraire, horaires,
-                            conductrice et conditions.
-                        </p>
+                        <div className="flex flex-col md:flex-row md:items-start md:justify-between md:gap-4">
+                            <div>
+                                <h1 className="text-3xl font-bold text-gray-900 font-staatliches">
+                                    Détails du trajet
+                                </h1>
+                                <p className="text-gray-600 text-base mt-2">
+                                    Découvre toutes les infos de ce trajet : itinéraire, horaires,
+                                    conductrice et conditions.
+                                </p>
+                            </div>
+                            {showFinishButton && confirmUrl && (
+                                <Link
+                                    href={confirmUrl}
+                                    className="mt-4 md:mt-0 w-full md:w-auto shrink-0 bg-[var(--yellow)] text-[var(--black)] font-medium py-3 px-6 rounded-xl hover:opacity-90 transition-opacity text-center"
+                                >
+                                    Terminer mon trajet
+                                </Link>
+                            )}
+                        </div>
                     </div>
 
                     {/* Messages */}
@@ -463,6 +513,7 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                                         onLeaveTrip={handleLeaveTrip}
                                         cancelling={cancelling}
                                         onCancelTrip={handleCancelTrip}
+                                        hasReviewedTrip={hasReviewedTrip}
                                     />
                                 }
                             />
@@ -475,7 +526,9 @@ export default function TripDetailsPage({ params }: TripDetailsPageProps) {
                                 message={contactMessage}
                                 title={contactTitle}
                             />
-                            {hasContactAccess && <TripAlert tripId={trip.id} />}
+                            {hasContactAccess && trip.status !== 'finished' && (
+                                <TripAlert tripId={trip.id} />
+                            )}
                         </div>
                     </div>
 

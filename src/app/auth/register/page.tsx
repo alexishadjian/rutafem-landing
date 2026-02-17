@@ -45,6 +45,7 @@ export default function RegisterPage() {
 
         try {
             await registerUser(email, password, firstName, lastName, phoneNumber, selectedRole);
+            fetch('/api/webhooks/new-user', { method: 'POST' }).catch(() => {});
             router.push('/auth/profile/verification');
         } catch (error: unknown) {
             setError(error instanceof Error ? error.message : 'Une erreur est survenue');

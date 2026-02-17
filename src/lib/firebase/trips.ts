@@ -307,17 +307,12 @@ export const getUserTrips = async (
     try {
         const [createdTrips, participatedTrips] = await Promise.all([
             fetchTrips(
-                query(
-                    tripsCollection,
-                    where('driverId', '==', userId),
-                    where('isActive', '==', true),
-                ),
+                query(tripsCollection, where('driverId', '==', userId)),
             ),
             fetchTrips(
                 query(
                     tripsCollection,
                     where('participants', 'array-contains', userId),
-                    where('isActive', '==', true),
                 ),
             ),
         ]);

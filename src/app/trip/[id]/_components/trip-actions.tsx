@@ -14,6 +14,7 @@ type TripActionsProps = {
     onLeaveTrip: () => void;
     cancelling: boolean;
     onCancelTrip: () => void;
+    hasReviewedTrip?: boolean;
 };
 
 // Check if trip date/time has passed
@@ -35,17 +36,19 @@ export const TripActions = ({
     onLeaveTrip,
     cancelling,
     onCancelTrip,
+    hasReviewedTrip = false,
 }: TripActionsProps) => {
     const [showLeaveModal, setShowLeaveModal] = useState(false);
     const [showCancelModal, setShowCancelModal] = useState(false);
 
-    const isCompleted = trip.status === 'completed';
+    const isCompleted = trip.status === 'completed' || trip.status === 'finished';
     const isPending = trip.status === 'pending';
     const isOngoing = trip.status === 'ongoing';
     const tripPassed = isTripPassed(trip);
 
     // Determine which button to show
-    const showReviewButton = isUserParticipant && isCompleted;
+    const showReviewButton =
+        (isUserParticipant || isUserDriver) && (isCompleted || tripPassed) && !hasReviewedTrip;
     const showLeaveButton = isUserParticipant && isPending && !isCompleted && !tripPassed;
     const showCancelButton = isUserDriver && !isOngoing && !tripPassed && trip.isActive;
     const showJoinButton = canJoinTrip && !tripPassed;
