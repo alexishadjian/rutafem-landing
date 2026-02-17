@@ -120,14 +120,11 @@ const ConfirmContent = ({ tripId }: { tripId: string }) => {
 
             const updatedBookings = [...bookings];
             updatedBookings[bookingIndex] = updatedBooking;
-            const tripUpdate: Record<string, unknown> = {
+            const tripUpdate = {
                 bookings: updatedBookings,
                 updatedAt: now,
+                ...(bothConfirmed && { status: 'finished' as const, isActive: false }),
             };
-            if (bothConfirmed) {
-                tripUpdate.status = 'completed';
-                tripUpdate.isActive = false;
-            }
             await updateDoc(tripRef, tripUpdate);
 
             setBooking(updatedBooking as Booking);
