@@ -65,7 +65,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Ville de départ
+                            Ton point de départ
                         </label>
                         <AddressAutocomplete
                             id="departure-city"
@@ -78,7 +78,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                     </div>
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Ville d&apos;arrivée
+                            Ta destination
                         </label>
                         <AddressAutocomplete
                             id="arrival-city"
@@ -95,7 +95,7 @@ export default function SearchBar({ onSearch }: SearchBarProps) {
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2">
-                            Date de départ
+                            Ta date de départ
                         </label>
                         <Datepicker
                             i18n="fr"

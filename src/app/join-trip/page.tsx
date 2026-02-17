@@ -58,12 +58,12 @@ export default function JoinTripPage() {
             const filtersWithPrice: TripFilters = filters
                 ? { ...filters, maxPrice }
                 : {
-                      departureCity: '',
-                      arrivalCity: '',
-                      maxPrice,
-                      date: null,
-                      minSeats: null,
-                  };
+                    departureCity: '',
+                    arrivalCity: '',
+                    maxPrice,
+                    date: null,
+                    minSeats: null,
+                };
             result = filterTrips(result, filtersWithPrice);
         }
         result = sortTrips(result, sort);
@@ -140,9 +140,8 @@ export default function JoinTripPage() {
                         <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 font-staatliches">
                             {filteredTrips.length === allTrips.length
                                 ? 'Les trajets de la communauté'
-                                : `${filteredTrips.length} trajet${
-                                      filteredTrips.length > 1 ? 's' : ''
-                                  } trouvé${filteredTrips.length > 1 ? 's' : ''}`}
+                                : `${filteredTrips.length} trajet${filteredTrips.length > 1 ? 's' : ''
+                                } trouvé${filteredTrips.length > 1 ? 's' : ''}`}
                         </h3>
                         <p className="text-gray-600 mt-2">
                             {filteredTrips.length === allTrips.length
@@ -252,12 +251,12 @@ export default function JoinTripPage() {
                             </div>
                             <h3 className="text-lg font-semibold text-gray-900 mb-2">
                                 {allTrips.length === 0
-                                    ? 'Aucun trajet disponible'
+                                    ? 'Pas encore de trajets disponibles pour cette date'
                                     : 'Aucun trajet trouvé'}
                             </h3>
                             <p className="text-gray-600 mb-4">
                                 {allTrips.length === 0
-                                    ? "Il n'y a actuellement aucun trajet disponible. Soyez la première à en créer un !"
+                                    ? "Sois la première à publier un trajet !"
                                     : 'Aucun trajet ne correspond à tes critères. Essaie de modifier tes filtres.'}
                             </p>
                             {allTrips.length === 0 && (
