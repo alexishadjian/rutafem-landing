@@ -21,6 +21,12 @@ export const VerificationModal = ({ user, onClose, onAction }: VerificationModal
         try {
             if (action === 'approve') {
                 await approveVerification(user.uid, activeTab);
+                // Notify user by email that their verification was approved
+                fetch('/api/email/verification-approved', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ email: user.email, firstName: user.firstName, type: activeTab }),
+                }).catch((err) => console.error('Failed to send verification email:', err));
             } else {
                 await rejectVerification(user.uid, activeTab);
             }
