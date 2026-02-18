@@ -5,12 +5,13 @@ import WinnerCard from '@/components/ui/cards/winnerCard';
 import Icon from '@/components/ui/icon';
 import { CardLine, RideIllu, StarIllu } from '@/images';
 import Image from 'next/image';
+import RotatingText from './_components/ui/RotatingText';
 
 export default function Home() {
     return (
         <div className="home">
             <section className="section-margin bg-[var(--dark-green)] relative">
-                <div className="absolute inset-0 flex flex-col gap-4 self-center overflow-hidden">
+                <div className="absolute inset-0 flex-col gap-4 self-center overflow-hidden hidden md:flex">
                     <div className="flex gap-4 w-full animate-scroll-slow">
                         <Image
                             src={CardLine}
@@ -51,15 +52,22 @@ export default function Home() {
 
                 <div className="bg-gradient-to-r from-[var(--dark-green)] from-0% via-[var(--dark-green)] via-50% to-transparent to-100% absolute inset-0 z-[0]"></div>
 
-                <div className="flex-col flex lg:items-start items-center justify-center min-h-[90vh] text-[var(--white)] relative wrapper pt-24 md:pt-32">
+                <div className="flex-col flex lg:items-start items-center justify-center min-h-[90vh] text-[var(--white)] relative wrapper pt-24 md:pt-0">
                     <div className="w-full lg:w-1/2 relative z-[1]">
-                        <h1 className="font-montserrat text-[50px] lg:text-[60px] xl:text-[70px] font-bold">
-                            Le covoiturage
-                            <br />
-                            <span className="bg-[var(--yellow)] text-[var(--dark-green)]">
-                                100% féminin
-                            </span>
-                            ,<br /> simple et safe.
+                        <h1 className="font-montserrat text-[50px] lg:text-[60px] xl:text-[70px] font-bold leading-[1.2]">
+                            <span className="pr-4">Le covoiturage 100%</span>
+                            <RotatingText
+                                texts={['féminin', 'simple', 'safe']}
+                                mainClassName="px-2 sm:px-2 bg-[var(--yellow)] text-[var(--dark-green)] md:px-3 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
+                                staggerFrom={"last"}
+                                initial={{ y: "100%" }}
+                                animate={{ y: 0 }}
+                                exit={{ y: "-120%" }}
+                                staggerDuration={0.025}
+                                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
+                                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                                rotationInterval={2000}
+                            />
                         </h1>
                         <p className="mb-8 text-[20px]">
                             Partage tes trajets entre femmes, en toute confiance, comme entre
@@ -85,7 +93,7 @@ export default function Home() {
             </section>
 
             <section className="section-margin">
-                <div className="wrapper flex flex-col gap-20">
+                <div className="wrapper flex flex-col gap-10 md:gap-20">
                     <div className="flex items-start gap-20">
                         <div className="w-1/4 aspect-[257/241] hidden md:block">
                             <Image
@@ -95,7 +103,7 @@ export default function Home() {
                             />
                         </div>
                         <div className="w-full md:w-2/3" id="nous-connaitre">
-                            <h2 className="uppercase text-[var(--dark-green)] font-staatliches text-[50px] md:text-[60px] lg:text-[70px]">
+                            <h2 className="uppercase text-[var(--dark-green)] font-staatliches text-[50px] md:text-[60px] lg:text-[70px] leading-[1.2]">
                                 Notre rêve est de créer une mobilité{' '}
                                 <span className="bg-[var(--orange)] text-[var(--white)]">
                                     sûre et solidaire, {/* */}
@@ -141,7 +149,7 @@ export default function Home() {
 
             <section className="section-margin bg-[var(--yellow)]">
                 <div className="wrapper flex flex-col lg:flex-row gap-0 lg:gap-10">
-                    <div className="w-full lg:w-1/2 flex flex-col gap-10 items-start pb-0 lg:pb-20 py-20">
+                    <div className="w-full lg:w-1/2 flex flex-col gap-10 items-start pb-0 lg:pb-20 py-10 md:py-20">
                         <div>
                             <div className="flex gap-4 flex-wrap">
                                 <span className="bg-[var(--black)] text-[var(--white)] px-6 py-2 rounded-full">
@@ -151,7 +159,7 @@ export default function Home() {
                                     Partout en France
                                 </span>
                             </div>
-                            <h2 className="font-staatliches text-[70px] mt-12 leading-tight">
+                            <h2 className="font-staatliches text-[50px] md:text-[70px] mt-12 leading-[1.2] md:leading-tight">
                                 Propose ton trajet dès maintenant !
                             </h2>
                         </div>
@@ -375,7 +383,7 @@ export default function Home() {
                         </span>
                     </h2>
 
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-0 md:gap-4">
                         <FaqCard
                             number="1"
                             question="Propose ou rejoins un trajet"
@@ -409,7 +417,7 @@ export default function Home() {
             </section>
 
             <section className="section-margin wrapper">
-                <h2 className="font-staatliches text-[60px] mb-10 uppercase">Toutes Gagnantes</h2>
+                <h2 className="font-staatliches text-[40px] md:text-[60px] mb-4 md:mb-10 uppercase">Toutes Gagnantes</h2>
 
                 <div className="flex flex-col md:flex-row gap-6">
                     <WinnerCard

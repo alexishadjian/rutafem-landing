@@ -16,8 +16,8 @@ export default function Footer() {
                     <EmailForm />
                 </div>
 
-                <div className="flex justify-between">
-                    <Link href="/" className="flex items-center">
+                <div className="flex justify-between flex-col md:flex-row gap-14">
+                    <Link href="/" className="flex items-center mx-auto md:mx-0">
                         <svg
                             className="h-14 w-auto"
                             viewBox="0 0 976 343"

@@ -17,7 +17,7 @@ export default function FaqCard({
 
     return (
         <div
-            className="faq-card p-8 rounded-3xl duration-500 cursor-pointer"
+            className="faq-card p-4 md:p-8 rounded-3xl duration-500 cursor-pointer"
             style={{
                 backgroundColor: isOpen ? 'var(--pink)' : 'var(--white)',
             }}
@@ -30,10 +30,10 @@ export default function FaqCard({
                     className="flex gap-4 md:gap-6 duration-500 font-staatliches"
                     style={{ color: isOpen ? 'var(--dark-green)' : 'var(--black)' }}
                 >
-                    <span className="text-[60px] md:text-[70px] lg:text-[100px] font-bold leading-none">
+                    <span className="text-[40px] md:text-[70px] lg:text-[100px] font-bold leading-none">
                         {number}.
                     </span>
-                    <h3 className="text-[30px] lg:text-[40px] w-2/3 text-left leading-[1.2]">
+                    <h3 className="text-[24px] lg:text-[40px] md:w-2/3 text-left leading-[1.2]">
                         {question}
                     </h3>
                 </div>
@@ -48,12 +48,13 @@ export default function FaqCard({
                         beforeIcon={
                             <Icon
                                 name="chevronDown"
-                                width={82}
-                                height={82}
+                                width={54}
+                                height={54}
                                 strokeColor={'var(--black)'}
                             />
                         }
                         iconOnly
+                        className="p-0"
                         color="transparent"
                     />
                 </div>
@@ -66,9 +67,9 @@ export default function FaqCard({
                 }}
             >
                 <div className="overflow-hidden flex column gap-xs">
-                    <div className="faq-card__answer-item mt-4 pl-20 text-[20px]">
+                    <div className="faq-card__answer-item mt-4 pl-8 md:pl-20 text-[20px]">
                         {answer.map((item, index) => (
-                            <p key={index} className="text-[20px] leading-relaxed">
+                            <p key={index} className="text-[16px] md:text-[18px] leading-[1.6] md:leading-relaxed">
                                 {item}
                             </p>
                         ))}
