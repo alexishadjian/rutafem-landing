@@ -20,9 +20,12 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
             <Image src={YellowLine2} alt="" width={220} height={195} />
         </div>
         <div className="bg-[var(--pink)] border-[5px] border-[var(--black)] rounded-[32px] overflow-hidden p-[10px] w-full relative">
-            <div className="flex flex-col gap-10 items-center px-8 md:px-28 py-20 relative">
+            <figure className="flex flex-col gap-10 items-center px-8 md:px-28 py-20 relative">
                 {/* Up quotes - top left */}
-                <div className="absolute left-8 md:left-[15%] top-12 md:top-16 z-10">
+                <div
+                    className="absolute left-8 md:left-[15%] top-12 md:top-16 z-10"
+                    aria-hidden="true"
+                >
                     <Image
                         src={UpQuotes}
                         alt=""
@@ -32,11 +35,14 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
                     />
                 </div>
                 {/* Quote text */}
-                <p className="font-montserrat font-bold text-[24px] md:text-[48px] leading-[1.4] text-[var(--dark-green)] text-center max-w-[885px] px-8">
+                <blockquote className="font-montserrat font-bold text-[24px] md:text-[48px] leading-[1.4] text-[var(--dark-green)] text-center max-w-[885px] px-8">
                     {quote}
-                </p>
+                </blockquote>
                 {/* Down quotes - after quote, before author */}
-                <div className="flex justify-end w-full max-w-[585px] px-8 lg:-mt-20 -mt-10">
+                <div
+                    className="flex justify-end w-full max-w-[585px] px-8 lg:-mt-20 -mt-10"
+                    aria-hidden="true"
+                >
                     <Image
                         src={DownQuotes}
                         alt=""
@@ -46,15 +52,18 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
                     />
                 </div>
                 {author && (
-                    <div className="bg-[var(--dark-green)] flex gap-3 items-center px-6 py-3 rounded-full">
-                        <div className="bg-[var(--yellow)] rounded-full size-10" />
+                    <figcaption className="bg-[var(--dark-green)] flex gap-3 items-center px-6 py-3 rounded-full">
+                        <div
+                            className="bg-[var(--yellow)] rounded-full size-10"
+                            aria-hidden="true"
+                        />
                         <p className="font-poppins font-semibold text-[14px] md:text-[16px] text-[var(--white)] text-center">
                             {author}
                             {role && `, ${role}`}
                         </p>
-                    </div>
+                    </figcaption>
                 )}
-            </div>
+            </figure>
         </div>
     </div>
 );

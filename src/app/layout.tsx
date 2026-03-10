@@ -72,14 +72,20 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
                 <GoogleAnalytics />
                 <MicrosoftClarity />
             </head>
-            <ScrollState />
             <body
                 className={`${poppins.className} ${montserrat.variable} ${poppins.variable} ${staatliches.variable}`}
                 suppressHydrationWarning
             >
+                <ScrollState />
+                <a
+                    href="#main-content"
+                    className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-[100] focus:bg-[var(--dark-green)] focus:text-[var(--white)] focus:px-4 focus:py-2 focus:rounded-lg"
+                >
+                    Aller au contenu principal
+                </a>
                 <AuthProvider>
                     <Header />
-                    <main>{children}</main>
+                    <main id="main-content">{children}</main>
                     <Footer />
                 </AuthProvider>
             </body>

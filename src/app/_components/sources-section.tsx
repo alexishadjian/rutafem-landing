@@ -9,16 +9,16 @@ export const SourcesSection = ({ sources }: SourcesSectionProps) => {
                 <h3 className="font-poppins font-semibold text-[24px] leading-[36px] text-[var(--dark-green)]">
                     Sources
                 </h3>
-                <div className="flex flex-col gap-2">
+                <ul className="flex flex-col gap-2 list-none">
                     {sources.map((source, index) => (
-                        <p
+                        <li
                             key={index}
                             className="font-poppins text-[14px] leading-[23.8px] text-[var(--dark-green)]"
                         >
                             • {source}
-                        </p>
+                        </li>
                     ))}
-                </div>
+                </ul>
             </div>
         </div>
     );

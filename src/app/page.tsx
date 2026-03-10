@@ -52,20 +52,23 @@ export default function Home() {
 
                 <div className="bg-gradient-to-r from-[var(--dark-green)] from-0% via-[var(--dark-green)] via-50% to-transparent to-100% absolute inset-0 z-[0]"></div>
 
-                <div className="flex-col flex lg:items-start items-center justify-center min-h-[90vh] text-[var(--white)] relative wrapper pt-24 md:pt-0">
+                <div className="flex-col flex lg:items-start items-center justify-center min-h-[100vh] text-[var(--white)] relative wrapper pt-24 md:pt-0">
                     <div className="w-full lg:w-1/2 relative z-[1]">
-                        <h1 className="font-montserrat text-[50px] lg:text-[60px] xl:text-[70px] font-bold leading-[1.2]">
+                        <h1
+                            className="font-montserrat text-[50px] lg:text-[60px] xl:text-[70px] font-bold leading-[1.2]"
+                            aria-label="Le covoiturage 100% féminin, simple et safe"
+                        >
                             <span className="pr-4">Le covoiturage 100%</span>
                             <RotatingText
                                 texts={['féminin', 'simple', 'safe']}
                                 mainClassName="px-2 sm:px-2 bg-[var(--yellow)] text-[var(--dark-green)] md:px-3 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
-                                staggerFrom={"last"}
-                                initial={{ y: "100%" }}
+                                staggerFrom={'last'}
+                                initial={{ y: '100%' }}
                                 animate={{ y: 0 }}
-                                exit={{ y: "-120%" }}
+                                exit={{ y: '-120%' }}
                                 staggerDuration={0.025}
                                 splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-                                transition={{ type: "spring", damping: 30, stiffness: 400 }}
+                                transition={{ type: 'spring', damping: 30, stiffness: 400 }}
                                 rotationInterval={2000}
                             />
                         </h1>
@@ -96,11 +99,7 @@ export default function Home() {
                 <div className="wrapper flex flex-col gap-10 md:gap-20">
                     <div className="flex items-start gap-20">
                         <div className="w-1/4 aspect-[257/241] hidden md:block">
-                            <Image
-                                src={StarIllu}
-                                alt=""
-                                className="w-full h-full object-cover"
-                            />
+                            <Image src={StarIllu} alt="" className="w-full h-full object-cover" />
                         </div>
                         <div className="w-full md:w-2/3" id="nous-connaitre">
                             <h2 className="uppercase text-[var(--dark-green)] font-staatliches text-[50px] md:text-[60px] lg:text-[70px] leading-[1.2]">
@@ -184,7 +183,14 @@ export default function Home() {
                     </div>
                 </div>
                 <div className="bg-[var(--orange)] text-[var(--white)] overflow-hidden">
-                    <div className="flex items-center gap-4 p-4 animate-scroll-slow w-max">
+                    <span className="sr-only">
+                        100% féminin · Profils vérifiés · Moins de stress · Eco-responsable · Plus
+                        d&apos;économies
+                    </span>
+                    <div
+                        className="flex items-center gap-4 p-4 animate-scroll-slow w-max"
+                        aria-hidden="true"
+                    >
                         {/* Première série */}
                         <span className="whitespace-nowrap">100% féminin</span>
                         <Icon
@@ -417,7 +423,9 @@ export default function Home() {
             </section>
 
             <section className="section-margin wrapper">
-                <h2 className="font-staatliches text-[40px] md:text-[60px] mb-4 md:mb-10 uppercase">Toutes Gagnantes</h2>
+                <h2 className="font-staatliches text-[40px] md:text-[60px] mb-4 md:mb-10 uppercase">
+                    Toutes Gagnantes
+                </h2>
 
                 <div className="flex flex-col md:flex-row gap-6">
                     <WinnerCard

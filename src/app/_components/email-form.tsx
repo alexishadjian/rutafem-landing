@@ -36,6 +36,7 @@ export default function EmailForm() {
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="nom@domain.fr"
+                        aria-label="Adresse email"
                         className="p-4 text-black rounded-xl md:w-1/2"
                         required
                     />

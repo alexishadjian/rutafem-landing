@@ -3,7 +3,12 @@ import Link from 'next/link';
 export default function Socials() {
     return (
         <div className="flex gap-x-5 items-center socials">
-            <Link href="https://www.instagram.com/rutafem_" target="_blank">
+            <Link
+                href="https://www.instagram.com/rutafem_"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram RutaFem"
+            >
                 <svg
                     width="21"
                     height="21"
@@ -17,7 +22,12 @@ export default function Socials() {
                     />
                 </svg>
             </Link>
-            <Link href="https://www.facebook.com/profile.php?id=61571813917996" target="_blank">
+            <Link
+                href="https://www.facebook.com/profile.php?id=61571813917996"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Facebook RutaFem"
+            >
                 <svg
                     width="21"
                     height="21"
