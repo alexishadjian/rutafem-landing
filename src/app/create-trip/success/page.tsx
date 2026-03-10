@@ -38,7 +38,7 @@ function SuccessContent() {
                     </h1>
                 </div>
                 <div className="flex items-center justify-center flex-col gap-4 px-6">
-                    <Image src={confirmation} alt="confirmation" width={300} height={300} />
+                    <Image src={confirmation} alt="Trois personnages joyeux célébrant la publication du trajet" width={300} height={300} />
                 </div>
                 <div className="flex justify-center px-6 mt-10">
                     <button

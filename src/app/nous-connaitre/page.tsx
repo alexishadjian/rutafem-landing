@@ -54,7 +54,7 @@ export default function NousConnaitrePage() {
                         <div className="relative lg:flex-1 lg:w-1/2 min-h-[400px] lg:min-h-[600px] border-[5px] border-b-0 lg:border-b-[5px] lg:border-r-0 border-[var(--black)] rounded-t-[32px] lg:rounded-l-[32px] lg:rounded-tr-none overflow-hidden">
                             <Image
                                 src={WomanFacingMountain}
-                                alt="Femme face aux montagnes"
+                                alt="Deux amies assises au bord d'un lac contemplant une montagne enneigée"
                                 fill
                                 className="object-cover"
                                 priority
@@ -199,7 +199,7 @@ export default function NousConnaitrePage() {
                             <div className="flex-1 relative min-h-[400px] lg:min-h-[584px] rounded-[24px] border-white overflow-hidden">
                                 <Image
                                     src={ThreeWomanBack}
-                                    alt="Trois femmes de dos"
+                                    alt="Trois amies serrées les unes contre les autres face à la mer"
                                     fill
                                     className="rounded-[22px]"
                                 />

@@ -15,36 +15,36 @@ export default function Home() {
                     <div className="flex gap-4 w-full animate-scroll-slow">
                         <Image
                             src={CardLine}
-                            alt="hero banner"
+                            alt=""
                             className="w-full flex-shrink-0 object-contain"
                         />
                         <Image
                             src={CardLine}
-                            alt="hero banner"
+                            alt=""
                             className="w-full flex-shrink-0 object-contain"
                         />
                     </div>
                     <div className="flex gap-4 w-full animate-scroll-fast">
                         <Image
                             src={CardLine}
-                            alt="hero banner"
+                            alt=""
                             className="w-full flex-shrink-0 object-contain"
                         />
                         <Image
                             src={CardLine}
-                            alt="hero banner"
+                            alt=""
                             className="w-full flex-shrink-0 object-contain"
                         />
                     </div>
                     <div className="flex gap-4 w-full animate-scroll-mid">
                         <Image
                             src={CardLine}
-                            alt="hero banner"
+                            alt=""
                             className="w-full flex-shrink-0 object-contain"
                         />
                         <Image
                             src={CardLine}
-                            alt="hero banner"
+                            alt=""
                             className="w-full flex-shrink-0 object-contain"
                         />
                     </div>
@@ -98,7 +98,7 @@ export default function Home() {
                         <div className="w-1/4 aspect-[257/241] hidden md:block">
                             <Image
                                 src={StarIllu}
-                                alt="hero banner"
+                                alt=""
                                 className="w-full h-full object-cover"
                             />
                         </div>
@@ -178,7 +178,7 @@ export default function Home() {
                     <div className="w-4/6 lg:w-1/2 h-full lg:self-end self-center">
                         <Image
                             src={RideIllu}
-                            alt="ride illu"
+                            alt="Deux amies souriantes tenant un appareil photo polaroid"
                             className="w-full h-full object-cover"
                         />
                     </div>

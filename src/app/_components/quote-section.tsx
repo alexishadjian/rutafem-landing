@@ -11,13 +11,13 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
     <div className="relative w-full">
         {/* Decorative lines - top left, outside pink section but overlapping */}
         <div className="absolute right-10 -top-32 hidden xl:block z-0 rotate-[15deg]">
-            <Image src={YellowLine1} alt="decorative line" width={420} height={280} />
+            <Image src={YellowLine1} alt="" width={420} height={280} />
         </div>
         <div
             className="absolute -top-20 hidden xl:block z-20"
             style={{ right: 'calc(-50vw + 50%)' }}
         >
-            <Image src={YellowLine2} alt="decorative line" width={220} height={195} />
+            <Image src={YellowLine2} alt="" width={220} height={195} />
         </div>
         <div className="bg-[var(--pink)] border-[5px] border-[var(--black)] rounded-[32px] overflow-hidden p-[10px] w-full relative">
             <div className="flex flex-col gap-10 items-center px-8 md:px-28 py-20 relative">
@@ -25,7 +25,7 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
                 <div className="absolute left-8 md:left-[15%] top-12 md:top-16 z-10">
                     <Image
                         src={UpQuotes}
-                        alt="quotes up for a citation"
+                        alt=""
                         width={62}
                         height={42}
                         className="w-8 md:w-[62px]"
@@ -39,7 +39,7 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
                 <div className="flex justify-end w-full max-w-[585px] px-8 lg:-mt-20 -mt-10">
                     <Image
                         src={DownQuotes}
-                        alt="quotes down for a citation"
+                        alt=""
                         width={62}
                         height={42}
                         className="w-8 md:w-[62px]"

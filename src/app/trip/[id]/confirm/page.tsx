@@ -365,7 +365,7 @@ const ConfirmContent = ({ tripId }: { tripId: string }) => {
                         <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-6 text-center">
                             <Image
                                 src={confirmation}
-                                alt="confirmation"
+                                alt="Trois personnages joyeux célébrant la confirmation du trajet"
                                 width={200}
                                 height={200}
                                 className="mx-auto mb-4"

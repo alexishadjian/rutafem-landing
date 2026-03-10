@@ -217,7 +217,7 @@ const SuccessContent = () => {
                 )}
 
                 <div className="flex items-center justify-center flex-col gap-4 px-6">
-                    <Image src={confirmation} alt="confirmation" width={300} height={300} />
+                    <Image src={confirmation} alt="Trois personnages joyeux célébrant la réservation réussie" width={300} height={300} />
                     <p className="text-center text-gray-700 text-base mt-10">
                         Tu peux désormais discuter avec ta conductrice pour préparer ensemble votre trajet.
                     </p>
