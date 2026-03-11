@@ -55,7 +55,11 @@ export default function UserInformation({
                 <div className="flex items-center gap-2 flex-wrap">
                     <p className="text-base font-semibold text-[var(--black)]">{firstName}</p>
                     {typeof rating === 'number' && (
-                        <div className="flex items-center gap-1">
+                        <div
+                            className="flex items-center gap-1"
+                            role="img"
+                            aria-label={`${rating} sur 5 étoiles`}
+                        >
                             {Array.from({ length: 5 }).map((_, index) => {
                                 const isActive = index < rating;
                                 return (

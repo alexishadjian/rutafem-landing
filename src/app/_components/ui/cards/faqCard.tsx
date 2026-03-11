@@ -1,6 +1,5 @@
 'use client';
 
-import Button from '@/components/ui/button';
 import Icon from '@/components/ui/icon';
 import { useState } from 'react';
 
@@ -15,16 +14,21 @@ export default function FaqCard({
 }) {
     const [isOpen, setIsOpen] = useState(false);
 
+    const faqId = `faq-answer-${number}`;
+
     return (
         <div
-            className="faq-card p-4 md:p-8 rounded-3xl duration-500 cursor-pointer"
+            className="faq-card p-4 md:p-8 rounded-3xl duration-500"
             style={{
                 backgroundColor: isOpen ? 'var(--pink)' : 'var(--white)',
             }}
         >
-            <div
-                className="flex items-start justify-between space gap-4 md:gap-10start-y w-full"
+            <button
+                type="button"
+                className="flex items-start justify-between gap-4 md:gap-10 w-full cursor-pointer text-left"
                 onClick={() => setIsOpen(!isOpen)}
+                aria-expanded={isOpen}
+                aria-controls={faqId}
             >
                 <div
                     className="flex gap-4 md:gap-6 duration-500 font-staatliches"
@@ -44,22 +48,20 @@ export default function FaqCard({
                         transition: 'transform 0.5s ease',
                     }}
                 >
-                    <Button
-                        beforeIcon={
-                            <Icon
-                                name="chevronDown"
-                                width={54}
-                                height={54}
-                                strokeColor={'var(--black)'}
-                            />
-                        }
-                        iconOnly
-                        className="p-0"
-                        color="transparent"
-                    />
+                    <span aria-hidden="true">
+                        <Icon
+                            name="chevronDown"
+                            width={54}
+                            height={54}
+                            strokeColor={'var(--black)'}
+                        />
+                    </span>
                 </div>
-            </div>
+            </button>
             <div
+                id={faqId}
+                role="region"
+                aria-labelledby={`faq-question-${number}`}
                 className="grid template-rows-[0fr] transition-all duration-500 overflow-hidden"
                 style={{
                     gridTemplateRows: isOpen ? '1fr' : '0fr',
@@ -69,7 +71,10 @@ export default function FaqCard({
                 <div className="overflow-hidden flex column gap-xs">
                     <div className="faq-card__answer-item mt-4 pl-8 md:pl-20 text-[20px]">
                         {answer.map((item, index) => (
-                            <p key={index} className="text-[16px] md:text-[18px] leading-[1.6] md:leading-relaxed">
+                            <p
+                                key={index}
+                                className="text-[16px] md:text-[18px] leading-[1.6] md:leading-relaxed"
+                            >
                                 {item}
                             </p>
                         ))}

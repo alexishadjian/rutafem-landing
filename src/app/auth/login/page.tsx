@@ -40,7 +40,7 @@ export default function LoginPage() {
                             <div className="relative h-full w-full rounded-l-3xl overflow-hidden">
                                 <Image
                                     src={WomanFacingMountain}
-                                    alt="Femmes face aux montagnes"
+                                    alt="Deux amies assises au bord d'un lac contemplant une montagne enneigée"
                                     fill
                                     className="object-cover"
                                     priority

@@ -79,7 +79,7 @@ export default function WelcomeStep({ formData, updateFormData, onNext }: Welcom
                     <div className="flex justify-center lg:justify-start mb-6 lg:flex-1 lg:self-end lg:-mb-8 lg:pb-0">
                         <Image
                             src={TwoWomanLaughing}
-                            alt="Bienvenue sur RutaFem !"
+                            alt="Deux amies riant ensemble lors d'une rencontre estivale"
                             sizes="(max-width: 1024px) 100vw, 600px"
                             style={{ objectFit: 'cover' }}
                             width={600}

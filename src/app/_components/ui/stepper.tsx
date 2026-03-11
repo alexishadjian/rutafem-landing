@@ -5,7 +5,11 @@ type StepperProps = {
 
 export default function Stepper({ totalSteps, currentStep }: StepperProps) {
     return (
-        <div className="flex items-center justify-center w-full">
+        <div
+            className="flex items-center justify-center w-full"
+            role="group"
+            aria-label={`Étape ${currentStep} sur ${totalSteps}`}
+        >
             {Array.from({ length: totalSteps }, (_, index) => {
                 const stepNumber = index + 1;
                 const isActive = stepNumber <= currentStep;
@@ -18,6 +22,7 @@ export default function Stepper({ totalSteps, currentStep }: StepperProps) {
                             className={`w-10 h-10 rounded-full flex items-center justify-center text-white font-semibold text-sm transition-colors duration-200 ${
                                 isActive ? 'bg-[var(--orange)]' : 'bg-gray-300'
                             }`}
+                            aria-current={stepNumber === currentStep ? 'step' : undefined}
                         >
                             {stepNumber}
                         </div>
