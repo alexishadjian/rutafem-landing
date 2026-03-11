@@ -11,13 +11,23 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
     <div className="relative w-full">
         {/* Decorative lines - top left, outside pink section but overlapping */}
         <div className="absolute right-10 -top-32 hidden xl:block z-0 rotate-[15deg]">
-            <Image src={YellowLine1} alt="" width={420} height={280} />
+            <Image
+                src={YellowLine1}
+                alt="Trait jaune légèrement arrondi affiché en arrière plan"
+                width={420}
+                height={280}
+            />
         </div>
         <div
             className="absolute -top-20 hidden xl:block z-20"
             style={{ right: 'calc(-50vw + 50%)' }}
         >
-            <Image src={YellowLine2} alt="" width={220} height={195} />
+            <Image
+                src={YellowLine2}
+                alt="Trait jaune formant une boucle affiché en arrière plan"
+                width={220}
+                height={195}
+            />
         </div>
         <div className="bg-[var(--pink)] border-[5px] border-[var(--black)] rounded-[32px] overflow-hidden p-[10px] w-full relative">
             <figure className="flex flex-col gap-10 items-center px-8 md:px-28 py-20 relative">
@@ -28,7 +38,7 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
                 >
                     <Image
                         src={UpQuotes}
-                        alt=""
+                        alt="Guillemets ouvrants affichés en arrière plan"
                         width={62}
                         height={42}
                         className="w-8 md:w-[62px]"
@@ -45,7 +55,7 @@ export const QuoteSection = ({ quote, author, role }: QuoteSectionProps) => (
                 >
                     <Image
                         src={DownQuotes}
-                        alt=""
+                        alt="Guillemets fermants affichés en arrière plan"
                         width={62}
                         height={42}
                         className="w-8 md:w-[62px]"

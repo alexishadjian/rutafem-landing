@@ -15,36 +15,36 @@ export default function Home() {
                     <div className="flex gap-4 w-full animate-scroll-slow">
                         <Image
                             src={CardLine}
-                            alt=""
+                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
                             className="w-full flex-shrink-0 object-contain"
                         />
                         <Image
                             src={CardLine}
-                            alt=""
+                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
                             className="w-full flex-shrink-0 object-contain"
                         />
                     </div>
                     <div className="flex gap-4 w-full animate-scroll-fast">
                         <Image
                             src={CardLine}
-                            alt=""
+                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
                             className="w-full flex-shrink-0 object-contain"
                         />
                         <Image
                             src={CardLine}
-                            alt=""
+                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
                             className="w-full flex-shrink-0 object-contain"
                         />
                     </div>
                     <div className="flex gap-4 w-full animate-scroll-mid">
                         <Image
                             src={CardLine}
-                            alt=""
+                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
                             className="w-full flex-shrink-0 object-contain"
                         />
                         <Image
                             src={CardLine}
-                            alt=""
+                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
                             className="w-full flex-shrink-0 object-contain"
                         />
                     </div>
@@ -99,7 +99,11 @@ export default function Home() {
                 <div className="wrapper flex flex-col gap-10 md:gap-20">
                     <div className="flex items-start gap-20">
                         <div className="w-1/4 aspect-[257/241] hidden md:block">
-                            <Image src={StarIllu} alt="" className="w-full h-full object-cover" />
+                            <Image
+                                src={StarIllu}
+                                alt="Dessin d'une étoile orange"
+                                className="w-full h-full object-cover"
+                            />
                         </div>
                         <div className="w-full md:w-2/3" id="nous-connaitre">
                             <h2 className="uppercase text-[var(--dark-green)] font-staatliches text-[50px] md:text-[60px] lg:text-[70px] leading-[1.2]">
