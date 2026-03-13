@@ -1,0 +1,169 @@
+@startuml Diagramme de cas d'utilisation – RutaFem
+
+left to right direction
+skinparam actorStyle awesome
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam roundCorner 20
+skinparam defaultFontName "Segoe UI"
+skinparam defaultFontSize 12
+
+skinparam usecase {
+  BackgroundColor #FFF8F0
+  BorderColor #2e504d
+  BorderThickness 1.5
+  FontColor #222639
+  FontSize 12
+  ArrowColor #2e504d
+  StereotypeFontColor #f28562
+}
+
+skinparam actor {
+  BackgroundColor #fda7c1
+  BorderColor #2e504d
+}
+
+skinparam package {
+  BorderColor #2e504d
+  BorderThickness 2
+  FontColor #2e504d
+  FontSize 14
+  FontStyle bold
+  RoundCorner 16
+}
+
+skinparam note {
+  BackgroundColor #fcbf4e
+  BorderColor #2e504d
+  FontColor #222639
+  FontSize 10
+  RoundCorner 8
+}
+
+skinparam arrow {
+  Color #2e504d
+  Thickness 1.5
+}
+
+' ──────────────────────────────────
+' ACTEURS
+' ──────────────────────────────────
+actor "Visiteuse" as visitor
+actor "Passagère" as passenger
+actor "Conductrice" as driver
+actor "Administratrice" as admin
+actor "Stripe" as stripe <<système>>
+
+passenger -up-|> visitor
+driver -up-|> passenger
+
+' ──────────────────────────────────
+' CAS D'UTILISATION
+' ──────────────────────────────────
+
+package "Consultation" #e8f4f3 {
+  usecase "Consulter le site\n(accueil, à propos, CGV...)" as UC_BROWSE
+  usecase "S'inscrire à la newsletter" as UC_NEWSLETTER
+}
+
+package "Authentification & Profil" #fde8ef {
+  usecase "S'inscrire" as UC_REGISTER
+  usecase "Se connecter / Se déconnecter" as UC_AUTH
+  usecase "Gérer son profil" as UC_PROFILE
+  usecase "Vérifier son identité" as UC_VERIFY_ID
+  usecase "Vérifier son permis\net son véhicule" as UC_VERIFY_DRIVER
+  usecase "Connecter son compte\nbancaire (Stripe Connect)" as UC_STRIPE_CONNECT
+}
+
+package "Trajets" #e6f0fb {
+  usecase "Rechercher / Filtrer\nles trajets" as UC_SEARCH
+  usecase "Consulter le détail\nd'un trajet" as UC_VIEW_TRIP
+  usecase "Créer un trajet" as UC_CREATE_TRIP
+  usecase "Annuler son trajet" as UC_CANCEL_TRIP
+}
+
+package "Réservation & Paiement" #fef3e2 {
+  usecase "Réserver un trajet" as UC_BOOK
+  usecase "Annuler sa réservation" as UC_LEAVE
+  usecase "Confirmer le trajet\n(post-trajet)" as UC_CONFIRM
+  usecase "Signaler un litige" as UC_DISPUTE
+}
+
+package "Avis" #e8f4f3 {
+  usecase "Laisser un avis" as UC_REVIEW
+  usecase "Consulter les avis" as UC_VIEW_REVIEWS
+}
+
+package "Administration" #f0e6fb {
+  usecase "Consulter le tableau de bord" as UC_DASHBOARD
+  usecase "Approuver / Rejeter\nles vérifications" as UC_ADMIN_VERIFY
+  usecase "Gérer les utilisatrices\net les trajets" as UC_ADMIN_MANAGE
+}
+
+' ──────────────────────────────────
+' RELATIONS VISITEUSE
+' ──────────────────────────────────
+visitor --> UC_BROWSE
+visitor --> UC_NEWSLETTER
+visitor --> UC_REGISTER
+visitor --> UC_AUTH
+visitor --> UC_SEARCH
+
+' ──────────────────────────────────
+' RELATIONS PASSAGÈRE
+' ──────────────────────────────────
+passenger --> UC_PROFILE
+passenger --> UC_VERIFY_ID
+passenger --> UC_VIEW_TRIP
+passenger --> UC_BOOK
+passenger --> UC_LEAVE
+passenger --> UC_CONFIRM
+passenger --> UC_DISPUTE
+passenger --> UC_REVIEW
+passenger --> UC_VIEW_REVIEWS
+
+' ──────────────────────────────────
+' RELATIONS CONDUCTRICE
+' ──────────────────────────────────
+driver --> UC_VERIFY_DRIVER
+driver --> UC_STRIPE_CONNECT
+driver --> UC_CREATE_TRIP
+driver --> UC_CANCEL_TRIP
+
+' ──────────────────────────────────
+' RELATIONS ADMINISTRATRICE
+' ──────────────────────────────────
+admin --> UC_DASHBOARD
+admin --> UC_ADMIN_VERIFY
+admin --> UC_ADMIN_MANAGE
+
+' ──────────────────────────────────
+' RELATIONS SYSTÈME
+' ──────────────────────────────────
+UC_BOOK --> stripe
+UC_CONFIRM --> stripe
+UC_STRIPE_CONNECT --> stripe
+
+' ──────────────────────────────────
+' INCLUDE / EXTEND
+' ──────────────────────────────────
+UC_BOOK ..> UC_VIEW_TRIP : <<include>>
+UC_DISPUTE ..> UC_CONFIRM : <<extend>>
+
+' ──────────────────────────────────
+' NOTES
+' ──────────────────────────────────
+note bottom of UC_VERIFY_ID
+  Prérequis pour réserver
+end note
+
+note bottom of UC_VERIFY_DRIVER
+  Prérequis pour créer un trajet
+end note
+
+note bottom of UC_BOOK
+  Paiement séquestré
+  (capture manuelle, commission 15%)
+end note
+
+@enduml
