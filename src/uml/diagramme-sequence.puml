@@ -1,0 +1,65 @@
+@startuml Parcours trajet – RutaFem
+
+skinparam shadowing false
+skinparam roundCorner 16
+skinparam defaultFontName "Segoe UI"
+skinparam sequenceArrowThickness 1.5
+skinparam sequenceLifeLineBorderColor #2e504d
+skinparam sequenceParticipantBorderColor #2e504d
+skinparam sequenceParticipantBackgroundColor #fde8ef
+skinparam sequenceActorBorderColor #2e504d
+skinparam sequenceActorBackgroundColor #fda7c1
+skinparam sequenceDividerBackgroundColor #fcbf4e
+skinparam sequenceDividerBorderColor #2e504d
+
+title **Parcours global d'un trajet**
+
+actor Conductrice as D
+participant "RutaFem" as App #fde8ef
+database "Base de\ndonnées" as DB #e6f0fb
+participant "Stripe" as S #fef3e2
+actor Passagère as P
+
+== Publication du trajet ==
+
+D -> App ++ : Crée un trajet\n(départ, arrivée, date, prix)
+App -> DB ++ : Enregistre le trajet
+DB --> App -- : OK
+App --> D -- : Trajet publié
+
+== Réservation ==
+
+P -> App ++ : Recherche un trajet
+App -> DB ++ : Récupère les trajets actifs
+DB --> App -- : Liste des trajets
+App --> P -- : Affiche les résultats
+
+P -> App ++ : Réserve le trajet
+App -> S ++ : Crée le paiement\n(capture manuelle)
+S --> App -- : Paiement pré-autorisé
+App -> DB ++ : Crée la réservation
+DB --> App -- : OK
+App --> P -- : Réservation confirmée
+App --> D : Notification nouvelle passagère
+
+== Confirmation post-trajet ==
+
+App --> D : Email rappel (J+1)
+App --> P : Email rappel (J+1)
+
+D -> App ++ : Confirme le trajet
+App -> DB ++ : Enregistre la confirmation
+DB --> App -- : OK
+App --> D -- : En attente de la passagère
+
+P -> App ++ : Confirme le trajet
+App -> DB ++ : Enregistre la confirmation
+DB --> App -- : Deux confirmations reçues
+App -> S ++ : Capture le paiement\n(montant - 15% commission)
+S --> App -- : Paiement capturé
+App -> DB ++ : Trajet terminé
+DB --> App -- : OK
+App --> P -- : Trajet confirmé
+App --> D : Paiement reçu
+
+@enduml

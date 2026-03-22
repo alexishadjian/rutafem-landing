@@ -2,7 +2,7 @@
 
 import { registerUser } from '@/lib/firebase/auth';
 import { BlueMoovingCar, TravelerPassenger } from '@/public/images';
-import { registerUserSchema } from '@/utils/validation';
+import { registerUserSchema, sanitizePhoneInput } from '@/utils/validation';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -244,7 +244,9 @@ export default function RegisterPage() {
                                         type="tel"
                                         placeholder="06 12 34 56 78"
                                         value={phoneNumber}
-                                        onChange={(e) => setPhoneNumber(e.target.value)}
+                                        onChange={(e) =>
+                                            setPhoneNumber(sanitizePhoneInput(e.target.value))
+                                        }
                                         required
                                         className="block w-full pl-10 pr-3 py-3 border border-gray-300 rounded-lg bg-white transition-colors duration-200"
                                     />

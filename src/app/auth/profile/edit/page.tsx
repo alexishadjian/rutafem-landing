@@ -3,7 +3,7 @@
 import { useAuth } from '@/contexts/AuthContext';
 import { sendVerificationEmail, updateUserEmail, updateUserPassword } from '@/lib/firebase/auth';
 import { updateUserProfile } from '@/lib/firebase/users';
-import { updatePasswordSchema, updateProfileSchema } from '@/utils/validation';
+import { sanitizePhoneInput, updatePasswordSchema, updateProfileSchema } from '@/utils/validation';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -369,7 +369,12 @@ export default function EditProfilePage() {
                                 id="phoneNumber"
                                 type="tel"
                                 value={formData.phoneNumber}
-                                onChange={(e) => handleInputChange('phoneNumber', e.target.value)}
+                                onChange={(e) =>
+                                    handleInputChange(
+                                        'phoneNumber',
+                                        sanitizePhoneInput(e.target.value),
+                                    )
+                                }
                                 className={`w-full px-3 md:px-4 py-2 md:py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-[var(--pink)] ${
                                     errors.phoneNumber ? 'border-red-500' : 'border-gray-300'
                                 }`}

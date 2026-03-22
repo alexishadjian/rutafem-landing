@@ -78,8 +78,8 @@ export default function UsersPage() {
                                         {role === 'all'
                                             ? 'Toutes'
                                             : role === 'passenger'
-                                            ? 'Passagères'
-                                            : 'Conductrices'}
+                                              ? 'Passagères'
+                                              : 'Conductrices'}
                                     </button>
                                 ))}
                             </div>
@@ -95,11 +95,53 @@ export default function UsersPage() {
                             <p className="text-[var(--white)]/40 text-lg">Aucune utilisatrice</p>
                         </div>
                     ) : (
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                            {filteredUsers.map((user) => (
-                                <AdminUserCard key={user.uid} user={user} />
-                            ))}
-                        </div>
+                        <>
+                            {/* Verified Users */}
+                            <section className="mb-8">
+                                <h2 className="text-[var(--white)] text-xl font-semibold mb-4 flex items-center gap-3">
+                                    Utilisatrices vérifiées
+                                    <span className="bg-green-500/20 text-green-400 px-2 py-1 rounded-full text-sm font-medium">
+                                        {filteredUsers.filter((u) => u.isUserVerified).length}
+                                    </span>
+                                </h2>
+                                {filteredUsers.filter((u) => u.isUserVerified).length === 0 ? (
+                                    <p className="text-[var(--white)]/40 text-center py-8">
+                                        Aucune utilisatrice vérifiée
+                                    </p>
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {filteredUsers
+                                            .filter((u) => u.isUserVerified)
+                                            .map((user) => (
+                                                <AdminUserCard key={user.uid} user={user} />
+                                            ))}
+                                    </div>
+                                )}
+                            </section>
+
+                            {/* Non-verified Users */}
+                            <section>
+                                <h2 className="text-[var(--white)] text-xl font-semibold mb-4 flex items-center gap-3">
+                                    Utilisatrices non vérifiées
+                                    <span className="bg-red-500/20 text-red-400 px-2 py-1 rounded-full text-sm font-medium">
+                                        {filteredUsers.filter((u) => !u.isUserVerified).length}
+                                    </span>
+                                </h2>
+                                {filteredUsers.filter((u) => !u.isUserVerified).length === 0 ? (
+                                    <p className="text-[var(--white)]/40 text-center py-8">
+                                        Aucune utilisatrice non vérifiée
+                                    </p>
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {filteredUsers
+                                            .filter((u) => !u.isUserVerified)
+                                            .map((user) => (
+                                                <AdminUserCard key={user.uid} user={user} />
+                                            ))}
+                                    </div>
+                                )}
+                            </section>
+                        </>
                     )}
                 </div>
             </main>
