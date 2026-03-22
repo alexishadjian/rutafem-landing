@@ -1,5 +1,15 @@
 import { z } from 'zod';
 
+export const PHONE_REGEX = /^[\d\s+()-]+$/;
+
+export const phoneNumberSchema = z
+    .string()
+    .min(6, 'Numéro de téléphone requis')
+    .regex(PHONE_REGEX, 'Numéro de téléphone invalide');
+
+export const sanitizePhoneInput = (value: string): string =>
+    value.replace(/[^\d\s+()-]/g, '');
+
 export const MAX_UPLOAD_BYTES = 5 * 1024 * 1024;
 export const DEFAULT_ALLOWED_FILE_TYPES = [
     'image/jpeg',
@@ -55,7 +65,7 @@ export const registerUserSchema = z
         confirmPassword: z.string(),
         firstName: z.string().min(1, 'Prénom requis'),
         lastName: z.string().min(1, 'Nom requis'),
-        phoneNumber: z.string().min(6, 'Numéro de téléphone requis'),
+        phoneNumber: phoneNumberSchema,
         acceptTerms: z.boolean().refine((value) => value, {
             message:
                 'Vous devez accepter les conditions générales de vente et la politique de confidentialité pour créer un compte',
@@ -106,7 +116,7 @@ export const vehicleSchema = z.object({
 export const updateProfileSchema = z.object({
     firstName: z.string().min(1, 'Prénom requis'),
     email: z.email("Format d'email invalide"),
-    phoneNumber: z.string().min(6, 'Numéro de téléphone requis'),
+    phoneNumber: phoneNumberSchema,
 });
 
 export const updatePasswordSchema = z

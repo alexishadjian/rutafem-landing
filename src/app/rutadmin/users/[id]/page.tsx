@@ -6,6 +6,7 @@ import { VerificationType } from '@/types/admin.types';
 import { UserProfile } from '@/types/users.types';
 import { formatDate } from '@/utils/date';
 import { logFirebaseError } from '@/utils/errors';
+import { sanitizePhoneInput } from '@/utils/validation';
 import Link from 'next/link';
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
@@ -162,7 +163,9 @@ export default function UserDetailPage() {
                                 <InputField
                                     label="Téléphone"
                                     value={form.phoneNumber}
-                                    onChange={(v) => setForm({ ...form, phoneNumber: v })}
+                                    onChange={(v) =>
+                                        setForm({ ...form, phoneNumber: sanitizePhoneInput(v) })
+                                    }
                                 />
                                 <div>
                                     <label className="text-[var(--white)]/60 text-sm block mb-1">

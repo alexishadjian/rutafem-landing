@@ -147,22 +147,48 @@ export default function AdminDashboard() {
                                 )}
                             </section>
 
-                            {/* Users Section */}
-                            <section>
+                            {/* Verified Users Section */}
+                            <section className="mb-8">
                                 <SectionHeader
-                                    title="Utilisatrices"
-                                    count={users.length}
+                                    title="Utilisatrices vérifiées"
+                                    count={users.filter((u) => u.isUserVerified).length}
                                     viewAllLink="/rutadmin/users"
                                 />
-                                {users.length === 0 ? (
+                                {users.filter((u) => u.isUserVerified).length === 0 ? (
                                     <p className="text-[var(--white)]/40 text-center py-8">
-                                        Aucune utilisatrice
+                                        Aucune utilisatrice vérifiée
                                     </p>
                                 ) : (
                                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                                        {users.slice(0, PREVIEW_LIMIT).map((user) => (
-                                            <AdminUserCard key={user.uid} user={user} />
-                                        ))}
+                                        {users
+                                            .filter((u) => u.isUserVerified)
+                                            .slice(0, PREVIEW_LIMIT)
+                                            .map((user) => (
+                                                <AdminUserCard key={user.uid} user={user} />
+                                            ))}
+                                    </div>
+                                )}
+                            </section>
+
+                            {/* Non-verified Users Section */}
+                            <section>
+                                <SectionHeader
+                                    title="Utilisatrices non vérifiées"
+                                    count={users.filter((u) => !u.isUserVerified).length}
+                                    viewAllLink="/rutadmin/users"
+                                />
+                                {users.filter((u) => !u.isUserVerified).length === 0 ? (
+                                    <p className="text-[var(--white)]/40 text-center py-8">
+                                        Aucune utilisatrice non vérifiée
+                                    </p>
+                                ) : (
+                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                                        {users
+                                            .filter((u) => !u.isUserVerified)
+                                            .slice(0, PREVIEW_LIMIT)
+                                            .map((user) => (
+                                                <AdminUserCard key={user.uid} user={user} />
+                                            ))}
                                     </div>
                                 )}
                             </section>
