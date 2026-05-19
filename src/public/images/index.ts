@@ -25,6 +25,8 @@ import ValueBg from './value-bg.png';
 import WomanFacingMountain from './woman-facing-mountains.png';
 import YellowLine1 from './yellowLine1.png';
 import YellowLine2 from './yellowLine2.png';
+import TeamRutafem from './team_rutafem.png';
+import UluleLogo from './ulule_logo.png';
 
 export {
     Advantage1,
@@ -54,4 +56,6 @@ export {
     WomanFacingMountain,
     YellowLine1,
     YellowLine2,
+    TeamRutafem,
+    UluleLogo,
 };

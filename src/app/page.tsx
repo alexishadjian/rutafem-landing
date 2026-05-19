@@ -3,97 +3,14 @@ import FaqCard from '@/components/ui/cards/faqCard';
 import ValueCard from '@/components/ui/cards/valueCard';
 import WinnerCard from '@/components/ui/cards/winnerCard';
 import Icon from '@/components/ui/icon';
-import { CardLine, RideIllu, StarIllu } from '@/images';
+import { RideIllu, StarIllu } from '@/images';
 import Image from 'next/image';
-import RotatingText from './_components/ui/RotatingText';
+import HeroCarousel from './_components/hero-carousel';
 
 export default function Home() {
     return (
         <div className="home">
-            <section className="section-margin bg-[var(--dark-green)] relative">
-                <div className="absolute inset-0 flex-col gap-4 self-center overflow-hidden hidden md:flex">
-                    <div className="flex gap-4 w-full animate-scroll-slow">
-                        <Image
-                            src={CardLine}
-                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
-                            className="w-full flex-shrink-0 object-contain"
-                        />
-                        <Image
-                            src={CardLine}
-                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
-                            className="w-full flex-shrink-0 object-contain"
-                        />
-                    </div>
-                    <div className="flex gap-4 w-full animate-scroll-fast">
-                        <Image
-                            src={CardLine}
-                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
-                            className="w-full flex-shrink-0 object-contain"
-                        />
-                        <Image
-                            src={CardLine}
-                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
-                            className="w-full flex-shrink-0 object-contain"
-                        />
-                    </div>
-                    <div className="flex gap-4 w-full animate-scroll-mid">
-                        <Image
-                            src={CardLine}
-                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
-                            className="w-full flex-shrink-0 object-contain"
-                        />
-                        <Image
-                            src={CardLine}
-                            alt="Carte réprésentant un trajet à destination de Lyon depuis Paris pour le 23 mai avec 3 passagères."
-                            className="w-full flex-shrink-0 object-contain"
-                        />
-                    </div>
-                </div>
-
-                <div className="bg-gradient-to-r from-[var(--dark-green)] from-0% via-[var(--dark-green)] via-50% to-transparent to-100% absolute inset-0 z-[0]"></div>
-
-                <div className="flex-col flex lg:items-start items-center justify-center min-h-[100vh] text-[var(--white)] relative wrapper pt-24 md:pt-0">
-                    <div className="w-full lg:w-1/2 relative z-[1]">
-                        <h1
-                            className="font-montserrat text-[50px] lg:text-[60px] xl:text-[70px] font-bold leading-[1.2]"
-                            aria-label="Le covoiturage 100% féminin, simple et safe"
-                        >
-                            <span className="pr-4">Le covoiturage 100%</span>
-                            <RotatingText
-                                texts={['féminin', 'simple', 'safe']}
-                                mainClassName="px-2 sm:px-2 bg-[var(--yellow)] text-[var(--dark-green)] md:px-3 overflow-hidden py-0.5 sm:py-1 md:py-2 justify-center rounded-lg"
-                                staggerFrom={'last'}
-                                initial={{ y: '100%' }}
-                                animate={{ y: 0 }}
-                                exit={{ y: '-120%' }}
-                                staggerDuration={0.025}
-                                splitLevelClassName="overflow-hidden pb-0.5 sm:pb-1 md:pb-1"
-                                transition={{ type: 'spring', damping: 30, stiffness: 400 }}
-                                rotationInterval={2000}
-                            />
-                        </h1>
-                        <p className="mb-8 text-[20px]">
-                            Partage tes trajets entre femmes, en toute confiance, comme entre
-                            copines. Simple et en sécurité.
-                        </p>
-                        <div className="flex gap-4 flex-wrap items-start pb-4">
-                            <Button
-                                text="Rejoindre un trajet"
-                                color="pink"
-                                link="/join-trip"
-                                fill
-                            />
-                            <Button
-                                text="Publier un trajet"
-                                color="pink"
-                                link="/create-trip"
-                                fill
-                            />
-                        </div>
-                    </div>
-                    <div className="w-1/2"></div>
-                </div>
-            </section>
+            <HeroCarousel />
 
             <section className="section-margin">
                 <div className="wrapper flex flex-col gap-10 md:gap-20">
