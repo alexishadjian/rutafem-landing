@@ -22,6 +22,7 @@ const SORT_OPTIONS: { value: TripSortOption; label: string }[] = [
 export default function JoinTripPage() {
     const [allTrips, setAllTrips] = useState<Trip[]>([]);
     const [filteredTrips, setFilteredTrips] = useState<Trip[]>([]);
+    const [pastTrips, setPastTrips] = useState<Trip[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
     const [displayedCount, setDisplayedCount] = useState(INITIAL_DISPLAY_COUNT);
@@ -33,10 +34,12 @@ export default function JoinTripPage() {
         const fetchTrips = async () => {
             try {
                 const tripsData = await getActiveTrips();
-                // Filter out past trips
                 const futureTrips = filterPastTrips(tripsData);
+                const today = new Date().toISOString().split('T')[0];
+                const past = tripsData.filter((trip) => trip.departureDate < today);
                 setAllTrips(futureTrips);
                 setFilteredTrips(futureTrips);
+                setPastTrips(past);
             } catch (err) {
                 console.error('Erreur lors du chargement des trajets:', err);
                 setError('Erreur lors du chargement des trajets');
@@ -291,6 +294,24 @@ export default function JoinTripPage() {
                                 </div>
                             )}
                         </>
+                    )}
+
+                    {!loading && !error && pastTrips.length > 0 && (
+                        <div className="mt-12">
+                            <div className="mb-6">
+                                <h3 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-gray-900 font-staatliches">
+                                    Trajets passés
+                                </h3>
+                                <p className="text-gray-600 mt-2">
+                                    Ces trajets sont terminés et ne sont plus disponibles à la réservation.
+                                </p>
+                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 opacity-60">
+                                {pastTrips.map((trip) => (
+                                    <TripCard key={trip.id} trip={trip} />
+                                ))}
+                            </div>
+                        </div>
                     )}
                 </div>
             </div>
