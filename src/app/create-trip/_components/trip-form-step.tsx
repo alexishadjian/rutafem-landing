@@ -248,6 +248,9 @@ export default function TripFormStep({
                                         Prix conseillé : {suggestedPrice}€ (~{distance} km)
                                     </p>
                                 )}
+                                <p className="text-gray-300 text-xs mt-1 italic">
+                                    Le paiement peut prendre jusqu&apos;à 7 jours pour être traité.
+                                </p>
                                 {errors.price && (
                                     <p className="text-red-500 text-xs sm:text-sm mt-1">
                                         {errors.price}

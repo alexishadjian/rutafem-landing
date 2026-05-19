@@ -188,7 +188,10 @@ export default function VerificationPage() {
                                             Carte d&apos;identité recto{' '}
                                             <span className="text-pink-500">*</span>
                                         </label>
-                                        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-pink-400 transition-colors duration-200">
+                                        <label
+                                            htmlFor="idCardFront"
+                                            className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-pink-400 transition-colors duration-200 cursor-pointer"
+                                        >
                                             <div className="space-y-1 text-center">
                                                 {idCardFront ? (
                                                     <div className="flex items-center space-x-2">
@@ -211,7 +214,7 @@ export default function VerificationPage() {
                                                             </p>
                                                             <button
                                                                 type="button"
-                                                                onClick={() => removeFile('front')}
+                                                                onClick={(e) => { e.preventDefault(); removeFile('front'); }}
                                                                 className="text-sm text-red-500 hover:text-red-700"
                                                             >
                                                                 Supprimer
@@ -233,32 +236,27 @@ export default function VerificationPage() {
                                                                 strokeLinejoin="round"
                                                             />
                                                         </svg>
-                                                        <div className="flex text-sm text-gray-600">
-                                                            <label
-                                                                htmlFor="idCardFront"
-                                                                className="relative cursor-pointer bg-white rounded-md font-medium text-[var(--orange)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--orange)]"
-                                                            >
-                                                                <span>Télécharger un fichier</span>
-                                                                <input
-                                                                    id="idCardFront"
-                                                                    type="file"
-                                                                    accept="image/*,.pdf,application/pdf"
-                                                                    capture="environment"
-                                                                    onChange={(e) =>
-                                                                        handleFileChange(e, 'front')
-                                                                    }
-                                                                    required
-                                                                    className="sr-only"
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                        <p className="text-sm font-medium text-[var(--orange)]">
+                                                            Télécharger un fichier
+                                                        </p>
+                                                        <input
+                                                            id="idCardFront"
+                                                            type="file"
+                                                            accept="image/*,.pdf,application/pdf"
+                                                            capture="environment"
+                                                            onChange={(e) =>
+                                                                handleFileChange(e, 'front')
+                                                            }
+                                                            required
+                                                            className="sr-only"
+                                                        />
                                                         <p className="text-xs text-gray-500">
                                                             PNG, JPG, PDF jusqu&apos;à 5MB
                                                         </p>
                                                     </>
                                                 )}
                                             </div>
-                                        </div>
+                                        </label>
                                     </div>
 
                                     <div>
@@ -269,7 +267,10 @@ export default function VerificationPage() {
                                             Carte d&apos;identité verso
                                             <span className="text-pink-500">*</span>
                                         </label>
-                                        <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-pink-400 transition-colors duration-200">
+                                        <label
+                                            htmlFor="idCardBack"
+                                            className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-lg hover:border-pink-400 transition-colors duration-200 cursor-pointer"
+                                        >
                                             <div className="space-y-1 text-center">
                                                 {idCardBack ? (
                                                     <div className="flex items-center space-x-2">
@@ -292,7 +293,7 @@ export default function VerificationPage() {
                                                             </p>
                                                             <button
                                                                 type="button"
-                                                                onClick={() => removeFile('back')}
+                                                                onClick={(e) => { e.preventDefault(); removeFile('back'); }}
                                                                 className="text-sm text-red-500 hover:text-red-700"
                                                             >
                                                                 Supprimer
@@ -314,32 +315,27 @@ export default function VerificationPage() {
                                                                 strokeLinejoin="round"
                                                             />
                                                         </svg>
-                                                        <div className="flex text-sm text-gray-600">
-                                                            <label
-                                                                htmlFor="idCardBack"
-                                                                className="relative cursor-pointer bg-white rounded-md font-medium text-[var(--orange)] focus-within:outline-none focus-within:ring-2 focus-within:ring-offset-2 focus-within:ring-[var(--orange)]"
-                                                            >
-                                                                <span>Télécharger un fichier</span>
-                                                                <input
-                                                                    id="idCardBack"
-                                                                    type="file"
-                                                                    accept="image/*,.pdf,application/pdf"
-                                                                    capture="environment"
-                                                                    onChange={(e) =>
-                                                                        handleFileChange(e, 'back')
-                                                                    }
-                                                                    required
-                                                                    className="sr-only"
-                                                                />
-                                                            </label>
-                                                        </div>
+                                                        <p className="text-sm font-medium text-[var(--orange)]">
+                                                            Télécharger un fichier
+                                                        </p>
+                                                        <input
+                                                            id="idCardBack"
+                                                            type="file"
+                                                            accept="image/*,.pdf,application/pdf"
+                                                            capture="environment"
+                                                            onChange={(e) =>
+                                                                handleFileChange(e, 'back')
+                                                            }
+                                                            required
+                                                            className="sr-only"
+                                                        />
                                                         <p className="text-xs text-gray-500">
                                                             PNG, JPG, PDF jusqu&apos;à 5MB
                                                         </p>
                                                     </>
                                                 )}
                                             </div>
-                                        </div>
+                                        </label>
                                     </div>
                                 </div>
                             </div>
