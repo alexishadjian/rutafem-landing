@@ -134,7 +134,7 @@ export default function HeroCarousel() {
 
                 {/* Slide 2 — Ulule */}
                 <div className="w-full flex-shrink-0 relative min-h-[100vh] flex items-center">
-                    <div className="wrapper relative z-[1] flex flex-col lg:flex-row items-center gap-10 lg:gap-10 pt-24 md:pt-0">
+                    <div className="wrapper relative z-[1] flex flex-col lg:flex-row items-center gap-10 lg:gap-10 pt-24 lg:pt-0">
                         {/* Left — Text */}
                         <div className="w-full lg:w-[55%] text-[var(--white)] flex flex-col gap-6 items-start">
                             <span className="bg-[var(--orange)] text-[var(--white)] px-6 py-2 rounded-full text-lg font-medium border border-[var(--white)]">
@@ -164,7 +164,7 @@ export default function HeroCarousel() {
                                 src={UluleLogo}
                                 alt="Logo de Ulule, plateforme de financement participatif"
                                 aria-hidden="true"
-                                className="absolute -top-60 left-1/2 -translate-x-1/2 w-[550px] md:w-[750px] lg:w-[800px] h-auto opacity-70 object-contain"
+                                className="absolute -top-20 md:-top-60 left-1/2 -translate-x-1/2 w-[250px] md:w-[550px] lg:w-[800px] h-auto opacity-70 object-contain"
                             />
                             <Image
                                 src={TeamRutafem}
